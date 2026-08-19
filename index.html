@@ -80,6 +80,71 @@
             opacity: 0.9;
         }
 
+        /* LOGIN BOX */
+
+        #loginBox {
+            display: none;
+            max-width: 400px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        #loginBox h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #userType {
+            text-align: center;
+            color: #2563eb;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .login-btn:hover {
+            opacity: 0.9;
+        }
+
+        .back-btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #e5e7eb;
+            color: #222;
+            cursor: pointer;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
         footer {
             text-align: center;
             padding: 20px;
@@ -106,7 +171,9 @@
             </p>
         </div>
 
-        <div class="login-container">
+        <!-- LOGIN BUTTONS -->
+
+        <div class="login-container" id="loginButtons">
 
             <button onclick="studentLogin()">
                 👨‍🎓 Student Login
@@ -118,22 +185,245 @@
 
         </div>
 
+
+        <!-- LOGIN BOX -->
+
+        <div id="loginBox">
+
+            <h2>Login 🔐</h2>
+
+            <p id="userType"></p>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+            >
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+            >
+
+            <button class="login-btn" onclick="loginUser()">
+                Login
+            </button>
+
+            <button class="back-btn" onclick="goBack()">
+                ← Back
+            </button>
+
+            <p id="message"></p>
+
+        </div>
+
     </main>
+
 
     <footer>
         <p>Plus One Student Management System</p>
     </footer>
 
 
-    <script>
+    <!-- FIREBASE -->
 
-        function studentLogin() {
-            alert("Student Login will be added in the next step.");
-        }
+    <script type="module">
 
-        function teacherLogin() {
-            alert("Teacher Login will be added in the next step.");
-        }
+        import { initializeApp } from
+        "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+        import {
+            getAuth,
+            signInWithEmailAndPassword
+        } from
+        "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+        // YOUR FIREBASE CONFIG
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBCfKnTHrLVR1KdGbF1dDaj-Q0ZMdbBcgk",
+            authDomain: "plus-one-student-web.firebaseapp.com",
+            projectId: "plus-one-student-web",
+            storageBucket: "plus-one-student-web.firebasestorage.app",
+            messagingSenderId: "845465703333",
+            appId: "1:845465703333:web:dc78c09173e27d69f04e4c"
+        };
+
+
+        // INITIALIZE FIREBASE
+
+        const app = initializeApp(firebaseConfig);
+
+        const auth = getAuth(app);
+
+
+        // CURRENT USER TYPE
+
+        let selectedUserType = "";
+
+
+        // STUDENT LOGIN
+
+        window.studentLogin = function() {
+
+            selectedUserType = "Student";
+
+            document.getElementById("loginButtons").style.display = "none";
+
+            document.getElementById("loginBox").style.display = "block";
+
+            document.getElementById("userType").innerText =
+                "👨‍🎓 Student Login";
+
+            document.getElementById("message").innerText = "";
+
+        };
+
+
+        // TEACHER LOGIN
+
+        window.teacherLogin = function() {
+
+            selectedUserType = "Teacher";
+
+            document.getElementById("loginButtons").style.display = "none";
+
+            document.getElementById("loginBox").style.display = "block";
+
+            document.getElementById("userType").innerText =
+                "👨‍🏫 Teacher Login";
+
+            document.getElementById("message").innerText = "";
+
+        };
+
+
+        // LOGIN USER
+
+        window.loginUser = async function() {
+
+            const email =
+                document.getElementById("email").value.trim();
+
+            const password =
+                document.getElementById("password").value;
+
+            const message =
+                document.getElementById("message");
+
+
+            if (!email || !password) {
+
+                message.style.color = "red";
+
+                message.innerText =
+                    "Please enter email and password.";
+
+                return;
+            }
+
+
+            message.style.color = "#2563eb";
+
+            message.innerText = "Logging in...";
+
+
+            try {
+
+                const userCredential =
+                    await signInWithEmailAndPassword(
+                        auth,
+                        email,
+                        password
+                    );
+
+
+                const user =
+                    userCredential.user;
+
+
+                message.style.color = "green";
+
+                message.innerText =
+                    "Login successful! Welcome 🎉";
+
+
+                console.log(
+                    "Logged in user:",
+                    user.email
+                );
+
+                console.log(
+                    "User type:",
+                    selectedUserType
+                );
+
+
+                // NEXT STEP:
+                // We will create separate
+                // Student and Teacher dashboards here.
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                message.style.color = "red";
+
+
+                if (error.code === "auth/invalid-credential") {
+
+                    message.innerText =
+                        "Invalid email or password.";
+
+                }
+
+                else if (error.code === "auth/invalid-email") {
+
+                    message.innerText =
+                        "Please enter a valid email.";
+
+                }
+
+                else if (error.code === "auth/too-many-requests") {
+
+                    message.innerText =
+                        "Too many attempts. Try again later.";
+
+                }
+
+                else {
+
+                    message.innerText =
+                        "Login failed. Please try again.";
+
+                }
+
+            }
+
+        };
+
+
+        // BACK BUTTON
+
+        window.goBack = function() {
+
+            document.getElementById("loginBox").style.display =
+                "none";
+
+            document.getElementById("loginButtons").style.display =
+                "flex";
+
+            document.getElementById("email").value = "";
+
+            document.getElementById("password").value = "";
+
+            document.getElementById("message").innerText = "";
+
+        };
 
     </script>
 
