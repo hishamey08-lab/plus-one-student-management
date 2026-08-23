@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Plus One Student Management System</title>
+    <title>Plus One Student System</title>
 
     <style>
+
         * {
             margin: 0;
             padding: 0;
@@ -15,31 +17,41 @@
 
         body {
             font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            color: #222;
+            background: #f4f7fb;
+            color: #1f2937;
             min-height: 100vh;
         }
+
+        /* =========================
+           HEADER
+        ========================== */
 
         header {
             background: #111827;
             color: white;
             text-align: center;
-            padding: 30px 15px;
+            padding: 45px 20px;
         }
 
         header h1 {
-            font-size: 32px;
+            font-size: 36px;
+            letter-spacing: 1px;
         }
 
         header p {
-            margin-top: 8px;
-            opacity: 0.8;
+            margin-top: 10px;
+            font-size: 17px;
+            color: #d1d5db;
         }
 
+        /* =========================
+           MAIN
+        ========================== */
+
         .container {
-            max-width: 900px;
+            width: 90%;
+            max-width: 1000px;
             margin: 50px auto;
-            padding: 20px;
         }
 
         .welcome {
@@ -53,379 +65,784 @@
         }
 
         .welcome p {
-            color: #555;
+            color: #6b7280;
+            font-size: 16px;
         }
 
-        .login-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
+        /* =========================
+           LOBBY CARDS
+        ========================== */
+
+        .lobby-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
         }
 
-        .login-container button {
-            width: 250px;
-            padding: 18px;
+        .lobby-card {
+            background: white;
+            border-radius: 18px;
+            padding: 35px 25px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            transition: 0.3s;
+        }
+
+        .lobby-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .icon {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        .lobby-card h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .lobby-card p {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .lobby-button {
+            width: 100%;
+            padding: 15px;
             border: none;
-            border-radius: 12px;
-            background: #2563eb;
-            color: white;
+            border-radius: 10px;
             font-size: 17px;
+            font-weight: bold;
             cursor: pointer;
+            color: white;
+            background: #2563eb;
             transition: 0.2s;
         }
 
-        .login-container button:hover {
-            transform: translateY(-3px);
+        .lobby-button:hover {
             opacity: 0.9;
+            transform: scale(1.02);
         }
 
-        /* LOGIN BOX */
+        .teacher-button {
+            background: #111827;
+        }
 
-        #loginBox {
+        /* =========================
+           FOOTER
+        ========================== */
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        /* =========================
+           STUDENT LOBBY
+        ========================== */
+
+        .page {
             display: none;
-            max-width: 400px;
-            margin: 30px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
         }
 
-        #loginBox h2 {
-            text-align: center;
-            margin-bottom: 20px;
+        .page.active {
+            display: block;
         }
 
-        #userType {
-            text-align: center;
-            color: #2563eb;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        input {
-            width: 100%;
-            padding: 14px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
+        .back-button {
+            background: #e5e7eb;
+            border: none;
+            padding: 10px 18px;
             border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 25px;
             font-size: 15px;
         }
 
-        .login-btn {
+        .back-button:hover {
+            background: #d1d5db;
+        }
+
+        .dashboard-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-title h2 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .dashboard-title p {
+            color: #6b7280;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+            text-align: center;
+        }
+
+        .feature-card .feature-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        /* =========================
+           TEACHER PASSWORD
+        ========================== */
+
+        .password-box {
+            max-width: 450px;
+            margin: 0 auto;
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .password-box h2 {
+            margin-bottom: 10px;
+        }
+
+        .password-box p {
+            color: #6b7280;
+            margin-bottom: 25px;
+        }
+
+        .password-box input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        .password-box input:focus {
+            border-color: #2563eb;
+        }
+
+        .password-box button {
             width: 100%;
             padding: 14px;
             border: none;
-            border-radius: 8px;
-            background: #2563eb;
+            border-radius: 9px;
+            background: #111827;
             color: white;
             font-size: 16px;
             cursor: pointer;
         }
 
-        .login-btn:hover {
+        .password-box button:hover {
             opacity: 0.9;
         }
 
-        .back-btn {
-            width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            border: none;
-            border-radius: 8px;
-            background: #e5e7eb;
-            color: #222;
-            cursor: pointer;
+        .error {
+            color: #dc2626;
+            margin-top: 12px;
+            display: none;
         }
 
-        #message {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 14px;
+        /* =========================
+           TEACHER DASHBOARD
+        ========================== */
+
+        .teacher-feature {
+            border-left: 4px solid #111827;
         }
 
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: #777;
+        /* =========================
+           MOBILE
+        ========================== */
+
+        @media (max-width: 700px) {
+
+            header h1 {
+                font-size: 28px;
+            }
+
+            .lobby-container {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                margin-top: 30px;
+            }
+
         }
+
     </style>
 </head>
 
+
 <body>
 
-    <header>
-        <h1>PLUS ONE</h1>
-        <p>Student Management System</p>
-    </header>
 
-    <main class="container">
+    <!-- =========================
+         HOME PAGE
+    ========================== -->
 
-        <div class="welcome">
-            <h2>Welcome 👋</h2>
+    <div id="homePage" class="page active">
 
+        <header>
+            <h1>PLUS ONE</h1>
+            <p>Student Management System</p>
+        </header>
+
+
+        <main class="container">
+
+            <div class="welcome">
+
+                <h2>Welcome 👋</h2>
+
+                <p>
+                    Access student results, study materials,
+                    notes and class announcements.
+                </p>
+
+            </div>
+
+
+            <div class="lobby-container">
+
+
+                <!-- STUDENT / PARENT -->
+
+                <div class="lobby-card">
+
+                    <div class="icon">
+                        👨‍🎓
+                    </div>
+
+                    <h3>
+                        Student / Parent
+                    </h3>
+
+                    <p>
+                        View exam results, study materials,
+                        PDF notes and class announcements.
+                    </p>
+
+                    <button
+                        class="lobby-button"
+                        onclick="openStudentLobby()">
+
+                        Enter Student Lobby
+
+                    </button>
+
+                </div>
+
+
+                <!-- TEACHER -->
+
+                <div class="lobby-card">
+
+                    <div class="icon">
+                        👩‍🏫
+                    </div>
+
+                    <h3>
+                        Teacher
+                    </h3>
+
+                    <p>
+                        Manage students, marks, study materials
+                        and class announcements.
+                    </p>
+
+                    <button
+                        class="lobby-button teacher-button"
+                        onclick="openTeacherLogin()">
+
+                        Enter Teacher Lobby 🔐
+
+                    </button>
+
+                </div>
+
+
+            </div>
+
+        </main>
+
+
+        <footer>
             <p>
-                Access student results, study materials,
-                notes and class announcements.
+                © 2026 Plus One Student Management System
             </p>
-        </div>
+        </footer>
 
-        <!-- LOGIN BUTTONS -->
+    </div>
 
-        <div class="login-container" id="loginButtons">
 
-            <button onclick="studentLogin()">
-                👨‍🎓 Student Login
+
+    <!-- =========================
+         STUDENT LOBBY
+    ========================== -->
+
+    <div id="studentLobby" class="page">
+
+        <header>
+            <h1>STUDENT LOBBY</h1>
+            <p>Plus One Student Management System</p>
+        </header>
+
+
+        <main class="container">
+
+            <button
+                class="back-button"
+                onclick="goHome()">
+
+                ← Back to Home
+
             </button>
 
-            <button onclick="teacherLogin()">
-                👨‍🏫 Teacher Login
+
+            <div class="dashboard-title">
+
+                <h2>Welcome 👋</h2>
+
+                <p>
+                    Find everything you need for your class.
+                </p>
+
+            </div>
+
+
+            <div class="feature-grid">
+
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        📊
+                    </div>
+
+                    <h3>
+                        Exam Results
+                    </h3>
+
+                    <p>
+                        View student exam marks and grades.
+                    </p>
+
+                </div>
+
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        📚
+                    </div>
+
+                    <h3>
+                        Study Materials
+                    </h3>
+
+                    <p>
+                        Find subject-wise study materials.
+                    </p>
+
+                </div>
+
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        📄
+                    </div>
+
+                    <h3>
+                        Notes & PDFs
+                    </h3>
+
+                    <p>
+                        Access class notes and PDF files.
+                    </p>
+
+                </div>
+
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        📢
+                    </div>
+
+                    <h3>
+                        Announcements
+                    </h3>
+
+                    <p>
+                        See important class announcements.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+
+    <!-- =========================
+         TEACHER LOGIN
+    ========================== -->
+
+    <div id="teacherLogin" class="page">
+
+        <header>
+            <h1>TEACHER ACCESS</h1>
+            <p>Protected Teacher Area</p>
+        </header>
+
+
+        <main class="container">
+
+            <button
+                class="back-button"
+                onclick="goHome()">
+
+                ← Back to Home
+
             </button>
 
-        </div>
+
+            <div class="password-box">
+
+                <div class="icon">
+                    🔐
+                </div>
+
+                <h2>
+                    Teacher Login
+                </h2>
+
+                <p>
+                    Enter the teacher password to continue.
+                </p>
 
 
-        <!-- LOGIN BOX -->
+                <input
+                    type="password"
+                    id="teacherPassword"
+                    placeholder="Enter teacher password"
+                    autocomplete="off"
+                >
 
-        <div id="loginBox">
 
-            <h2>Login 🔐</h2>
+                <button onclick="checkTeacherPassword()">
+                    Enter Teacher Lobby
+                </button>
 
-            <p id="userType"></p>
 
-            <input
-                type="email"
-                id="email"
-                placeholder="Enter your email"
-            >
+                <div
+                    id="passwordError"
+                    class="error">
 
-            <input
-                type="password"
-                id="password"
-                placeholder="Enter your password"
-            >
+                    Incorrect password. Please try again.
 
-            <button class="login-btn" onclick="loginUser()">
-                Login
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+
+    <!-- =========================
+         TEACHER LOBBY
+    ========================== -->
+
+    <div id="teacherLobby" class="page">
+
+        <header>
+            <h1>TEACHER LOBBY</h1>
+            <p>Management Dashboard</p>
+        </header>
+
+
+        <main class="container">
+
+            <button
+                class="back-button"
+                onclick="goHome()">
+
+                ← Back to Home
+
             </button>
 
-            <button class="back-btn" onclick="goBack()">
-                ← Back
-            </button>
 
-            <p id="message"></p>
+            <div class="dashboard-title">
 
-        </div>
+                <h2>
+                    Teacher Dashboard 👩‍🏫
+                </h2>
 
-    </main>
+                <p>
+                    Manage your Plus One class.
+                </p>
 
-
-    <footer>
-        <p>Plus One Student Management System</p>
-    </footer>
+            </div>
 
 
-    <!-- FIREBASE -->
-
-    <script type="module">
-
-        import { initializeApp } from
-        "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-
-        import {
-            getAuth,
-            signInWithEmailAndPassword
-        } from
-        "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+            <div class="feature-grid">
 
 
-        // YOUR FIREBASE CONFIG
+                <div class="feature-card teacher-feature">
 
-       const firebaseConfig = {
-  apiKey: "AIzaSyBCfKnTHrLVR1KdGbF1dDaj-Q0ZMdbBcgk",
-  authDomain: "plus-one-student-web.firebaseapp.com",
-  projectId: "plus-one-student-web",
-  storageBucket: "plus-one-student-web.firebasestorage.app",
-  messagingSenderId: "845465703333",
-  appId: "1:845465703333:web:dc78c09173e27d69f04e4c"
-};
+                    <div class="feature-icon">
+                        👨‍🎓
+                    </div>
 
+                    <h3>
+                        Student Management
+                    </h3>
 
-        // INITIALIZE FIREBASE
+                    <p>
+                        Add, edit and manage student details.
+                    </p>
 
-        const app = initializeApp(firebaseConfig);
-
-        const auth = getAuth(app);
+                </div>
 
 
-        // CURRENT USER TYPE
+                <div class="feature-card teacher-feature">
 
-        let selectedUserType = "";
+                    <div class="feature-icon">
+                        📊
+                    </div>
 
+                    <h3>
+                        Marks Management
+                    </h3>
 
-        // STUDENT LOGIN
+                    <p>
+                        Add and edit examination marks and grades.
+                    </p>
 
-        window.studentLogin = function() {
-
-            selectedUserType = "Student";
-
-            document.getElementById("loginButtons").style.display = "none";
-
-            document.getElementById("loginBox").style.display = "block";
-
-            document.getElementById("userType").innerText =
-                "👨‍🎓 Student Login";
-
-            document.getElementById("message").innerText = "";
-
-        };
+                </div>
 
 
-        // TEACHER LOGIN
+                <div class="feature-card teacher-feature">
 
-        window.teacherLogin = function() {
+                    <div class="feature-icon">
+                        📚
+                    </div>
 
-            selectedUserType = "Teacher";
+                    <h3>
+                        Upload Notes
+                    </h3>
 
-            document.getElementById("loginButtons").style.display = "none";
+                    <p>
+                        Upload class notes and PDF study materials.
+                    </p>
 
-            document.getElementById("loginBox").style.display = "block";
-
-            document.getElementById("userType").innerText =
-                "👨‍🏫 Teacher Login";
-
-            document.getElementById("message").innerText = "";
-
-        };
+                </div>
 
 
-        // LOGIN USER
+                <div class="feature-card teacher-feature">
 
-        window.loginUser = async function() {
+                    <div class="feature-icon">
+                        📢
+                    </div>
 
-            const email =
-                document.getElementById("email").value.trim();
+                    <h3>
+                        Announcements
+                    </h3>
+
+                    <p>
+                        Create and manage class announcements.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+
+    <script>
+
+        /* =========================
+           PAGE CONTROL
+        ========================== */
+
+        function hideAllPages() {
+
+            document
+                .querySelectorAll(".page")
+                .forEach(function(page) {
+
+                    page.classList.remove("active");
+
+                });
+
+        }
+
+
+        function openStudentLobby() {
+
+            hideAllPages();
+
+            document
+                .getElementById("studentLobby")
+                .classList.add("active");
+
+        }
+
+
+        function openTeacherLogin() {
+
+            hideAllPages();
+
+            document
+                .getElementById("teacherLogin")
+                .classList.add("active");
+
+        }
+
+
+        function openTeacherLobby() {
+
+            hideAllPages();
+
+            document
+                .getElementById("teacherLobby")
+                .classList.add("active");
+
+        }
+
+
+        function goHome() {
+
+            hideAllPages();
+
+            document
+                .getElementById("homePage")
+                .classList.add("active");
+
+        }
+
+
+        /* =========================
+           TEMPORARY TEACHER LOGIN
+           =========================
+
+           IMPORTANT:
+           This is ONLY for testing
+           the interface.
+
+           We will NOT keep the
+           real teacher password
+           inside this JavaScript.
+
+           Firebase Authentication
+           will handle the real
+           teacher protection later.
+        */
+
+
+        function checkTeacherPassword() {
+
+            /*
+             * Temporary test password:
+             *
+             * 1234
+             *
+             * This will be removed
+             * before the real system
+             * is finished.
+             */
 
             const password =
-                document.getElementById("password").value;
-
-            const message =
-                document.getElementById("message");
-
-
-            if (!email || !password) {
-
-                message.style.color = "red";
-
-                message.innerText =
-                    "Please enter email and password.";
-
-                return;
-            }
+                document
+                .getElementById("teacherPassword")
+                .value;
 
 
-            message.style.color = "#2563eb";
-
-            message.innerText = "Logging in...";
-
-
-            try {
-
-                const userCredential =
-                    await signInWithEmailAndPassword(
-                        auth,
-                        email,
-                        password
-                    );
+            const error =
+                document
+                .getElementById("passwordError");
 
 
-                const user =
-                    userCredential.user;
+            if (password === "1234") {
 
+                error.style.display = "none";
 
-                message.style.color = "green";
-
-                message.innerText =
-                    "Login successful! Welcome 🎉";
-
-
-                console.log(
-                    "Logged in user:",
-                    user.email
-                );
-
-                console.log(
-                    "User type:",
-                    selectedUserType
-                );
-
-
-                // NEXT STEP:
-                // We will create separate
-                // Student and Teacher dashboards here.
-
-
-            } catch (error) {
-
-                console.error(error);
-
-
-                message.style.color = "red";
-
-
-                if (error.code === "auth/invalid-credential") {
-
-                    message.innerText =
-                        "Invalid email or password.";
-
-                }
-
-                else if (error.code === "auth/invalid-email") {
-
-                    message.innerText =
-                        "Please enter a valid email.";
-
-                }
-
-                else if (error.code === "auth/too-many-requests") {
-
-                    message.innerText =
-                        "Too many attempts. Try again later.";
-
-                }
-
-                else {
-
-                    message.innerText =
-                        "Login failed. Please try again.";
-
-                }
+                openTeacherLobby();
 
             }
 
-        };
+            else {
+
+                error.style.display = "block";
+
+            }
+
+        }
 
 
-        // BACK BUTTON
+        /* ENTER KEY SUPPORT */
 
-        window.goBack = function() {
+        document
+            .getElementById("teacherPassword")
+            .addEventListener(
+                "keydown",
+                function(event) {
 
-            document.getElementById("loginBox").style.display =
-                "none";
+                    if (event.key === "Enter") {
 
-            document.getElementById("loginButtons").style.display =
-                "flex";
+                        checkTeacherPassword();
 
-            document.getElementById("email").value = "";
+                    }
 
-            document.getElementById("password").value = "";
-
-            document.getElementById("message").innerText = "";
-
-        };
+                }
+            );
 
     </script>
 
+
 </body>
+
 </html>
