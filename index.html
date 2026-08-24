@@ -3,30 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Plus One Student System</title>
 
 <style>
+
 /* =========================================================
    THEME TOKENS — Liquid Glass x Neumorphism
-   Each [data-theme] block defines the full palette.
-   Default (no attribute) = Cyber Violet.
 ========================================================= */
 
 :root{
   --bg:#05030b;
-  --c1:#3b0f6b; --c2:#a855f7; --c3:#3d4fd9;
-  --text:#f4f2f8; --muted:#b6aec9;
-  --accent-a:#7c3aed; --accent-b:#a855f7;
+  --c1:#3b0f6b;
+  --c2:#a855f7;
+  --c3:#3d4fd9;
+
+  --text:#f4f2f8;
+  --muted:#b6aec9;
+
+  --accent-a:#7c3aed;
+  --accent-b:#a855f7;
+
   --highlight:#22d3ee;
   --phantom:#4c5fe8;
+
   --glow:rgba(168,85,247,.55);
-  --glass-bg:rgba(20,17,28,.5); --glass-bg-strong:rgba(32,27,44,.68);
+
+  --glass-bg:rgba(20,17,28,.5);
+  --glass-bg-strong:rgba(32,27,44,.68);
+
   --glass-border:rgba(168,85,247,.2);
-  --shadow-dark:rgba(0,0,0,.7); --shadow-light:rgba(168,85,247,.08);
-  --danger:#dc2626; --success:#22d3ee;
+
+  --shadow-dark:rgba(0,0,0,.7);
+  --shadow-light:rgba(168,85,247,.08);
+
+  --danger:#dc2626;
+  --success:#22d3ee;
 }
 
-*{ margin:0; padding:0; box-sizing:border-box; }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
 body{
   font-family:'Segoe UI',Arial,Helvetica,sans-serif;
@@ -35,119 +54,319 @@ body{
   min-height:100vh;
   position:relative;
   overflow-x:hidden;
-  transition:background .5s ease, color .5s ease;
+  transition:background .5s ease,color .5s ease;
 }
 
-/* ambient liquid blobs behind everything */
-.bg-blobs{ position:fixed; inset:0; z-index:-1; overflow:hidden; }
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+.bg-blobs{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  overflow:hidden;
+}
+
 .bg-blobs span{
-  position:absolute; filter:blur(100px); opacity:.6;
+  position:absolute;
+  filter:blur(100px);
+  opacity:.6;
   transition:background .5s ease;
   border-radius:58% 42% 65% 35% / 45% 55% 45% 55%;
 }
-.bg-blobs span:nth-child(1){ width:560px; height:560px; background:var(--c1); top:-180px; left:-140px; animation:liquid1 24s ease-in-out infinite; }
-.bg-blobs span:nth-child(2){ width:500px; height:500px; background:var(--c2); bottom:-160px; right:-120px; animation:liquid2 28s ease-in-out infinite; }
-.bg-blobs span:nth-child(3){ width:420px; height:420px; background:var(--c3); top:40%; left:50%; opacity:.4; animation:liquid3 32s ease-in-out infinite; }
+
+.bg-blobs span:nth-child(1){
+  width:560px;
+  height:560px;
+  background:var(--c1);
+  top:-180px;
+  left:-140px;
+  animation:liquid1 24s ease-in-out infinite;
+}
+
+.bg-blobs span:nth-child(2){
+  width:500px;
+  height:500px;
+  background:var(--c2);
+  bottom:-160px;
+  right:-120px;
+  animation:liquid2 28s ease-in-out infinite;
+}
+
+.bg-blobs span:nth-child(3){
+  width:420px;
+  height:420px;
+  background:var(--c3);
+  top:40%;
+  left:50%;
+  opacity:.4;
+  animation:liquid3 32s ease-in-out infinite;
+}
 
 @keyframes liquid1{
-  0%,100%{ transform:translate(0,0) rotate(0deg); border-radius:58% 42% 65% 35% / 45% 55% 45% 55%; }
-  33%{ transform:translate(70px,90px) rotate(40deg); border-radius:42% 58% 40% 60% / 60% 40% 60% 40%; }
-  66%{ transform:translate(30px,-40px) rotate(-25deg); border-radius:65% 35% 55% 45% / 40% 60% 35% 65%; }
+  0%,100%{
+    transform:translate(0,0) rotate(0deg);
+    border-radius:58% 42% 65% 35% / 45% 55% 45% 55%;
+  }
+
+  33%{
+    transform:translate(70px,90px) rotate(40deg);
+    border-radius:42% 58% 40% 60% / 60% 40% 60% 40%;
+  }
+
+  66%{
+    transform:translate(30px,-40px) rotate(-25deg);
+    border-radius:65% 35% 55% 45% / 40% 60% 35% 65%;
+  }
 }
+
 @keyframes liquid2{
-  0%,100%{ transform:translate(0,0) rotate(0deg); border-radius:60% 40% 45% 55% / 55% 45% 60% 40%; }
-  50%{ transform:translate(-80px,-60px) rotate(-30deg); border-radius:40% 60% 60% 40% / 45% 55% 40% 60%; }
+  0%,100%{
+    transform:translate(0,0) rotate(0deg);
+  }
+
+  50%{
+    transform:translate(-80px,-60px) rotate(-30deg);
+  }
 }
+
 @keyframes liquid3{
-  0%,100%{ transform:translate(-50%,-50%) scale(1) rotate(0deg); }
-  50%{ transform:translate(-50%,-50%) scale(1.25) rotate(50deg); }
+  0%,100%{
+    transform:translate(-50%,-50%) scale(1) rotate(0deg);
+  }
+
+  50%{
+    transform:translate(-50%,-50%) scale(1.25) rotate(50deg);
+  }
 }
 
-/* spectral particles drifting up through the void */
-.particles{ position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none; }
+/* =========================================================
+   PARTICLES
+========================================================= */
+
+.particles{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  overflow:hidden;
+  pointer-events:none;
+}
+
 .particles span{
-  position:absolute; bottom:-24px; border-radius:50%;
-  background:var(--pc); box-shadow:0 0 10px 2px var(--pc);
-  opacity:0; animation-name:particleRise; animation-timing-function:linear; animation-iteration-count:infinite;
-}
-@keyframes particleRise{
-  0%{ transform:translateY(0) translateX(0) scale(.6); opacity:0; }
-  8%{ opacity:.9; }
-  85%{ opacity:.5; }
-  100%{ transform:translateY(-112vh) translateX(24px) scale(1); opacity:0; }
+  position:absolute;
+  bottom:-24px;
+  border-radius:50%;
+  background:var(--pc);
+  box-shadow:0 0 10px 2px var(--pc);
+  opacity:0;
+  animation-name:particleRise;
+  animation-timing-function:linear;
+  animation-iteration-count:infinite;
 }
 
-.page{ display:none; }
-.page.active{ display:block; animation:pageIn .55s ease both; }
+@keyframes particleRise{
+  0%{
+    transform:translateY(0) translateX(0) scale(.6);
+    opacity:0;
+  }
+
+  8%{
+    opacity:.9;
+  }
+
+  85%{
+    opacity:.5;
+  }
+
+  100%{
+    transform:translateY(-112vh) translateX(24px) scale(1);
+    opacity:0;
+  }
+}
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+  animation:pageIn .55s ease both;
+}
 
 @keyframes pageIn{
-  from{ opacity:0; transform:translateY(16px); }
-  to{ opacity:1; transform:translateY(0); }
+  from{
+    opacity:0;
+    transform:translateY(16px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
 }
 
-/* staggered entrance for cards */
-.lobby-card, .feature-card, .form-card, .result-card, .password-box{
+/* =========================================================
+   CARDS
+========================================================= */
+
+.lobby-card,
+.feature-card,
+.form-card,
+.result-card,
+.password-box{
   animation:cardIn .6s cubic-bezier(.22,.7,.3,1) both;
 }
-.lobby-container .lobby-card:nth-child(1),
-.feature-grid .feature-card:nth-child(1){ animation-delay:.05s; }
-.lobby-container .lobby-card:nth-child(2),
-.feature-grid .feature-card:nth-child(2){ animation-delay:.15s; }
-.feature-grid .feature-card:nth-child(3){ animation-delay:.25s; }
-.feature-grid .feature-card:nth-child(4){ animation-delay:.35s; }
 
 @keyframes cardIn{
-  from{ opacity:0; transform:translateY(26px) scale(.96); }
-  to{ opacity:1; transform:translateY(0) scale(1); }
+  from{
+    opacity:0;
+    transform:translateY(26px) scale(.96);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
 }
 
-/* gentle bob for emoji icons */
-.icon, .feature-icon{ animation:iconFloat 4.2s ease-in-out infinite; }
+/* =========================================================
+   ICONS
+========================================================= */
+
+.icon,
+.feature-icon{
+  animation:iconFloat 4.2s ease-in-out infinite;
+}
+
 @keyframes iconFloat{
-  0%,100%{ transform:translateY(0); }
-  50%{ transform:translateY(-7px); }
+  0%,100%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-7px);
+  }
 }
 
-/* header title breathing glow */
-header h1{ animation:titleGlow 3.6s ease-in-out infinite; }
+/* =========================================================
+   HEADER
+========================================================= */
+
+header{
+  position:relative;
+  text-align:center;
+  padding:48px 20px 40px;
+
+  background:linear-gradient(
+    135deg,
+    rgba(255,255,255,.14),
+    var(--glass-bg)
+  );
+
+  border-bottom:1px solid var(--glass-border);
+
+  backdrop-filter:blur(26px) saturate(170%);
+  -webkit-backdrop-filter:blur(26px) saturate(170%);
+
+  box-shadow:
+    0 10px 30px var(--shadow-dark),
+    inset 0 -1px 0 rgba(255,255,255,.12);
+}
+
+header h1{
+  font-size:clamp(26px,5vw,38px);
+  letter-spacing:3px;
+  font-weight:800;
+
+  background:linear-gradient(
+    120deg,
+    var(--accent-a),
+    var(--accent-b)
+  );
+
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+
+  filter:drop-shadow(0 0 18px var(--glow));
+
+  animation:titleGlow 3.6s ease-in-out infinite;
+}
+
 @keyframes titleGlow{
-  0%,100%{ filter:drop-shadow(0 0 16px var(--glow)); }
-  50%{ filter:drop-shadow(0 0 30px var(--glow)); }
+  0%,100%{
+    filter:drop-shadow(0 0 16px var(--glow));
+  }
+
+  50%{
+    filter:drop-shadow(0 0 30px var(--glow));
+  }
 }
 
-/* status messages slide in */
-.success, .error{ animation:msgIn .35s ease both; }
-@keyframes msgIn{
-  from{ opacity:0; transform:translateY(-6px); }
-  to{ opacity:1; transform:translateY(0); }
+header p{
+  margin-top:10px;
+  color:var(--muted);
+  font-size:16px;
+  letter-spacing:.5px;
 }
 
-/* spinning ring for loading states */
-.loading{ position:relative; }
-.loading::before{
-  content:''; display:inline-block; width:16px; height:16px; margin-right:10px; vertical-align:-3px;
-  border:3px solid var(--glass-border); border-top-color:var(--highlight);
-  border-radius:50%; animation:spin .8s linear infinite;
-}
-@keyframes spin{ to{ transform:rotate(360deg); } }
+/* =========================================================
+   CONTAINER
+========================================================= */
 
-@media (prefers-reduced-motion: reduce){
-  .bg-blobs span, .particles span, .page.active, .lobby-card, .feature-card,
-  .form-card, .result-card, .password-box, .icon, .feature-icon, header h1,
-  .success, .error{ animation:none !important; }
+.container{
+  width:92%;
+  max-width:1100px;
+  margin:45px auto;
+  position:relative;
 }
 
-/* =========================
-   LIQUID GLASS + NEUMORPHIC SURFACE
-   Frosted, translucent panel with a diagonal sheen,
-   sitting on the page like a soft, pressed/raised
-   neumorphic slab (dual soft shadows).
-========================== */
+/* =========================================================
+   TITLES
+========================================================= */
+
+.welcome,
+.dashboard-title{
+  text-align:center;
+  margin-bottom:40px;
+}
+
+.welcome h2,
+.dashboard-title h2{
+  font-size:28px;
+  margin-bottom:10px;
+  font-weight:700;
+}
+
+.welcome p,
+.dashboard-title p{
+  color:var(--muted);
+  font-size:16px;
+}
+
+/* =========================================================
+   GLASS
+========================================================= */
+
 .glass{
-  background:linear-gradient(135deg, rgba(255,255,255,.20) 0%, var(--glass-bg-strong) 18%, var(--glass-bg) 55%, var(--glass-bg-strong) 100%);
+  background:linear-gradient(
+    135deg,
+    rgba(255,255,255,.20) 0%,
+    var(--glass-bg-strong) 18%,
+    var(--glass-bg) 55%,
+    var(--glass-bg-strong) 100%
+  );
+
   border:1px solid var(--glass-border);
+
   backdrop-filter:blur(24px) saturate(170%);
   -webkit-backdrop-filter:blur(24px) saturate(170%);
+
   box-shadow:
     10px 10px 26px var(--shadow-dark),
     -10px -10px 24px var(--shadow-light),
@@ -156,1079 +375,3673 @@ header h1{ animation:titleGlow 3.6s ease-in-out infinite; }
     inset 0 -10px 18px -14px rgba(0,0,0,.3);
 }
 
-/* =========================
-   HEADER
-========================== */
-header{
-  position:relative;
-  text-align:center;
-  padding:48px 20px 40px;
-  background:linear-gradient(135deg, rgba(255,255,255,.14), var(--glass-bg));
-  border-bottom:1px solid var(--glass-border);
-  backdrop-filter:blur(26px) saturate(170%);
-  -webkit-backdrop-filter:blur(26px) saturate(170%);
-  box-shadow:0 10px 30px var(--shadow-dark), inset 0 -1px 0 rgba(255,255,255,.12);
+/* =========================================================
+   LOBBY
+========================================================= */
+
+.lobby-container,
+.feature-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:22px;
 }
-header h1{
-  font-size:clamp(26px,5vw,38px);
-  letter-spacing:3px;
-  font-weight:800;
-  background:linear-gradient(120deg,var(--accent-a),var(--accent-b));
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  filter:drop-shadow(0 0 18px var(--glow));
-}
-header p{ margin-top:10px; color:var(--muted); font-size:16px; letter-spacing:.5px; }
 
-/* =========================
-   CONTAINER
-========================== */
-.container{ width:92%; max-width:1100px; margin:45px auto; position:relative; }
-
-/* =========================
-   WELCOME / DASHBOARD TITLE
-========================== */
-.welcome, .dashboard-title{ text-align:center; margin-bottom:40px; }
-.welcome h2, .dashboard-title h2{ font-size:28px; margin-bottom:10px; font-weight:700; }
-.welcome p, .dashboard-title p{ color:var(--muted); font-size:16px; }
-
-/* =========================
-   LOBBY / FEATURE GRIDS
-========================== */
-.lobby-container, .feature-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:22px; }
-
-.lobby-card, .feature-card{
+.lobby-card,
+.feature-card{
   border-radius:38% 62% 60% 40% / 42% 38% 62% 58%;
   padding:36px 26px;
   text-align:center;
-  transition:transform .3s ease, box-shadow .3s ease, border-radius .5s ease, border-color .3s ease;
+
+  transition:
+    transform .3s ease,
+    box-shadow .3s ease,
+    border-radius .5s ease,
+    border-color .3s ease;
 }
-.lobby-card:hover, .feature-card:hover{
+
+.lobby-card:hover,
+.feature-card:hover{
   transform:translateY(-6px);
   border-color:var(--accent-a);
   border-radius:28px;
+
   box-shadow:
     14px 14px 34px var(--shadow-dark),
     -12px -12px 28px var(--shadow-light),
     0 0 36px -6px var(--glow),
     inset 0 1px 1px rgba(255,255,255,.3);
 }
-.feature-card.clickable{ cursor:pointer; }
 
-.icon, .feature-icon{ font-size:52px; margin-bottom:14px; filter:drop-shadow(0 0 14px var(--glow)); }
-.feature-icon{ font-size:40px; }
+.feature-card.clickable{
+  cursor:pointer;
+}
 
-.lobby-card h3, .feature-card h3{ font-size:22px; margin-bottom:9px; font-weight:700; }
-.lobby-card p, .feature-card p{ color:var(--muted); line-height:1.6; margin-bottom:22px; font-size:14.5px; }
-.feature-card p{ margin-bottom:0; }
+.icon,
+.feature-icon{
+  font-size:52px;
+  margin-bottom:14px;
+  filter:drop-shadow(0 0 14px var(--glow));
+}
 
-.teacher-feature{ border-left:3px solid var(--phantom); }
+.feature-icon{
+  font-size:40px;
+}
 
-/* =========================
-   BUTTONS — liquid pill blobs, neumorphic press
-========================== */
-button{ cursor:pointer; font-family:inherit; }
+.lobby-card h3,
+.feature-card h3{
+  font-size:22px;
+  margin-bottom:9px;
+  font-weight:700;
+}
 
-.lobby-button, .primary-button{
-  position:relative; width:100%; border:none; padding:15px; border-radius:50px;
-  font-size:16px; font-weight:700; letter-spacing:.3px; color:#fff;
-  background:linear-gradient(135deg,var(--accent-a),var(--accent-b));
+.lobby-card p,
+.feature-card p{
+  color:var(--muted);
+  line-height:1.6;
+  margin-bottom:22px;
+  font-size:14.5px;
+}
+
+.feature-card p{
+  margin-bottom:0;
+}
+
+.teacher-feature{
+  border-left:3px solid var(--phantom);
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+button{
+  cursor:pointer;
+  font-family:inherit;
+}
+
+.lobby-button,
+.primary-button{
+  position:relative;
+  width:100%;
+  border:none;
+  padding:15px;
+  border-radius:50px;
+
+  font-size:16px;
+  font-weight:700;
+  letter-spacing:.3px;
+  color:#fff;
+
+  background:linear-gradient(
+    135deg,
+    var(--accent-a),
+    var(--accent-b)
+  );
+
   box-shadow:
     7px 7px 16px var(--shadow-dark),
     -5px -5px 12px var(--shadow-light),
     0 0 26px -6px var(--glow),
     inset 0 1px 0 rgba(255,255,255,.45),
     inset 0 -6px 10px -6px rgba(0,0,0,.28);
-  transition:transform .15s ease, box-shadow .15s ease, opacity .2s ease;
-}
-.primary-button{ width:auto; padding:13px 26px; margin-top:16px; }
-.lobby-button:hover, .primary-button:hover{ transform:translateY(-3px); box-shadow:10px 10px 22px var(--shadow-dark), -7px -7px 16px var(--shadow-light), 0 0 34px -4px var(--glow), inset 0 1px 0 rgba(255,255,255,.5); }
-.lobby-button:active, .primary-button:active{
-  transform:translateY(0) scale(.97);
-  box-shadow:inset 6px 6px 14px rgba(0,0,0,.35), inset -6px -6px 12px rgba(255,255,255,.12);
+
+  transition:
+    transform .15s ease,
+    box-shadow .15s ease,
+    opacity .2s ease;
 }
 
-.teacher-button{ background:linear-gradient(135deg,var(--phantom),#1e1b4b); box-shadow:7px 7px 16px var(--shadow-dark), -5px -5px 12px var(--shadow-light), 0 0 24px -8px var(--phantom), inset 0 1px 0 rgba(255,255,255,.25); }
+.primary-button{
+  width:auto;
+  padding:13px 26px;
+  margin-top:16px;
+}
+
+.lobby-button:hover,
+.primary-button:hover{
+  transform:translateY(-3px);
+}
+
+.lobby-button:active,
+.primary-button:active{
+  transform:translateY(0) scale(.97);
+}
+
+.teacher-button{
+  background:linear-gradient(
+    135deg,
+    var(--phantom),
+    #1e1b4b
+  );
+}
 
 .back-button{
-  border:1px solid var(--glass-border); background:linear-gradient(135deg, rgba(255,255,255,.14), var(--glass-bg));
-  backdrop-filter:blur(16px); color:var(--text);
-  padding:11px 20px; border-radius:50px; font-size:14.5px; margin-bottom:25px;
-  box-shadow:5px 5px 12px var(--shadow-dark), -4px -4px 10px var(--shadow-light);
+  border:1px solid var(--glass-border);
+
+  background:linear-gradient(
+    135deg,
+    rgba(255,255,255,.14),
+    var(--glass-bg)
+  );
+
+  backdrop-filter:blur(16px);
+
+  color:var(--text);
+
+  padding:11px 20px;
+  border-radius:50px;
+  font-size:14.5px;
+  margin-bottom:25px;
+
+  box-shadow:
+    5px 5px 12px var(--shadow-dark),
+    -4px -4px 10px var(--shadow-light);
+
   transition:.2s;
 }
-.back-button:hover{ border-color:var(--accent-a); transform:translateY(-2px); }
-.back-button:active{ box-shadow:inset 4px 4px 10px var(--shadow-dark), inset -3px -3px 8px var(--shadow-light); transform:translateY(0); }
 
-.danger-button{ border:none; padding:9px 16px; border-radius:50px; color:#fff; background:linear-gradient(135deg,var(--danger),#991b1b); box-shadow:4px 4px 10px var(--shadow-dark), -3px -3px 8px var(--shadow-light), inset 0 1px 0 rgba(255,255,255,.3); }
-.edit-button{ border:none; padding:9px 16px; border-radius:50px; color:#fff; background:linear-gradient(135deg,var(--success),#047857); margin-right:6px; box-shadow:4px 4px 10px var(--shadow-dark), -3px -3px 8px var(--shadow-light), inset 0 1px 0 rgba(255,255,255,.3); }
-.secondary-button{ border:1px solid var(--glass-border); background:linear-gradient(135deg, rgba(255,255,255,.12), var(--glass-bg)); color:var(--text); padding:11px 20px; border-radius:50px; margin-left:8px; box-shadow:4px 4px 10px var(--shadow-dark), -3px -3px 8px var(--shadow-light); }
+.back-button:hover{
+  border-color:var(--accent-a);
+  transform:translateY(-2px);
+}
 
-/* =========================
-   FORMS
-========================== */
-.form-card{ border-radius:26px; padding:30px; margin-bottom:24px; }
-.form-card h2{ margin-bottom:20px; font-size:21px; }
+.danger-button{
+  border:none;
+  padding:9px 16px;
+  border-radius:50px;
+  color:#fff;
 
-.form-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
-.form-group{ display:flex; flex-direction:column; }
-.form-group.full{ grid-column:1/-1; }
+  background:linear-gradient(
+    135deg,
+    var(--danger),
+    #991b1b
+  );
+}
 
-label{ font-weight:700; font-size:13px; margin-bottom:7px; color:var(--muted); letter-spacing:.3px; text-transform:uppercase; }
+.edit-button{
+  border:none;
+  padding:9px 16px;
+  border-radius:50px;
+  color:#fff;
 
-/* neumorphic "carved in" liquid fields */
-input, select, textarea{
-  width:100%; padding:14px 16px; border-radius:16px; font-size:15px; outline:none;
-  color:var(--text); background:var(--bg);
+  background:linear-gradient(
+    135deg,
+    var(--success),
+    #047857
+  );
+
+  margin-right:6px;
+}
+
+.secondary-button{
   border:1px solid var(--glass-border);
+
+  background:linear-gradient(
+    135deg,
+    rgba(255,255,255,.12),
+    var(--glass-bg)
+  );
+
+  color:var(--text);
+
+  padding:11px 20px;
+  border-radius:50px;
+  margin-left:8px;
+}
+
+/* =========================================================
+   FORMS
+========================================================= */
+
+.form-card{
+  border-radius:26px;
+  padding:30px;
+  margin-bottom:24px;
+}
+
+.form-card h2{
+  margin-bottom:20px;
+  font-size:21px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+}
+
+.form-group{
+  display:flex;
+  flex-direction:column;
+}
+
+.form-group.full{
+  grid-column:1/-1;
+}
+
+label{
+  font-weight:700;
+  font-size:13px;
+  margin-bottom:7px;
+  color:var(--muted);
+  letter-spacing:.3px;
+  text-transform:uppercase;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  padding:14px 16px;
+  border-radius:16px;
+  font-size:15px;
+  outline:none;
+
+  color:var(--text);
+  background:var(--bg);
+
+  border:1px solid var(--glass-border);
+
   box-shadow:
     inset 6px 6px 12px var(--shadow-dark),
     inset -5px -5px 10px var(--shadow-light);
-  transition:box-shadow .2s, border-color .2s;
+
+  transition:
+    box-shadow .2s,
+    border-color .2s;
 }
-input::placeholder, textarea::placeholder{ color:var(--muted); opacity:.7; }
-input:focus, select:focus, textarea:focus{
+
+input::placeholder,
+textarea::placeholder{
+  color:var(--muted);
+  opacity:.7;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
   border-color:var(--highlight);
+
   box-shadow:
     inset 6px 6px 12px var(--shadow-dark),
     inset -5px -5px 10px var(--shadow-light),
     0 0 0 3px rgba(34,211,238,.35);
 }
-textarea{ min-height:120px; resize:vertical; }
 
-/* =========================
-   PASSWORD
-========================== */
-.password-box{ max-width:440px; margin:0 auto; border-radius:34px; padding:36px; text-align:center; }
-.password-box .icon{ font-size:52px; }
-.password-box h2{ margin-bottom:10px; }
-.password-box p{ color:var(--muted); margin-bottom:24px; }
-.password-box input{ margin-bottom:15px; }
-.password-box button{
-  width:100%; padding:14px; border:none; border-radius:50px;
-  background:linear-gradient(135deg,var(--accent-a),var(--accent-b)); color:#fff; font-size:16px; font-weight:700;
-  box-shadow:7px 7px 16px var(--shadow-dark), -5px -5px 12px var(--shadow-light), 0 0 26px -6px var(--glow), inset 0 1px 0 rgba(255,255,255,.4);
+textarea{
+  min-height:120px;
+  resize:vertical;
 }
-.password-box button:active{ box-shadow:inset 6px 6px 14px rgba(0,0,0,.35), inset -6px -6px 12px rgba(255,255,255,.12); }
 
-.error{ display:none; color:#fca5a5; margin-top:12px; font-size:14px; font-weight:600; }
-.success{ color:#6ee7b7; margin-top:12px; font-weight:700; }
+/* =========================================================
+   MARK INPUT GROUP
+========================================================= */
 
-/* =========================
+.mark-group{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.mark-group input{
+  min-width:0;
+}
+
+.mark-label{
+  font-size:11px;
+  color:var(--muted);
+  margin-bottom:5px;
+  text-transform:none;
+}
+
+/* =========================================================
+   PASSWORD
+========================================================= */
+
+.password-box{
+  max-width:440px;
+  margin:0 auto;
+  border-radius:34px;
+  padding:36px;
+  text-align:center;
+}
+
+.password-box .icon{
+  font-size:52px;
+}
+
+.password-box h2{
+  margin-bottom:10px;
+}
+
+.password-box p{
+  color:var(--muted);
+  margin-bottom:24px;
+}
+
+.password-box input{
+  margin-bottom:15px;
+}
+
+.password-box button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:50px;
+
+  background:linear-gradient(
+    135deg,
+    var(--accent-a),
+    var(--accent-b)
+  );
+
+  color:#fff;
+  font-size:16px;
+  font-weight:700;
+}
+
+.error{
+  display:none;
+  color:#fca5a5;
+  margin-top:12px;
+  font-size:14px;
+  font-weight:600;
+}
+
+.success{
+  color:#6ee7b7;
+  margin-top:12px;
+  font-weight:700;
+}
+
+/* =========================================================
    RESULTS
-========================== */
-.result-search{ display:flex; gap:10px; margin-bottom:25px; }
-.result-search input{ flex:1; }
+========================================================= */
 
-.result-card{ border-radius:26px; padding:26px; margin-bottom:20px; }
+.result-search{
+  display:flex;
+  gap:10px;
+  margin-bottom:25px;
+}
 
-.student-header{ display:flex; justify-content:space-between; align-items:center; gap:15px; margin-bottom:18px; flex-wrap:wrap; }
-.student-header h2{ background:linear-gradient(120deg,var(--accent-a),var(--accent-b)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.result-search input{
+  flex:1;
+}
+
+.result-card{
+  border-radius:26px;
+  padding:26px;
+  margin-bottom:20px;
+}
+
+.student-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:18px;
+  flex-wrap:wrap;
+}
+
+.student-header h2{
+  background:linear-gradient(
+    120deg,
+    var(--accent-a),
+    var(--accent-b)
+  );
+
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
 
 .exam-title{
-  display:inline-block; background:linear-gradient(135deg, rgba(255,255,255,.16), var(--glass-bg-strong)); color:var(--highlight);
-  border:1px solid rgba(34,211,238,.3); padding:7px 16px; border-radius:50px;
-  font-size:12.5px; font-weight:700; letter-spacing:.4px; margin-bottom:10px;
-  box-shadow:3px 3px 8px var(--shadow-dark), -2px -2px 6px var(--shadow-light);
+  display:inline-block;
+
+  background:linear-gradient(
+    135deg,
+    rgba(255,255,255,.16),
+    var(--glass-bg-strong)
+  );
+
+  color:var(--highlight);
+
+  border:1px solid rgba(34,211,238,.3);
+
+  padding:7px 16px;
+  border-radius:50px;
+
+  font-size:12.5px;
+  font-weight:700;
+
+  margin-bottom:10px;
 }
 
-.marks-table{ width:100%; border-collapse:collapse; margin-top:14px; }
-.marks-table th, .marks-table td{ padding:12px; border-bottom:1px solid var(--glass-border); text-align:left; }
-.marks-table th{ color:var(--muted); font-size:12.5px; letter-spacing:.4px; text-transform:uppercase; }
-.grade{ font-weight:800; color:var(--highlight); text-shadow:0 0 10px rgba(34,211,238,.5); }
+.exam-date{
+  color:var(--muted);
+  font-size:12px;
+  margin-left:8px;
+}
+
+.marks-table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:14px;
+}
+
+.marks-table th,
+.marks-table td{
+  padding:12px;
+  border-bottom:1px solid var(--glass-border);
+  text-align:left;
+}
+
+.marks-table th{
+  color:var(--muted);
+  font-size:12.5px;
+  letter-spacing:.4px;
+  text-transform:uppercase;
+}
+
+.grade{
+  font-weight:800;
+  color:var(--highlight);
+  text-shadow:0 0 10px rgba(34,211,238,.5);
+}
 
 .total-box{
-  margin-top:16px; padding:15px 20px; border-radius:18px;
-  background:linear-gradient(135deg, rgba(255,255,255,.12), var(--glass-bg-strong));
-  border:1px solid var(--glass-border); display:flex; justify-content:space-between; font-weight:800;
-  box-shadow:inset 4px 4px 10px var(--shadow-dark), inset -3px -3px 8px var(--shadow-light);
+  margin-top:16px;
+  padding:15px 20px;
+  border-radius:18px;
+
+  background:linear-gradient(
+    135deg,
+    rgba(255,255,255,.12),
+    var(--glass-bg-strong)
+  );
+
+  border:1px solid var(--glass-border);
+
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+
+  font-weight:800;
+
+  box-shadow:
+    inset 4px 4px 10px var(--shadow-dark),
+    inset -3px -3px 8px var(--shadow-light);
+
+  flex-wrap:wrap;
 }
 
-/* =========================
-   TEACHER STUDENT LIST
-========================== */
-.student-list{ overflow-x:auto; }
-.data-table{ width:100%; border-collapse:collapse; min-width:700px; }
-.data-table th, .data-table td{ padding:12px; border-bottom:1px solid var(--glass-border); text-align:left; }
-.data-table th{ color:var(--muted); font-size:12.5px; letter-spacing:.4px; text-transform:uppercase; }
+.percentage-box{
+  margin-top:10px;
+  padding:13px 20px;
+  border-radius:18px;
 
-.empty, .loading{ text-align:center; padding:30px; color:var(--muted); }
+  border:1px solid rgba(34,211,238,.25);
 
-/* =========================
+  background:rgba(34,211,238,.05);
+
+  display:flex;
+  justify-content:space-between;
+
+  color:var(--highlight);
+  font-weight:800;
+}
+
+/* =========================================================
+   TEACHER LIST
+========================================================= */
+
+.student-list{
+  overflow-x:auto;
+}
+
+.data-table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:700px;
+}
+
+.data-table th,
+.data-table td{
+  padding:12px;
+  border-bottom:1px solid var(--glass-border);
+  text-align:left;
+}
+
+.data-table th{
+  color:var(--muted);
+  font-size:12.5px;
+  letter-spacing:.4px;
+  text-transform:uppercase;
+}
+
+.date-text{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:7px;
+}
+
+/* =========================================================
    FOOTER
-========================== */
-footer{ text-align:center; padding:30px; color:var(--muted); font-size:13.5px; }
+========================================================= */
 
-/* =========================
-   MOBILE
-========================== */
-@media (max-width:700px){
-  header h1{ font-size:24px; }
-  .lobby-container, .feature-grid, .form-grid{ grid-template-columns:1fr; }
-  .form-group.full{ grid-column:auto; }
-  .container{ margin-top:30px; }
-  .result-search{ flex-direction:column; }
-  .student-header{ flex-direction:column; align-items:flex-start; }
-  .marks-table th, .marks-table td{ padding:9px; font-size:13.5px; }
-  .lobby-card, .feature-card{ border-radius:26px; }
+footer{
+  text-align:center;
+  padding:30px;
+  color:var(--muted);
+  font-size:13.5px;
 }
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width:700px){
+
+  header h1{
+    font-size:24px;
+  }
+
+  .lobby-container,
+  .feature-grid,
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .form-group.full{
+    grid-column:auto;
+  }
+
+  .container{
+    margin-top:30px;
+  }
+
+  .result-search{
+    flex-direction:column;
+  }
+
+  .student-header{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .marks-table th,
+  .marks-table td{
+    padding:9px;
+    font-size:13.5px;
+  }
+
+  .lobby-card,
+  .feature-card{
+    border-radius:26px;
+  }
+
+  .mark-group{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
 </style>
 </head>
+
 <body>
 
-<div class="bg-blobs"><span></span><span></span><span></span></div>
+<div class="bg-blobs">
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
 
 <div class="particles" aria-hidden="true">
-  <span style="left:6%;  width:3px; height:3px; animation-duration:14s; animation-delay:0s;   --pc:var(--highlight);"></span>
-  <span style="left:14%; width:2px; height:2px; animation-duration:11s; animation-delay:2s;   --pc:var(--accent-b);"></span>
-  <span style="left:23%; width:4px; height:4px; animation-duration:17s; animation-delay:1s;   --pc:var(--danger);"></span>
-  <span style="left:32%; width:2px; height:2px; animation-duration:13s; animation-delay:4s;   --pc:var(--highlight);"></span>
-  <span style="left:41%; width:3px; height:3px; animation-duration:16s; animation-delay:.5s;  --pc:var(--accent-a);"></span>
-  <span style="left:52%; width:2px; height:2px; animation-duration:12s; animation-delay:3s;   --pc:var(--highlight);"></span>
-  <span style="left:61%; width:4px; height:4px; animation-duration:18s; animation-delay:6s;   --pc:var(--accent-b);"></span>
-  <span style="left:70%; width:2px; height:2px; animation-duration:10s; animation-delay:1.5s; --pc:var(--danger);"></span>
-  <span style="left:78%; width:3px; height:3px; animation-duration:15s; animation-delay:5s;   --pc:var(--highlight);"></span>
-  <span style="left:86%; width:2px; height:2px; animation-duration:13s; animation-delay:2.5s; --pc:var(--accent-a);"></span>
-  <span style="left:92%; width:3px; height:3px; animation-duration:19s; animation-delay:7s;   --pc:var(--highlight);"></span>
-  <span style="left:48%; width:2px; height:2px; animation-duration:14s; animation-delay:8s;   --pc:var(--accent-b);"></span>
+
+  <span style="left:6%;width:3px;height:3px;animation-duration:14s;animation-delay:0s;--pc:var(--highlight);"></span>
+
+  <span style="left:14%;width:2px;height:2px;animation-duration:11s;animation-delay:2s;--pc:var(--accent-b);"></span>
+
+  <span style="left:23%;width:4px;height:4px;animation-duration:17s;animation-delay:1s;--pc:var(--danger);"></span>
+
+  <span style="left:32%;width:2px;height:2px;animation-duration:13s;animation-delay:4s;--pc:var(--highlight);"></span>
+
+  <span style="left:41%;width:3px;height:3px;animation-duration:16s;animation-delay:.5s;--pc:var(--accent-a);"></span>
+
+  <span style="left:52%;width:2px;height:2px;animation-duration:12s;animation-delay:3s;--pc:var(--highlight);"></span>
+
+  <span style="left:61%;width:4px;height:4px;animation-duration:18s;animation-delay:6s;--pc:var(--accent-b);"></span>
+
+  <span style="left:70%;width:2px;height:2px;animation-duration:10s;animation-delay:1.5s;--pc:var(--danger);"></span>
+
+  <span style="left:78%;width:3px;height:3px;animation-duration:15s;animation-delay:5s;--pc:var(--highlight);"></span>
+
+  <span style="left:86%;width:2px;height:2px;animation-duration:13s;animation-delay:2.5s;--pc:var(--accent-a);"></span>
+
+  <span style="left:92%;width:3px;height:3px;animation-duration:19s;animation-delay:7s;--pc:var(--highlight);"></span>
+
 </div>
+
 
 <!-- =====================================================
      HOME
 ====================================================== -->
+
 <div id="homePage" class="page active">
-  <header>
-    <h1>PLUS ONE</h1>
-    <p>Student Management System</p>
-  </header>
 
-  <main class="container">
-    <div class="welcome">
-      <h2>Welcome 👋</h2>
-      <p>Results, study materials, notes and class announcements in one place.</p>
+<header>
+  <h1>PLUS ONE</h1>
+  <p>Student Management System</p>
+</header>
+
+<main class="container">
+
+  <div class="welcome">
+    <h2>Welcome 👋</h2>
+    <p>Results, study materials, notes and class announcements in one place.</p>
+  </div>
+
+  <div class="lobby-container">
+
+    <div class="lobby-card glass">
+
+      <div class="icon">👨‍🎓</div>
+
+      <h3>Student / Parent</h3>
+
+      <p>
+        View examination results, study materials,
+        notes and class announcements.
+      </p>
+
+      <button class="lobby-button"
+        onclick="openStudentLobby()">
+        Enter Student Lobby
+      </button>
+
     </div>
 
-    <div class="lobby-container">
-      <div class="lobby-card glass">
-        <div class="icon">👨‍🎓</div>
-        <h3>Student / Parent</h3>
-        <p>View examination results, study materials, notes and class announcements.</p>
-        <button class="lobby-button" onclick="openStudentLobby()">Enter Student Lobby</button>
-      </div>
 
-      <div class="lobby-card glass">
-        <div class="icon">👩‍🏫</div>
-        <h3>Teacher</h3>
-        <p>Manage students, marks, notes and announcements.</p>
-        <button class="lobby-button teacher-button" onclick="openTeacherLogin()">Enter Teacher Lobby 🔐</button>
-      </div>
+    <div class="lobby-card glass">
+
+      <div class="icon">👩‍🏫</div>
+
+      <h3>Teacher</h3>
+
+      <p>
+        Manage students, marks, notes and announcements.
+      </p>
+
+      <button class="lobby-button teacher-button"
+        onclick="openTeacherLogin()">
+        Enter Teacher Lobby 🔐
+      </button>
+
     </div>
-  </main>
 
-  <footer>© 2026 Plus One Student System</footer>
+  </div>
+
+</main>
+
+<footer>
+  © 2026 Plus One Student System
+</footer>
+
 </div>
+
 
 <!-- =====================================================
      STUDENT LOBBY
 ====================================================== -->
-<div id="studentLobby" class="page">
-  <header><h1>STUDENT LOBBY</h1><p>Plus One Student System</p></header>
-  <main class="container">
-    <button class="back-button" onclick="goHome()">← Back to Home</button>
-    <div class="dashboard-title"><h2>Welcome 👋</h2><p>Find everything for your class.</p></div>
 
-    <div class="feature-grid">
-      <div class="feature-card glass clickable" onclick="openResultsPage()">
-        <div class="feature-icon">📊</div><h3>Exam Results</h3>
-        <p>Search and view examination marks and grades.</p>
-      </div>
-      <div class="feature-card glass clickable">
-        <div class="feature-icon">📚</div><h3>Study Materials</h3>
-        <p>Subject-wise study materials will appear here.</p>
-      </div>
-      <div class="feature-card glass clickable" onclick="openNotesPage()">
-        <div class="feature-icon">📄</div><h3>Notes &amp; PDFs</h3>
-        <p>Access class notes and PDF study materials.</p>
-      </div>
-      <div class="feature-card glass clickable" onclick="openAnnouncementsPage()">
-        <div class="feature-icon">📢</div><h3>Announcements</h3>
-        <p>Important class announcements from your teacher.</p>
-      </div>
-    </div>
-  </main>
+<div id="studentLobby" class="page">
+
+<header>
+  <h1>STUDENT LOBBY</h1>
+  <p>Plus One Student System</p>
+</header>
+
+<main class="container">
+
+<button class="back-button" onclick="goHome()">
+  ← Back to Home
+</button>
+
+<div class="dashboard-title">
+  <h2>Welcome 👋</h2>
+  <p>Find everything for your class.</p>
 </div>
+
+<div class="feature-grid">
+
+  <div class="feature-card glass clickable"
+       onclick="openResultsPage()">
+
+    <div class="feature-icon">📊</div>
+
+    <h3>Exam Results</h3>
+
+    <p>
+      Search and view examination marks and grades.
+    </p>
+
+  </div>
+
+
+  <div class="feature-card glass clickable">
+
+    <div class="feature-icon">📚</div>
+
+    <h3>Study Materials</h3>
+
+    <p>
+      Subject-wise study materials will appear here.
+    </p>
+
+  </div>
+
+
+  <div class="feature-card glass clickable"
+       onclick="openNotesPage()">
+
+    <div class="feature-icon">📄</div>
+
+    <h3>Notes & PDFs</h3>
+
+    <p>
+      Access class notes and PDF study materials.
+    </p>
+
+  </div>
+
+
+  <div class="feature-card glass clickable"
+       onclick="openAnnouncementsPage()">
+
+    <div class="feature-icon">📢</div>
+
+    <h3>Announcements</h3>
+
+    <p>
+      Important class announcements from your teacher.
+    </p>
+
+  </div>
+
+</div>
+
+</main>
+
+</div>
+
 
 <!-- =====================================================
      STUDENT RESULTS
 ====================================================== -->
+
 <div id="resultsPage" class="page">
-  <header><h1>📊 EXAM RESULTS</h1><p>Student Examination Results</p></header>
-  <main class="container">
-    <button class="back-button" onclick="openStudentLobby()">← Back to Student Lobby</button>
-    <div class="dashboard-title"><h2>Find Your Result</h2><p>Enter your roll number or student name.</p></div>
 
-    <div class="result-search">
-      <input id="studentSearch" type="text" placeholder="Enter Roll Number or Student Name">
-      <button class="primary-button" onclick="searchResults()">🔍 Search</button>
-    </div>
+<header>
+  <h1>📊 EXAM RESULTS</h1>
+  <p>Student Examination Results</p>
+</header>
 
-    <div id="studentResults"><div class="empty">Enter your details and press Search.</div></div>
-  </main>
+<main class="container">
+
+<button class="back-button"
+        onclick="openStudentLobby()">
+  ← Back to Student Lobby
+</button>
+
+<div class="dashboard-title">
+
+  <h2>Find Your Result</h2>
+
+  <p>
+    Enter your roll number or student name.
+  </p>
+
 </div>
+
+<div class="result-search">
+
+  <input
+    id="studentSearch"
+    type="text"
+    placeholder="Enter Roll Number or Student Name"
+  >
+
+  <button class="primary-button"
+          onclick="searchResults()">
+    🔍 Search
+  </button>
+
+</div>
+
+<div id="studentResults">
+  <div class="empty">
+    Enter your details and press Search.
+  </div>
+</div>
+
+</main>
+
+</div>
+
 
 <!-- =====================================================
      TEACHER LOGIN
 ====================================================== -->
+
 <div id="teacherLogin" class="page">
-  <header><h1>TEACHER ACCESS</h1><p>Protected Teacher Area</p></header>
-  <main class="container">
-    <button class="back-button" onclick="goHome()">← Back to Home</button>
-    <div class="password-box glass">
-      <div class="icon">🔐</div>
-      <h2>Teacher Login</h2>
-      <p>Enter the teacher password to continue.</p>
-      <input type="password" id="teacherPassword" placeholder="Teacher password" autocomplete="off">
-      <button onclick="checkTeacherPassword()">Enter Teacher Lobby</button>
-      <div id="passwordError" class="error">Incorrect teacher password.</div>
-    </div>
-  </main>
+
+<header>
+  <h1>TEACHER ACCESS</h1>
+  <p>Protected Teacher Area</p>
+</header>
+
+<main class="container">
+
+<button class="back-button"
+        onclick="goHome()">
+  ← Back to Home
+</button>
+
+<div class="password-box glass">
+
+  <div class="icon">🔐</div>
+
+  <h2>Teacher Login</h2>
+
+  <p>
+    Enter the teacher password to continue.
+  </p>
+
+  <input
+    type="password"
+    id="teacherPassword"
+    placeholder="Teacher password"
+    autocomplete="off"
+  >
+
+  <button onclick="checkTeacherPassword()">
+    Enter Teacher Lobby
+  </button>
+
+  <div id="passwordError" class="error">
+    Incorrect teacher password.
+  </div>
+
 </div>
+
+</main>
+
+</div>
+
 
 <!-- =====================================================
      TEACHER LOBBY
 ====================================================== -->
-<div id="teacherLobby" class="page">
-  <header><h1>TEACHER LOBBY</h1><p>Management Dashboard</p></header>
-  <main class="container">
-    <button class="back-button" onclick="goHome()">← Back to Home</button>
-    <div class="dashboard-title"><h2>Teacher Dashboard 👩‍🏫</h2><p>Manage your Plus One class.</p></div>
 
-    <div class="feature-grid">
-      <div class="feature-card glass teacher-feature clickable" onclick="openTeacherResults()">
-        <div class="feature-icon">📊</div><h3>Marks Management</h3>
-        <p>Add, edit and delete student examination results.</p>
-      </div>
-      <div class="feature-card glass teacher-feature clickable" onclick="openTeacherNotes()">
-        <div class="feature-icon">📚</div><h3>Upload Notes</h3>
-        <p>Add notes and PDF links for students.</p>
-      </div>
-      <div class="feature-card glass teacher-feature clickable" onclick="openTeacherAnnouncements()">
-        <div class="feature-icon">📢</div><h3>Announcements</h3>
-        <p>Create and manage class announcements.</p>
-      </div>
-      <div class="feature-card glass teacher-feature clickable" onclick="loadTeacherStudents()">
-        <div class="feature-icon">👨‍🎓</div><h3>Student Management</h3>
-        <p>View all students stored in Firebase.</p>
-      </div>
-    </div>
-  </main>
+<div id="teacherLobby" class="page">
+
+<header>
+  <h1>TEACHER LOBBY</h1>
+  <p>Management Dashboard</p>
+</header>
+
+<main class="container">
+
+<button class="back-button"
+        onclick="goHome()">
+  ← Back to Home
+</button>
+
+<div class="dashboard-title">
+
+  <h2>Teacher Dashboard 👩‍🏫</h2>
+
+  <p>
+    Manage your Plus One class.
+  </p>
+
 </div>
+
+<div class="feature-grid">
+
+  <div class="feature-card glass teacher-feature clickable"
+       onclick="openTeacherResults()">
+
+    <div class="feature-icon">📊</div>
+
+    <h3>Marks Management</h3>
+
+    <p>
+      Add, edit and delete student examination results.
+    </p>
+
+  </div>
+
+
+  <div class="feature-card glass teacher-feature clickable"
+       onclick="openTeacherNotes()">
+
+    <div class="feature-icon">📚</div>
+
+    <h3>Upload Notes</h3>
+
+    <p>
+      Add notes and PDF links for students.
+    </p>
+
+  </div>
+
+
+  <div class="feature-card glass teacher-feature clickable"
+       onclick="openTeacherAnnouncements()">
+
+    <div class="feature-icon">📢</div>
+
+    <h3>Announcements</h3>
+
+    <p>
+      Create and manage class announcements.
+    </p>
+
+  </div>
+
+
+  <div class="feature-card glass teacher-feature clickable"
+       onclick="loadTeacherStudents()">
+
+    <div class="feature-icon">👨‍🎓</div>
+
+    <h3>Student Management</h3>
+
+    <p>
+      View all students stored in Firebase.
+    </p>
+
+  </div>
+
+</div>
+
+</main>
+
+</div>
+
 
 <!-- =====================================================
      TEACHER RESULTS
 ====================================================== -->
+
 <div id="teacherResults" class="page">
-  <header><h1>📊 MANAGE RESULTS</h1><p>Add and edit examination results</p></header>
-  <main class="container">
-    <button class="back-button" onclick="openTeacherLobby()">← Back to Teacher Lobby</button>
 
-    <div class="form-card glass">
-      <h2>➕ Add / Edit Student Result</h2>
-      <div class="form-grid">
-        <div class="form-group"><label>Student Name</label><input id="studentName" placeholder="Student name"></div>
-        <div class="form-group"><label>Roll Number</label><input id="rollNumber" placeholder="Roll number"></div>
-        <div class="form-group"><label>Class</label><input id="className" value="Plus One" placeholder="Class"></div>
-        <div class="form-group"><label>Exam</label><input id="examName" placeholder="First Term / Model Exam"></div>
-        <div class="form-group"><label>English</label><input id="englishMark" type="number" min="0" max="100" placeholder="0 - 100"></div>
-        <div class="form-group"><label>Accountancy</label><input id="accountancyMark" type="number" min="0" max="100" placeholder="0 - 100"></div>
-        <div class="form-group"><label>Business Studies</label><input id="businessMark" type="number" min="0" max="100" placeholder="0 - 100"></div>
-        <div class="form-group"><label>Computer Application</label><input id="computerMark" type="number" min="0" max="100" placeholder="0 - 100"></div>
-      </div>
+<header>
+  <h1>📊 MANAGE RESULTS</h1>
+  <p>Add and edit examination results</p>
+</header>
 
-      <button class="primary-button" onclick="saveStudentResult()">💾 Save Result</button>
-      <button class="secondary-button" onclick="clearResultForm()">Clear</button>
-      <div id="saveMessage"></div>
-    </div>
+<main class="container">
 
-    <div class="form-card glass">
-      <h2>👨‍🎓 Students &amp; Results</h2>
-      <div id="teacherStudentList"><div class="loading">Loading students...</div></div>
-    </div>
-  </main>
+<button class="back-button"
+        onclick="openTeacherLobby()">
+  ← Back to Teacher Lobby
+</button>
+
+
+<div class="form-card glass">
+
+<h2>➕ Add / Edit Student Result</h2>
+
+
+<div class="form-grid">
+
+
+<div class="form-group">
+
+<label>Student Name</label>
+
+<input
+  id="studentName"
+  placeholder="Student name"
+>
+
 </div>
+
+
+<div class="form-group">
+
+<label>Roll Number</label>
+
+<input
+  id="rollNumber"
+  placeholder="Roll number"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Class</label>
+
+<input
+  id="className"
+  value="Plus One"
+  placeholder="Class"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Exam</label>
+
+<input
+  id="examName"
+  placeholder="First Term / Model Exam"
+>
+
+</div>
+
+
+<!-- ENGLISH -->
+
+<div class="form-group">
+
+<label>English</label>
+
+<div class="mark-group">
+
+<div>
+
+<div class="mark-label">
+Obtained Mark
+</div>
+
+<input
+  id="englishMark"
+  type="number"
+  min="0"
+  placeholder="Obtained"
+>
+
+</div>
+
+<div>
+
+<div class="mark-label">
+Total Mark
+</div>
+
+<input
+  id="englishMax"
+  type="number"
+  min="1"
+  value="100"
+  placeholder="Total"
+>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ACCOUNTANCY -->
+
+<div class="form-group">
+
+<label>Accountancy</label>
+
+<div class="mark-group">
+
+<div>
+
+<div class="mark-label">
+Obtained Mark
+</div>
+
+<input
+  id="accountancyMark"
+  type="number"
+  min="0"
+  placeholder="Obtained"
+>
+
+</div>
+
+<div>
+
+<div class="mark-label">
+Total Mark
+</div>
+
+<input
+  id="accountancyMax"
+  type="number"
+  min="1"
+  value="100"
+  placeholder="Total"
+>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- BUSINESS -->
+
+<div class="form-group">
+
+<label>Business Studies</label>
+
+<div class="mark-group">
+
+<div>
+
+<div class="mark-label">
+Obtained Mark
+</div>
+
+<input
+  id="businessMark"
+  type="number"
+  min="0"
+  placeholder="Obtained"
+>
+
+</div>
+
+<div>
+
+<div class="mark-label">
+Total Mark
+</div>
+
+<input
+  id="businessMax"
+  type="number"
+  min="1"
+  value="100"
+  placeholder="Total"
+>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- COMPUTER -->
+
+<div class="form-group">
+
+<label>Computer Application</label>
+
+<div class="mark-group">
+
+<div>
+
+<div class="mark-label">
+Obtained Mark
+</div>
+
+<input
+  id="computerMark"
+  type="number"
+  min="0"
+  placeholder="Obtained"
+>
+
+</div>
+
+<div>
+
+<div class="mark-label">
+Total Mark
+</div>
+
+<input
+  id="computerMax"
+  type="number"
+  min="1"
+  value="100"
+  placeholder="Total"
+>
+
+</div>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<button class="primary-button"
+        onclick="saveStudentResult()">
+  💾 Save Result
+</button>
+
+<button class="secondary-button"
+        onclick="clearResultForm()">
+  Clear
+</button>
+
+<div id="saveMessage"></div>
+
+</div>
+
+
+<div class="form-card glass">
+
+<h2>👨‍🎓 Students & Results</h2>
+
+<div id="teacherStudentList">
+
+<div class="loading">
+Loading students...
+</div>
+
+</div>
+
+</div>
+
+</main>
+
+</div>
+
 
 <!-- =====================================================
      TEACHER NOTES
 ====================================================== -->
+
 <div id="teacherNotes" class="page">
-  <header><h1>📚 NOTES &amp; PDFs</h1><p>Manage class study materials</p></header>
-  <main class="container">
-    <button class="back-button" onclick="openTeacherLobby()">← Back to Teacher Lobby</button>
 
-    <div class="form-card glass">
-      <h2>➕ Add Study Material</h2>
-      <div class="form-grid">
-        <div class="form-group"><label>Title</label><input id="noteTitle" placeholder="Example: Chapter 1 Notes"></div>
-        <div class="form-group"><label>Subject</label><input id="noteSubject" placeholder="Computer Application"></div>
-        <div class="form-group full"><label>PDF / File Link</label><input id="noteUrl" placeholder="Paste your PDF link here"></div>
-      </div>
-      <button class="primary-button" onclick="saveNote()">💾 Save Note</button>
-      <div id="noteMessage"></div>
-    </div>
+<header>
+  <h1>📚 NOTES & PDFs</h1>
+  <p>Manage class study materials</p>
+</header>
 
-    <div class="form-card glass">
-      <h2>📄 Available Notes</h2>
-      <div id="teacherNotesList">Loading...</div>
-    </div>
-  </main>
+<main class="container">
+
+<button class="back-button"
+        onclick="openTeacherLobby()">
+  ← Back to Teacher Lobby
+</button>
+
+
+<div class="form-card glass">
+
+<h2>➕ Add Study Material</h2>
+
+<div class="form-grid">
+
+
+<div class="form-group">
+
+<label>Title</label>
+
+<input
+  id="noteTitle"
+  placeholder="Example: Chapter 1 Notes"
+>
+
 </div>
+
+
+<div class="form-group">
+
+<label>Subject</label>
+
+<input
+  id="noteSubject"
+  placeholder="Computer Application"
+>
+
+</div>
+
+
+<div class="form-group full">
+
+<label>PDF / File Link</label>
+
+<input
+  id="noteUrl"
+  placeholder="Paste your PDF link here"
+>
+
+</div>
+
+
+</div>
+
+
+<button class="primary-button"
+        onclick="saveNote()">
+  💾 Save Note
+</button>
+
+<div id="noteMessage"></div>
+
+</div>
+
+
+<div class="form-card glass">
+
+<h2>📄 Available Notes</h2>
+
+<div id="teacherNotesList">
+  Loading...
+</div>
+
+</div>
+
+</main>
+
+</div>
+
 
 <!-- =====================================================
      STUDENT NOTES
 ====================================================== -->
+
 <div id="notesPage" class="page">
-  <header><h1>📄 NOTES &amp; PDFs</h1><p>Class Study Materials</p></header>
-  <main class="container">
-    <button class="back-button" onclick="openStudentLobby()">← Back to Student Lobby</button>
-    <div id="studentNotesList"><div class="loading">Loading notes...</div></div>
-  </main>
+
+<header>
+  <h1>📄 NOTES & PDFs</h1>
+  <p>Class Study Materials</p>
+</header>
+
+<main class="container">
+
+<button class="back-button"
+        onclick="openStudentLobby()">
+  ← Back to Student Lobby
+</button>
+
+<div id="studentNotesList">
+
+<div class="loading">
+Loading notes...
 </div>
+
+</div>
+
+</main>
+
+</div>
+
 
 <!-- =====================================================
      TEACHER ANNOUNCEMENTS
 ====================================================== -->
+
 <div id="teacherAnnouncements" class="page">
-  <header><h1>📢 ANNOUNCEMENTS</h1><p>Manage class announcements</p></header>
-  <main class="container">
-    <button class="back-button" onclick="openTeacherLobby()">← Back to Teacher Lobby</button>
 
-    <div class="form-card glass">
-      <h2>➕ New Announcement</h2>
-      <div class="form-grid">
-        <div class="form-group full"><label>Announcement Title</label><input id="announcementTitle" placeholder="Important Notice"></div>
-        <div class="form-group full"><label>Message</label><textarea id="announcementMessage" placeholder="Write announcement..."></textarea></div>
-      </div>
-      <button class="primary-button" onclick="saveAnnouncement()">📢 Publish Announcement</button>
-      <div id="announcementMessageBox"></div>
-    </div>
+<header>
+  <h1>📢 ANNOUNCEMENTS</h1>
+  <p>Manage class announcements</p>
+</header>
 
-    <div class="form-card glass">
-      <h2>📢 Existing Announcements</h2>
-      <div id="teacherAnnouncementsList">Loading...</div>
-    </div>
-  </main>
+<main class="container">
+
+<button class="back-button"
+        onclick="openTeacherLobby()">
+  ← Back to Teacher Lobby
+</button>
+
+
+<div class="form-card glass">
+
+<h2>➕ New Announcement</h2>
+
+<div class="form-grid">
+
+
+<div class="form-group full">
+
+<label>Announcement Title</label>
+
+<input
+  id="announcementTitle"
+  placeholder="Important Notice"
+>
+
 </div>
+
+
+<div class="form-group full">
+
+<label>Message</label>
+
+<textarea
+  id="announcementMessage"
+  placeholder="Write announcement..."
+></textarea>
+
+</div>
+
+
+</div>
+
+
+<button class="primary-button"
+        onclick="saveAnnouncement()">
+  📢 Publish Announcement
+</button>
+
+<div id="announcementMessageBox"></div>
+
+</div>
+
+
+<div class="form-card glass">
+
+<h2>📢 Existing Announcements</h2>
+
+<div id="teacherAnnouncementsList">
+  Loading...
+</div>
+
+</div>
+
+</main>
+
+</div>
+
 
 <!-- =====================================================
      STUDENT ANNOUNCEMENTS
 ====================================================== -->
+
 <div id="announcementsPage" class="page">
-  <header><h1>📢 ANNOUNCEMENTS</h1><p>Class Updates</p></header>
-  <main class="container">
-    <button class="back-button" onclick="openStudentLobby()">← Back to Student Lobby</button>
-    <div id="studentAnnouncementsList"><div class="loading">Loading announcements...</div></div>
-  </main>
+
+<header>
+  <h1>📢 ANNOUNCEMENTS</h1>
+  <p>Class Updates</p>
+</header>
+
+<main class="container">
+
+<button class="back-button"
+        onclick="openStudentLobby()">
+  ← Back to Student Lobby
+</button>
+
+<div id="studentAnnouncementsList">
+
+<div class="loading">
+Loading announcements...
 </div>
 
 </div>
+
+</main>
+
+</div>
+
 
 <!-- =====================================================
      FIREBASE
 ====================================================== -->
+
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-import {
-  getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc,
-  orderBy, query, serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
-/* FIREBASE CONFIG */
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  updateDoc,
+  deleteDoc,
+  serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+/* =========================================================
+   FIREBASE CONFIG
+========================================================= */
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBCfKnTHrLVR1KdGbF1dDaj-Q0ZMdbBcgk",
-  authDomain: "plus-one-student-web.firebaseapp.com",
-  projectId: "plus-one-student-web",
-  storageBucket: "plus-one-student-web.firebasestorage.app",
-  messagingSenderId: "845465703333",
-  appId: "1:845465703333:web:dc78c09173e27d69f04e4c"
+
+  apiKey:"AIzaSyBCfKnTHrLVR1KdGbF1dDaj-Q0ZMdbBcgk",
+
+  authDomain:"plus-one-student-web.firebaseapp.com",
+
+  projectId:"plus-one-student-web",
+
+  storageBucket:"plus-one-student-web.firebasestorage.app",
+
+  messagingSenderId:"845465703333",
+
+  appId:"1:845465703333:web:dc78c09173e27d69f04e4c"
+
 };
+
 
 const app = initializeApp(firebaseConfig);
+
 const auth = getAuth(app);
+
 const db = getFirestore(app);
 
-const TEACHER_EMAIL = "teacher@plusone-school.web.app";
 
-/* PAGE CONTROL */
-window.hideAllPages = function() {
-  document.querySelectorAll(".page").forEach(page => page.classList.remove("active"));
+/* =========================================================
+   TEACHER EMAIL
+========================================================= */
+
+const TEACHER_EMAIL =
+"teacher@plusone-school.web.app";
+
+
+/* =========================================================
+   PAGE CONTROL
+========================================================= */
+
+window.hideAllPages = function(){
+
+  document
+    .querySelectorAll(".page")
+    .forEach(page =>
+      page.classList.remove("active")
+    );
+
 };
-window.goHome = function() { hideAllPages(); document.getElementById("homePage").classList.add("active"); };
-window.openStudentLobby = function() { hideAllPages(); document.getElementById("studentLobby").classList.add("active"); };
-window.openTeacherLogin = function() { hideAllPages(); document.getElementById("teacherLogin").classList.add("active"); };
-window.openTeacherLobby = function() { hideAllPages(); document.getElementById("teacherLobby").classList.add("active"); };
-window.openResultsPage = function() { hideAllPages(); document.getElementById("resultsPage").classList.add("active"); };
 
-window.openTeacherResults = async function() {
+
+window.goHome = function(){
+
   hideAllPages();
-  document.getElementById("teacherResults").classList.add("active");
+
+  document
+    .getElementById("homePage")
+    .classList.add("active");
+
+};
+
+
+window.openStudentLobby = function(){
+
+  hideAllPages();
+
+  document
+    .getElementById("studentLobby")
+    .classList.add("active");
+
+};
+
+
+window.openTeacherLogin = function(){
+
+  hideAllPages();
+
+  document
+    .getElementById("teacherLogin")
+    .classList.add("active");
+
+};
+
+
+window.openTeacherLobby = function(){
+
+  hideAllPages();
+
+  document
+    .getElementById("teacherLobby")
+    .classList.add("active");
+
+};
+
+
+window.openResultsPage = function(){
+
+  hideAllPages();
+
+  document
+    .getElementById("resultsPage")
+    .classList.add("active");
+
+};
+
+
+window.openTeacherResults = async function(){
+
+  hideAllPages();
+
+  document
+    .getElementById("teacherResults")
+    .classList.add("active");
+
   await loadTeacherStudents();
-};
-window.openTeacherNotes = async function() {
-  hideAllPages();
-  document.getElementById("teacherNotes").classList.add("active");
-  await loadTeacherNotes();
-};
-window.openNotesPage = async function() {
-  hideAllPages();
-  document.getElementById("notesPage").classList.add("active");
-  await loadStudentNotes();
-};
-window.openTeacherAnnouncements = async function() {
-  hideAllPages();
-  document.getElementById("teacherAnnouncements").classList.add("active");
-  await loadTeacherAnnouncements();
-};
-window.openAnnouncementsPage = async function() {
-  hideAllPages();
-  document.getElementById("announcementsPage").classList.add("active");
-  await loadStudentAnnouncements();
+
 };
 
-/* TEACHER LOGIN */
-window.checkTeacherPassword = async function() {
-  const password = document.getElementById("teacherPassword").value.trim();
-  const error = document.getElementById("passwordError");
+
+window.openTeacherNotes = async function(){
+
+  hideAllPages();
+
+  document
+    .getElementById("teacherNotes")
+    .classList.add("active");
+
+  await loadTeacherNotes();
+
+};
+
+
+window.openNotesPage = async function(){
+
+  hideAllPages();
+
+  document
+    .getElementById("notesPage")
+    .classList.add("active");
+
+  await loadStudentNotes();
+
+};
+
+
+window.openTeacherAnnouncements = async function(){
+
+  hideAllPages();
+
+  document
+    .getElementById("teacherAnnouncements")
+    .classList.add("active");
+
+  await loadTeacherAnnouncements();
+
+};
+
+
+window.openAnnouncementsPage = async function(){
+
+  hideAllPages();
+
+  document
+    .getElementById("announcementsPage")
+    .classList.add("active");
+
+  await loadStudentAnnouncements();
+
+};
+
+
+/* =========================================================
+   TEACHER LOGIN
+========================================================= */
+
+window.checkTeacherPassword = async function(){
+
+  const password =
+    document
+      .getElementById("teacherPassword")
+      .value
+      .trim();
+
+  const error =
+    document.getElementById("passwordError");
+
   error.style.display = "none";
 
-  if (!password) {
-    error.textContent = "Please enter the teacher password.";
+
+  if(!password){
+
+    error.textContent =
+      "Please enter the teacher password.";
+
     error.style.display = "block";
+
     return;
   }
 
-  try {
-    await signInWithEmailAndPassword(auth, TEACHER_EMAIL, password);
-    document.getElementById("teacherPassword").value = "";
+
+  try{
+
+    await signInWithEmailAndPassword(
+      auth,
+      TEACHER_EMAIL,
+      password
+    );
+
+
+    document
+      .getElementById("teacherPassword")
+      .value = "";
+
+
     openTeacherLobby();
-  } catch (errorObject) {
+
+
+  }catch(errorObject){
+
     console.error(errorObject);
-    error.textContent = "Incorrect teacher password.";
+
+    error.textContent =
+      "Incorrect teacher password.";
+
     error.style.display = "block";
+
   }
+
 };
 
-document.getElementById("teacherPassword").addEventListener("keydown", function(event) {
-  if (event.key === "Enter") checkTeacherPassword();
-});
 
-/* GRADE CALCULATOR */
-function calculateGrade(mark) {
+document
+  .getElementById("teacherPassword")
+  .addEventListener(
+    "keydown",
+    function(event){
+
+      if(event.key === "Enter"){
+
+        checkTeacherPassword();
+
+      }
+
+    }
+  );
+
+
+/* =========================================================
+   GRADE CALCULATOR
+   Grade is based on PERCENTAGE.
+========================================================= */
+
+function calculateGrade(mark,maxMark){
+
   mark = Number(mark);
-  if (mark >= 90) return "A+";
-  if (mark >= 80) return "A";
-  if (mark >= 70) return "B+";
-  if (mark >= 60) return "B";
-  if (mark >= 50) return "C+";
-  if (mark >= 40) return "C";
-  if (mark >= 30) return "D";
+  maxMark = Number(maxMark);
+
+  if(!maxMark || maxMark <= 0){
+    return "-";
+  }
+
+  const percentage =
+    (mark / maxMark) * 100;
+
+
+  if(percentage >= 90) return "A+";
+  if(percentage >= 80) return "A";
+  if(percentage >= 70) return "B+";
+  if(percentage >= 60) return "B";
+  if(percentage >= 50) return "C+";
+  if(percentage >= 40) return "C";
+  if(percentage >= 30) return "D";
+
   return "E";
 }
 
-/* SAVE STUDENT RESULT */
-window.saveStudentResult = async function() {
-  const name = document.getElementById("studentName").value.trim();
-  const rollNumber = document.getElementById("rollNumber").value.trim();
-  const className = document.getElementById("className").value.trim();
-  const exam = document.getElementById("examName").value.trim();
-  const english = Number(document.getElementById("englishMark").value);
-  const accountancy = Number(document.getElementById("accountancyMark").value);
-  const business = Number(document.getElementById("businessMark").value);
-  const computer = Number(document.getElementById("computerMark").value);
-  const message = document.getElementById("saveMessage");
 
-  if (!name || !rollNumber || !className || !exam) {
+/* =========================================================
+   NUMBER VALIDATION
+========================================================= */
+
+function getMark(id){
+
+  const value =
+    Number(
+      document
+        .getElementById(id)
+        .value
+    );
+
+  return value;
+}
+
+
+function validateMark(mark,maxMark){
+
+  if(
+    Number.isNaN(mark) ||
+    Number.isNaN(maxMark)
+  ){
+    return false;
+  }
+
+  if(maxMark <= 0){
+    return false;
+  }
+
+  if(mark < 0){
+    return false;
+  }
+
+  if(mark > maxMark){
+    return false;
+  }
+
+  return true;
+}
+
+
+/* =========================================================
+   SAVE STUDENT RESULT
+========================================================= */
+
+window.saveStudentResult = async function(){
+
+  const name =
+    document
+      .getElementById("studentName")
+      .value
+      .trim();
+
+
+  const rollNumber =
+    document
+      .getElementById("rollNumber")
+      .value
+      .trim();
+
+
+  const className =
+    document
+      .getElementById("className")
+      .value
+      .trim();
+
+
+  const exam =
+    document
+      .getElementById("examName")
+      .value
+      .trim();
+
+
+  const english = getMark("englishMark");
+  const englishMax = getMark("englishMax");
+
+  const accountancy = getMark("accountancyMark");
+  const accountancyMax = getMark("accountancyMax");
+
+  const business = getMark("businessMark");
+  const businessMax = getMark("businessMax");
+
+  const computer = getMark("computerMark");
+  const computerMax = getMark("computerMax");
+
+
+  const message =
+    document.getElementById("saveMessage");
+
+
+  /* REQUIRED DETAILS */
+
+  if(
+    !name ||
+    !rollNumber ||
+    !className ||
+    !exam
+  ){
+
     message.className = "error";
     message.style.display = "block";
-    message.textContent = "Please fill all student details.";
+
+    message.textContent =
+      "Please fill all student details.";
+
     return;
   }
+
+
+  /* MARK VALIDATION */
+
+  if(
+    !validateMark(english,englishMax) ||
+    !validateMark(accountancy,accountancyMax) ||
+    !validateMark(business,businessMax) ||
+    !validateMark(computer,computerMax)
+  ){
+
+    message.className = "error";
+    message.style.display = "block";
+
+    message.textContent =
+      "❌ Check marks. Obtained mark cannot be greater than total mark.";
+
+    return;
+  }
+
+
+  /* =====================================================
+     SUBJECT MARK OBJECT
+  ===================================================== */
 
   const marks = {
-    English: { mark: english, grade: calculateGrade(english) },
-    Accountancy: { mark: accountancy, grade: calculateGrade(accountancy) },
-    "Business Studies": { mark: business, grade: calculateGrade(business) },
-    "Computer Application": { mark: computer, grade: calculateGrade(computer) }
+
+    English:{
+      mark:english,
+      maxMark:englishMax,
+      grade:calculateGrade(
+        english,
+        englishMax
+      )
+    },
+
+    Accountancy:{
+      mark:accountancy,
+      maxMark:accountancyMax,
+      grade:calculateGrade(
+        accountancy,
+        accountancyMax
+      )
+    },
+
+    "Business Studies":{
+      mark:business,
+      maxMark:businessMax,
+      grade:calculateGrade(
+        business,
+        businessMax
+      )
+    },
+
+    "Computer Application":{
+      mark:computer,
+      maxMark:computerMax,
+      grade:calculateGrade(
+        computer,
+        computerMax
+      )
+    }
+
   };
 
-  const total = english + accountancy + business + computer;
-  const average = total / 4;
+
+  /* =====================================================
+     TOTAL CALCULATION
+  ===================================================== */
+
+  const total =
+    english +
+    accountancy +
+    business +
+    computer;
+
+
+  const maxTotal =
+    englishMax +
+    accountancyMax +
+    businessMax +
+    computerMax;
+
+
+  const percentage =
+    (total / maxTotal) * 100;
+
+
+  /* =====================================================
+     RESULT OBJECT
+  ===================================================== */
 
   const result = {
-    exam: exam,
-    marks: marks,
-    total: total,
-    average: Number(average.toFixed(2))
+
+    exam:exam,
+
+    marks:marks,
+
+    total:total,
+
+    maxTotal:maxTotal,
+
+    percentage:Number(
+      percentage.toFixed(2)
+    ),
+
+    savedAt:new Date().toISOString()
+
   };
 
-  try {
-    const existing = await getDocs(collection(db, "students"));
+
+  try{
+
+    const existing =
+      await getDocs(
+        collection(db,"students")
+      );
+
+
     let existingDoc = null;
 
-    existing.forEach(documentSnapshot => {
-      const data = documentSnapshot.data();
-      if (String(data.rollNumber).toLowerCase() === rollNumber.toLowerCase()) {
-        existingDoc = documentSnapshot;
+
+    existing.forEach(
+      documentSnapshot => {
+
+        const data =
+          documentSnapshot.data();
+
+
+        if(
+          String(data.rollNumber)
+            .toLowerCase() ===
+          rollNumber.toLowerCase()
+        ){
+
+          existingDoc =
+            documentSnapshot;
+
+        }
+
       }
-    });
+    );
 
-    if (existingDoc) {
-      const oldData = existingDoc.data();
-      let results = oldData.results || [];
-      const index = results.findIndex(item => item.exam.toLowerCase() === exam.toLowerCase());
 
-      if (index >= 0) results[index] = result;
-      else results.push(result);
+    /* =====================================================
+       UPDATE EXISTING STUDENT
+    ===================================================== */
 
-      await updateDoc(doc(db, "students", existingDoc.id), {
-        name: name, rollNumber: rollNumber, className: className,
-        results: results, updatedAt: serverTimestamp()
-      });
-    } else {
-      await addDoc(collection(db, "students"), {
-        name: name, rollNumber: rollNumber, className: className,
-        results: [result], createdAt: serverTimestamp(), updatedAt: serverTimestamp()
-      });
+    if(existingDoc){
+
+      const oldData =
+        existingDoc.data();
+
+
+      let results =
+        oldData.results || [];
+
+
+      const index =
+        results.findIndex(
+          item =>
+            String(item.exam || "")
+              .toLowerCase() ===
+            exam.toLowerCase()
+        );
+
+
+      if(index >= 0){
+
+        /*
+          Keep original creation date
+          but update the result date.
+        */
+
+        result.savedAt =
+          new Date().toISOString();
+
+        results[index] = result;
+
+      }else{
+
+        results.push(result);
+
+      }
+
+
+      await updateDoc(
+        doc(
+          db,
+          "students",
+          existingDoc.id
+        ),
+        {
+
+          name:name,
+
+          rollNumber:rollNumber,
+
+          className:className,
+
+          results:results,
+
+          updatedAt:serverTimestamp()
+
+        }
+      );
+
+
+    }else{
+
+      /* =================================================
+         CREATE NEW STUDENT
+      ================================================= */
+
+      await addDoc(
+        collection(db,"students"),
+        {
+
+          name:name,
+
+          rollNumber:rollNumber,
+
+          className:className,
+
+          results:[result],
+
+          createdAt:serverTimestamp(),
+
+          updatedAt:serverTimestamp()
+
+        }
+      );
+
     }
+
 
     message.className = "success";
     message.style.display = "block";
-    message.textContent = "✅ Result saved successfully!";
+
+    message.textContent =
+      "✅ Result saved successfully!";
+
 
     clearResultForm();
+
+
     await loadTeacherStudents();
-  } catch (errorObject) {
+
+
+  }catch(errorObject){
+
     console.error(errorObject);
+
     message.className = "error";
     message.style.display = "block";
-    message.textContent = "❌ Could not save result. Check Firestore Rules.";
+
+    message.textContent =
+      "❌ Could not save result. Check Firestore Rules.";
+
   }
+
 };
 
-/* LOAD TEACHER STUDENTS */
-window.loadTeacherStudents = async function() {
-  const container = document.getElementById("teacherStudentList");
-  container.innerHTML = '<div class="loading">Loading...</div>';
 
-  try {
-    const snapshot = await getDocs(collection(db, "students"));
+/* =========================================================
+   LOAD TEACHER STUDENTS
+========================================================= */
 
-    if (snapshot.empty) {
-      container.innerHTML = '<div class="empty">No students added yet.</div>';
+window.loadTeacherStudents = async function(){
+
+  const container =
+    document.getElementById(
+      "teacherStudentList"
+    );
+
+
+  container.innerHTML =
+    '<div class="loading">Loading...</div>';
+
+
+  try{
+
+    const snapshot =
+      await getDocs(
+        collection(db,"students")
+      );
+
+
+    if(snapshot.empty){
+
+      container.innerHTML =
+        '<div class="empty">No students added yet.</div>';
+
       return;
+
     }
+
 
     let html = `
+
       <div class="student-list">
+
       <table class="data-table">
-        <thead>
-          <tr><th>Name</th><th>Roll</th><th>Class</th><th>Exams</th><th>Actions</th></tr>
-        </thead>
-        <tbody>
+
+      <thead>
+
+        <tr>
+
+          <th>Name</th>
+          <th>Roll</th>
+          <th>Class</th>
+          <th>Exams</th>
+          <th>Actions</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
     `;
 
-    snapshot.forEach(documentSnapshot => {
-      const data = documentSnapshot.data();
-      const results = data.results || [];
 
-      html += `
-        <tr>
-          <td>${escapeHTML(data.name || "")}</td>
-          <td>${escapeHTML(data.rollNumber || "")}</td>
-          <td>${escapeHTML(data.className || "")}</td>
-          <td>${results.length}</td>
-          <td>
-            <button class="edit-button" onclick="editStudent('${documentSnapshot.id}')">Edit</button>
-            <button class="danger-button" onclick="deleteStudent('${documentSnapshot.id}')">Delete</button>
-          </td>
-        </tr>
-      `;
-    });
+    snapshot.forEach(
+      documentSnapshot => {
 
-    html += `</tbody></table></div>`;
+        const data =
+          documentSnapshot.data();
+
+
+        const results =
+          data.results || [];
+
+
+        html += `
+
+          <tr>
+
+            <td>
+              ${escapeHTML(data.name || "")}
+            </td>
+
+            <td>
+              ${escapeHTML(data.rollNumber || "")}
+            </td>
+
+            <td>
+              ${escapeHTML(data.className || "")}
+            </td>
+
+            <td>
+              ${results.length}
+            </td>
+
+            <td>
+
+              <button
+                class="edit-button"
+                onclick="editStudent('${documentSnapshot.id}')">
+                Edit
+              </button>
+
+              <button
+                class="danger-button"
+                onclick="deleteStudent('${documentSnapshot.id}')">
+                Delete
+              </button>
+
+            </td>
+
+          </tr>
+
+        `;
+
+      }
+    );
+
+
+    html += `
+      </tbody>
+      </table>
+      </div>
+    `;
+
+
     container.innerHTML = html;
-  } catch (errorObject) {
+
+
+  }catch(errorObject){
+
     console.error(errorObject);
-    container.innerHTML = '<div class="empty">Could not load students.</div>';
+
+    container.innerHTML =
+      '<div class="empty">Could not load students.</div>';
+
   }
+
 };
 
-/* EDIT STUDENT */
-window.editStudent = async function(id) {
-  try {
-    const snapshot = await getDocs(collection(db, "students"));
+
+/* =========================================================
+   EDIT STUDENT
+========================================================= */
+
+window.editStudent = async function(id){
+
+  try{
+
+    const snapshot =
+      await getDocs(
+        collection(db,"students")
+      );
+
+
     let selected = null;
 
-    snapshot.forEach(item => { if (item.id === id) selected = item; });
-    if (!selected) return;
 
-    const data = selected.data();
-    const results = data.results || [];
-    if (results.length === 0) return;
+    snapshot.forEach(
+      item => {
 
-    const result = results[results.length - 1];
+        if(item.id === id){
 
-    document.getElementById("studentName").value = data.name || "";
-    document.getElementById("rollNumber").value = data.rollNumber || "";
-    document.getElementById("className").value = data.className || "";
-    document.getElementById("examName").value = result.exam || "";
-    document.getElementById("englishMark").value = result.marks?.English?.mark ?? "";
-    document.getElementById("accountancyMark").value = result.marks?.Accountancy?.mark ?? "";
-    document.getElementById("businessMark").value = result.marks?.["Business Studies"]?.mark ?? "";
-    document.getElementById("computerMark").value = result.marks?.["Computer Application"]?.mark ?? "";
+          selected = item;
 
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  } catch (errorObject) {
+        }
+
+      }
+    );
+
+
+    if(!selected) return;
+
+
+    const data =
+      selected.data();
+
+
+    const results =
+      data.results || [];
+
+
+    if(results.length === 0) return;
+
+
+    const result =
+      results[results.length - 1];
+
+
+    document.getElementById(
+      "studentName"
+    ).value =
+      data.name || "";
+
+
+    document.getElementById(
+      "rollNumber"
+    ).value =
+      data.rollNumber || "";
+
+
+    document.getElementById(
+      "className"
+    ).value =
+      data.className || "";
+
+
+    document.getElementById(
+      "examName"
+    ).value =
+      result.exam || "";
+
+
+    document.getElementById(
+      "englishMark"
+    ).value =
+      result.marks?.English?.mark ?? "";
+
+
+    document.getElementById(
+      "englishMax"
+    ).value =
+      result.marks?.English?.maxMark ?? 100;
+
+
+    document.getElementById(
+      "accountancyMark"
+    ).value =
+      result.marks?.Accountancy?.mark ?? "";
+
+
+    document.getElementById(
+      "accountancyMax"
+    ).value =
+      result.marks?.Accountancy?.maxMark ?? 100;
+
+
+    document.getElementById(
+      "businessMark"
+    ).value =
+      result.marks?.["Business Studies"]?.mark ?? "";
+
+
+    document.getElementById(
+      "businessMax"
+    ).value =
+      result.marks?.["Business Studies"]?.maxMark ?? 100;
+
+
+    document.getElementById(
+      "computerMark"
+    ).value =
+      result.marks?.["Computer Application"]?.mark ?? "";
+
+
+    document.getElementById(
+      "computerMax"
+    ).value =
+      result.marks?.["Computer Application"]?.maxMark ?? 100;
+
+
+    window.scrollTo({
+      top:0,
+      behavior:"smooth"
+    });
+
+
+  }catch(errorObject){
+
     console.error(errorObject);
+
   }
+
 };
 
-/* DELETE STUDENT */
-window.deleteStudent = async function(id) {
-  const confirmDelete = confirm("Delete this student's complete result data?");
-  if (!confirmDelete) return;
 
-  try {
-    await deleteDoc(doc(db, "students", id));
+/* =========================================================
+   DELETE STUDENT
+========================================================= */
+
+window.deleteStudent = async function(id){
+
+  const confirmDelete =
+    confirm(
+      "Delete this student's complete result data?"
+    );
+
+
+  if(!confirmDelete) return;
+
+
+  try{
+
+    await deleteDoc(
+      doc(
+        db,
+        "students",
+        id
+      )
+    );
+
+
     await loadTeacherStudents();
-  } catch (errorObject) {
+
+
+  }catch(errorObject){
+
     console.error(errorObject);
-    alert("Could not delete student.");
+
+    alert(
+      "Could not delete student."
+    );
+
   }
+
 };
 
-/* CLEAR RESULT FORM */
-window.clearResultForm = function() {
-  const ids = ["studentName","rollNumber","examName","englishMark","accountancyMark","businessMark","computerMark"];
-  ids.forEach(id => { document.getElementById(id).value = ""; });
-  document.getElementById("className").value = "Plus One";
-  document.getElementById("saveMessage").style.display = "none";
+
+/* =========================================================
+   CLEAR RESULT FORM
+========================================================= */
+
+window.clearResultForm = function(){
+
+  const ids = [
+
+    "studentName",
+    "rollNumber",
+    "examName",
+
+    "englishMark",
+    "accountancyMark",
+    "businessMark",
+    "computerMark"
+
+  ];
+
+
+  ids.forEach(
+    id => {
+
+      document.getElementById(id).value = "";
+
+    }
+  );
+
+
+  document.getElementById(
+    "className"
+  ).value = "Plus One";
+
+
+  document.getElementById(
+    "englishMax"
+  ).value = 100;
+
+
+  document.getElementById(
+    "accountancyMax"
+  ).value = 100;
+
+
+  document.getElementById(
+    "businessMax"
+  ).value = 100;
+
+
+  document.getElementById(
+    "computerMax"
+  ).value = 100;
+
+
+  document.getElementById(
+    "saveMessage"
+  ).style.display = "none";
+
 };
 
-/* SEARCH RESULTS */
-window.searchResults = async function() {
-  const search = document.getElementById("studentSearch").value.trim().toLowerCase();
-  const container = document.getElementById("studentResults");
 
-  if (!search) {
-    container.innerHTML = '<div class="empty">Enter a roll number or name.</div>';
+/* =========================================================
+   SEARCH RESULTS
+========================================================= */
+
+window.searchResults = async function(){
+
+  const search =
+    document
+      .getElementById("studentSearch")
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  const container =
+    document.getElementById(
+      "studentResults"
+    );
+
+
+  if(!search){
+
+    container.innerHTML =
+      '<div class="empty">Enter a roll number or name.</div>';
+
     return;
+
   }
 
-  container.innerHTML = '<div class="loading">Searching...</div>';
 
-  try {
-    const snapshot = await getDocs(collection(db, "students"));
+  container.innerHTML =
+    '<div class="loading">Searching...</div>';
+
+
+  try{
+
+    const snapshot =
+      await getDocs(
+        collection(db,"students")
+      );
+
+
     let found = [];
 
-    snapshot.forEach(documentSnapshot => {
-      const data = documentSnapshot.data();
-      const name = String(data.name || "").toLowerCase();
-      const roll = String(data.rollNumber || "").toLowerCase();
-      if (name.includes(search) || roll.includes(search)) found.push(data);
-    });
 
-    if (found.length === 0) {
-      container.innerHTML = '<div class="empty">❌ Student not found.</div>';
+    snapshot.forEach(
+      documentSnapshot => {
+
+        const data =
+          documentSnapshot.data();
+
+
+        const name =
+          String(
+            data.name || ""
+          ).toLowerCase();
+
+
+        const roll =
+          String(
+            data.rollNumber || ""
+          ).toLowerCase();
+
+
+        if(
+          name.includes(search) ||
+          roll.includes(search)
+        ){
+
+          found.push(data);
+
+        }
+
+      }
+    );
+
+
+    if(found.length === 0){
+
+      container.innerHTML =
+        '<div class="empty">❌ Student not found.</div>';
+
       return;
+
     }
+
 
     let html = "";
 
-    found.forEach(student => {
-      const results = student.results || [];
 
-      html += `
-        <div class="result-card glass">
-          <div class="student-header">
-            <div>
-              <h2>${escapeHTML(student.name || "")}</h2>
-              <p>Roll No: ${escapeHTML(student.rollNumber || "")}</p>
-              <p>Class: ${escapeHTML(student.className || "")}</p>
+    found.forEach(
+      student => {
+
+        const results =
+          student.results || [];
+
+
+        html += `
+
+          <div class="result-card glass">
+
+            <div class="student-header">
+
+              <div>
+
+                <h2>
+                  ${escapeHTML(student.name || "")}
+                </h2>
+
+                <p>
+                  Roll No:
+                  ${escapeHTML(student.rollNumber || "")}
+                </p>
+
+                <p>
+                  Class:
+                  ${escapeHTML(student.className || "")}
+                </p>
+
+              </div>
+
             </div>
-          </div>
-      `;
 
-      if (results.length === 0) html += `<p>No results available.</p>`;
-
-      results.forEach(result => {
-        html += `
-          <div>
-            <span class="exam-title">${escapeHTML(result.exam || "")}</span>
-            <table class="marks-table">
-              <thead><tr><th>Subject</th><th>Mark</th><th>Grade</th></tr></thead>
-              <tbody>
         `;
 
-        Object.entries(result.marks || {}).forEach(([subject, value]) => {
+
+        if(results.length === 0){
+
           html += `
-            <tr>
-              <td>${escapeHTML(subject)}</td>
-              <td>${value.mark}</td>
-              <td class="grade">${escapeHTML(value.grade)}</td>
-            </tr>
+            <p>No results available.</p>
           `;
-        });
+
+        }
+
+
+        results.forEach(
+          result => {
+
+            const dateText =
+              formatDate(result.savedAt);
+
+
+            html += `
+
+              <div>
+
+                <span class="exam-title">
+
+                  ${escapeHTML(result.exam || "")}
+
+                </span>
+
+                <span class="exam-date">
+
+                  📅 ${dateText}
+
+                </span>
+
+
+                <table class="marks-table">
+
+                  <thead>
+
+                    <tr>
+
+                      <th>Subject</th>
+                      <th>Mark</th>
+                      <th>Total</th>
+                      <th>Grade</th>
+
+                    </tr>
+
+                  </thead>
+
+                  <tbody>
+
+            `;
+
+
+            Object.entries(
+              result.marks || {}
+            ).forEach(
+              ([subject,value]) => {
+
+                html += `
+
+                  <tr>
+
+                    <td>
+                      ${escapeHTML(subject)}
+                    </td>
+
+                    <td>
+                      ${value.mark}
+                    </td>
+
+                    <td>
+                      ${value.maxMark}
+                    </td>
+
+                    <td class="grade">
+                      ${escapeHTML(value.grade)}
+                    </td>
+
+                  </tr>
+
+                `;
+
+              }
+            );
+
+
+            html += `
+
+                  </tbody>
+
+                </table>
+
+
+                <div class="total-box">
+
+                  <span>
+                    Total
+                  </span>
+
+                  <span>
+                    ${result.total}
+                    /
+                    ${result.maxTotal}
+                  </span>
+
+                </div>
+
+
+                <div class="percentage-box">
+
+                  <span>
+                    Percentage
+                  </span>
+
+                  <span>
+                    ${result.percentage}%
+                  </span>
+
+                </div>
+
+
+              </div>
+
+            `;
+
+          }
+        );
+
 
         html += `
-              </tbody>
-            </table>
-            <div class="total-box"><span>Total</span><span>${result.total}</span></div>
           </div>
         `;
-      });
 
-      html += `</div>`;
-    });
+      }
+    );
+
 
     container.innerHTML = html;
-  } catch (errorObject) {
+
+
+  }catch(errorObject){
+
     console.error(errorObject);
-    container.innerHTML = '<div class="empty">Could not load results.</div>';
+
+    container.innerHTML =
+      '<div class="empty">Could not load results.</div>';
+
   }
+
 };
 
-/* NOTES */
-window.saveNote = async function() {
-  const title = document.getElementById("noteTitle").value.trim();
-  const subject = document.getElementById("noteSubject").value.trim();
-  const url = document.getElementById("noteUrl").value.trim();
-  const message = document.getElementById("noteMessage");
 
-  if (!title || !subject || !url) {
+/* =========================================================
+   NOTES
+========================================================= */
+
+window.saveNote = async function(){
+
+  const title =
+    document
+      .getElementById("noteTitle")
+      .value
+      .trim();
+
+
+  const subject =
+    document
+      .getElementById("noteSubject")
+      .value
+      .trim();
+
+
+  const url =
+    document
+      .getElementById("noteUrl")
+      .value
+      .trim();
+
+
+  const message =
+    document.getElementById(
+      "noteMessage"
+    );
+
+
+  if(
+    !title ||
+    !subject ||
+    !url
+  ){
+
     message.className = "error";
+
     message.style.display = "block";
-    message.textContent = "Please fill all fields.";
+
+    message.textContent =
+      "Please fill all fields.";
+
     return;
+
   }
 
-  try {
-    await addDoc(collection(db, "notes"), { title: title, subject: subject, url: url, createdAt: serverTimestamp() });
+
+  try{
+
+    await addDoc(
+      collection(db,"notes"),
+      {
+
+        title:title,
+
+        subject:subject,
+
+        url:url,
+
+        createdAt:serverTimestamp(),
+
+        uploadedAt:new Date().toISOString()
+
+      }
+    );
+
 
     message.className = "success";
+
     message.style.display = "block";
-    message.textContent = "✅ Note added successfully!";
 
-    document.getElementById("noteTitle").value = "";
-    document.getElementById("noteSubject").value = "";
-    document.getElementById("noteUrl").value = "";
+    message.textContent =
+      "✅ Note added successfully!";
+
+
+    document.getElementById(
+      "noteTitle"
+    ).value = "";
+
+
+    document.getElementById(
+      "noteSubject"
+    ).value = "";
+
+
+    document.getElementById(
+      "noteUrl"
+    ).value = "";
+
 
     await loadTeacherNotes();
-  } catch (errorObject) {
+
+
+  }catch(errorObject){
+
     console.error(errorObject);
-    message.textContent = "❌ Could not save note.";
+
+    message.className = "error";
+
+    message.style.display = "block";
+
+    message.textContent =
+      "❌ Could not save note.";
+
   }
+
 };
 
-async function loadTeacherNotes() {
-  const container = document.getElementById("teacherNotesList");
 
-  try {
-    const snapshot = await getDocs(collection(db, "notes"));
+async function loadTeacherNotes(){
 
-    if (snapshot.empty) {
-      container.innerHTML = '<div class="empty">No notes added.</div>';
+  const container =
+    document.getElementById(
+      "teacherNotesList"
+    );
+
+
+  try{
+
+    const snapshot =
+      await getDocs(
+        collection(db,"notes")
+      );
+
+
+    if(snapshot.empty){
+
+      container.innerHTML =
+        '<div class="empty">No notes added.</div>';
+
       return;
+
     }
+
 
     let html = "";
 
-    snapshot.forEach(item => {
-      const data = item.data();
-      html += `
-        <div class="result-card glass">
-          <h3>${escapeHTML(data.title || "")}</h3>
-          <p>Subject: ${escapeHTML(data.subject || "")}</p>
-          <br>
-          <a href="${escapeAttribute(data.url || "#")}" target="_blank" rel="noopener">📄 Open PDF / Material</a>
-          <br><br>
-          <button class="danger-button" onclick="deleteNote('${item.id}')">Delete</button>
-        </div>
-      `;
-    });
+
+    snapshot.forEach(
+      item => {
+
+        const data =
+          item.data();
+
+
+        html += `
+
+          <div class="result-card glass">
+
+            <h3>
+              ${escapeHTML(data.title || "")}
+            </h3>
+
+            <p>
+              Subject:
+              ${escapeHTML(data.subject || "")}
+            </p>
+
+            <p class="date-text">
+              📅 Uploaded:
+              ${formatDate(
+                data.uploadedAt
+              )}
+            </p>
+
+            <br>
+
+            <a
+              href="${escapeAttribute(data.url || "#")}"
+              target="_blank"
+              rel="noopener">
+
+              📄 Open PDF / Material
+
+            </a>
+
+            <br>
+            <br>
+
+            <button
+              class="danger-button"
+              onclick="deleteNote('${item.id}')">
+
+              Delete
+
+            </button>
+
+          </div>
+
+        `;
+
+      }
+    );
+
 
     container.innerHTML = html;
-  } catch (errorObject) {
-    console.error(errorObject);
-    container.innerHTML = "Could not load notes.";
-  }
-}
-window.loadTeacherNotes = loadTeacherNotes;
 
-window.deleteNote = async function(id) {
-  if (!confirm("Delete this note?")) return;
-  try {
-    await deleteDoc(doc(db, "notes", id));
-    await loadTeacherNotes();
-  } catch (errorObject) {
+
+  }catch(errorObject){
+
     console.error(errorObject);
+
+    container.innerHTML =
+      "Could not load notes.";
+
   }
+
+}
+
+
+window.loadTeacherNotes =
+  loadTeacherNotes;
+
+
+/* =========================================================
+   DELETE NOTE
+========================================================= */
+
+window.deleteNote = async function(id){
+
+  if(!confirm("Delete this note?")) return;
+
+
+  try{
+
+    await deleteDoc(
+      doc(
+        db,
+        "notes",
+        id
+      )
+    );
+
+
+    await loadTeacherNotes();
+
+
+  }catch(errorObject){
+
+    console.error(errorObject);
+
+  }
+
 };
 
-async function loadStudentNotes() {
-  const container = document.getElementById("studentNotesList");
 
-  try {
-    const snapshot = await getDocs(collection(db, "notes"));
+/* =========================================================
+   STUDENT NOTES
+========================================================= */
 
-    if (snapshot.empty) {
-      container.innerHTML = '<div class="empty">No notes available yet.</div>';
+async function loadStudentNotes(){
+
+  const container =
+    document.getElementById(
+      "studentNotesList"
+    );
+
+
+  try{
+
+    const snapshot =
+      await getDocs(
+        collection(db,"notes")
+      );
+
+
+    if(snapshot.empty){
+
+      container.innerHTML =
+        '<div class="empty">No notes available yet.</div>';
+
       return;
+
     }
+
 
     let html = "";
 
-    snapshot.forEach(item => {
-      const data = item.data();
-      html += `
-        <div class="result-card glass">
-          <h2>📄 ${escapeHTML(data.title || "")}</h2>
-          <p>Subject: ${escapeHTML(data.subject || "")}</p>
-          <br>
-          <a href="${escapeAttribute(data.url || "#")}" target="_blank" rel="noopener">📖 Open Material</a>
-        </div>
-      `;
-    });
+
+    snapshot.forEach(
+      item => {
+
+        const data =
+          item.data();
+
+
+        html += `
+
+          <div class="result-card glass">
+
+            <h2>
+              📄
+              ${escapeHTML(data.title || "")}
+            </h2>
+
+            <p>
+              Subject:
+              ${escapeHTML(data.subject || "")}
+            </p>
+
+            <p class="date-text">
+
+              📅 Uploaded:
+              ${formatDate(
+                data.uploadedAt
+              )}
+
+            </p>
+
+            <br>
+
+            <a
+              href="${escapeAttribute(data.url || "#")}"
+              target="_blank"
+              rel="noopener">
+
+              📖 Open Material
+
+            </a>
+
+          </div>
+
+        `;
+
+      }
+    );
+
 
     container.innerHTML = html;
-  } catch (errorObject) {
+
+
+  }catch(errorObject){
+
     console.error(errorObject);
-    container.innerHTML = '<div class="empty">Could not load notes.</div>';
+
+    container.innerHTML =
+      '<div class="empty">Could not load notes.</div>';
+
   }
+
 }
 
-/* ANNOUNCEMENTS */
-window.saveAnnouncement = async function() {
-  const title = document.getElementById("announcementTitle").value.trim();
-  const message = document.getElementById("announcementMessage").value.trim();
-  const box = document.getElementById("announcementMessageBox");
 
-  if (!title || !message) {
+/* =========================================================
+   ANNOUNCEMENTS
+========================================================= */
+
+window.saveAnnouncement = async function(){
+
+  const title =
+    document
+      .getElementById(
+        "announcementTitle"
+      )
+      .value
+      .trim();
+
+
+  const message =
+    document
+      .getElementById(
+        "announcementMessage"
+      )
+      .value
+      .trim();
+
+
+  const box =
+    document.getElementById(
+      "announcementMessageBox"
+    );
+
+
+  if(!title || !message){
+
     box.className = "error";
+
     box.style.display = "block";
-    box.textContent = "Please fill both fields.";
+
+    box.textContent =
+      "Please fill both fields.";
+
     return;
+
   }
 
-  try {
-    await addDoc(collection(db, "announcements"), { title: title, message: message, createdAt: serverTimestamp() });
+
+  try{
+
+    await addDoc(
+      collection(db,"announcements"),
+      {
+
+        title:title,
+
+        message:message,
+
+        createdAt:serverTimestamp(),
+
+        publishedAt:new Date().toISOString()
+
+      }
+    );
+
 
     box.className = "success";
+
     box.style.display = "block";
-    box.textContent = "✅ Announcement published!";
 
-    document.getElementById("announcementTitle").value = "";
-    document.getElementById("announcementMessage").value = "";
+    box.textContent =
+      "✅ Announcement published!";
+
+
+    document.getElementById(
+      "announcementTitle"
+    ).value = "";
+
+
+    document.getElementById(
+      "announcementMessage"
+    ).value = "";
+
 
     await loadTeacherAnnouncements();
-  } catch (errorObject) {
+
+
+  }catch(errorObject){
+
     console.error(errorObject);
-    box.textContent = "❌ Could not publish announcement.";
+
+    box.className = "error";
+
+    box.style.display = "block";
+
+    box.textContent =
+      "❌ Could not publish announcement.";
+
   }
+
 };
 
-async function loadTeacherAnnouncements() {
-  const container = document.getElementById("teacherAnnouncementsList");
 
-  try {
-    const snapshot = await getDocs(collection(db, "announcements"));
+async function loadTeacherAnnouncements(){
 
-    if (snapshot.empty) {
-      container.innerHTML = '<div class="empty">No announcements.</div>';
+  const container =
+    document.getElementById(
+      "teacherAnnouncementsList"
+    );
+
+
+  try{
+
+    const snapshot =
+      await getDocs(
+        collection(db,"announcements")
+      );
+
+
+    if(snapshot.empty){
+
+      container.innerHTML =
+        '<div class="empty">No announcements.</div>';
+
       return;
+
     }
+
 
     let html = "";
 
-    snapshot.forEach(item => {
-      const data = item.data();
-      html += `
-        <div class="result-card glass">
-          <h3>📢 ${escapeHTML(data.title || "")}</h3>
-          <p>${escapeHTML(data.message || "")}</p>
-          <br>
-          <button class="danger-button" onclick="deleteAnnouncement('${item.id}')">Delete</button>
-        </div>
-      `;
-    });
+
+    snapshot.forEach(
+      item => {
+
+        const data =
+          item.data();
+
+
+        html += `
+
+          <div class="result-card glass">
+
+            <h3>
+
+              📢
+              ${escapeHTML(data.title || "")}
+
+            </h3>
+
+            <p>
+
+              ${escapeHTML(
+                data.message || ""
+              )}
+
+            </p>
+
+            <p class="date-text">
+
+              📅 Published:
+              ${formatDate(
+                data.publishedAt
+              )}
+
+            </p>
+
+            <br>
+
+            <button
+              class="danger-button"
+              onclick="deleteAnnouncement('${item.id}')">
+
+              Delete
+
+            </button>
+
+          </div>
+
+        `;
+
+      }
+    );
+
 
     container.innerHTML = html;
-  } catch (errorObject) {
-    console.error(errorObject);
-    container.innerHTML = "Could not load announcements.";
-  }
-}
-window.loadTeacherAnnouncements = loadTeacherAnnouncements;
 
-window.deleteAnnouncement = async function(id) {
-  if (!confirm("Delete this announcement?")) return;
-  try {
-    await deleteDoc(doc(db, "announcements", id));
-    await loadTeacherAnnouncements();
-  } catch (errorObject) {
+
+  }catch(errorObject){
+
     console.error(errorObject);
+
+    container.innerHTML =
+      "Could not load announcements.";
+
   }
+
+}
+
+
+window.loadTeacherAnnouncements =
+  loadTeacherAnnouncements;
+
+
+/* =========================================================
+   DELETE ANNOUNCEMENT
+========================================================= */
+
+window.deleteAnnouncement =
+async function(id){
+
+  if(
+    !confirm(
+      "Delete this announcement?"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  try{
+
+    await deleteDoc(
+      doc(
+        db,
+        "announcements",
+        id
+      )
+    );
+
+
+    await loadTeacherAnnouncements();
+
+
+  }catch(errorObject){
+
+    console.error(errorObject);
+
+  }
+
 };
 
-async function loadStudentAnnouncements() {
-  const container = document.getElementById("studentAnnouncementsList");
 
-  try {
-    const snapshot = await getDocs(collection(db, "announcements"));
+/* =========================================================
+   STUDENT ANNOUNCEMENTS
+========================================================= */
 
-    if (snapshot.empty) {
-      container.innerHTML = '<div class="empty">No announcements available.</div>';
+async function loadStudentAnnouncements(){
+
+  const container =
+    document.getElementById(
+      "studentAnnouncementsList"
+    );
+
+
+  try{
+
+    const snapshot =
+      await getDocs(
+        collection(db,"announcements")
+      );
+
+
+    if(snapshot.empty){
+
+      container.innerHTML =
+        '<div class="empty">No announcements available.</div>';
+
       return;
+
     }
+
 
     let html = "";
 
-    snapshot.forEach(item => {
-      const data = item.data();
-      html += `
-        <div class="result-card glass">
-          <h2>📢 ${escapeHTML(data.title || "")}</h2>
-          <br>
-          <p>${escapeHTML(data.message || "")}</p>
-        </div>
-      `;
-    });
+
+    snapshot.forEach(
+      item => {
+
+        const data =
+          item.data();
+
+
+        html += `
+
+          <div class="result-card glass">
+
+            <h2>
+
+              📢
+              ${escapeHTML(
+                data.title || ""
+              )}
+
+            </h2>
+
+            <br>
+
+            <p>
+
+              ${escapeHTML(
+                data.message || ""
+              )}
+
+            </p>
+
+            <p class="date-text">
+
+              📅 Published:
+              ${formatDate(
+                data.publishedAt
+              )}
+
+            </p>
+
+          </div>
+
+        `;
+
+      }
+    );
+
 
     container.innerHTML = html;
-  } catch (errorObject) {
+
+
+  }catch(errorObject){
+
     console.error(errorObject);
-    container.innerHTML = '<div class="empty">Could not load announcements.</div>';
+
+    container.innerHTML =
+      '<div class="empty">Could not load announcements.</div>';
+
   }
+
 }
 
-/* HTML SECURITY HELPERS */
-function escapeHTML(value) {
+
+/* =========================================================
+   DATE FORMATTER
+========================================================= */
+
+function formatDate(value){
+
+  if(!value){
+
+    return "Date unavailable";
+
+  }
+
+
+  let date;
+
+
+  /*
+    New data:
+    ISO string
+  */
+
+  if(typeof value === "string"){
+
+    date = new Date(value);
+
+  }
+
+
+  /*
+    Firestore Timestamp
+  */
+
+  else if(
+    typeof value.toDate === "function"
+  ){
+
+    date = value.toDate();
+
+  }
+
+
+  else{
+
+    date = new Date(value);
+
+  }
+
+
+  if(
+    Number.isNaN(
+      date.getTime()
+    )
+  ){
+
+    return "Date unavailable";
+
+  }
+
+
+  return date.toLocaleString(
+    "en-IN",
+    {
+
+      day:"2-digit",
+
+      month:"short",
+
+      year:"numeric",
+
+      hour:"2-digit",
+
+      minute:"2-digit"
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   HTML SECURITY HELPERS
+========================================================= */
+
+function escapeHTML(value){
+
   return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
 }
 
-function escapeAttribute(value) {
-  return String(value).replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+
+function escapeAttribute(value){
+
+  return String(value)
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
 }
 
-console.log("🔥 Plus One Student System loaded.");
+
+console.log(
+  "🔥 Plus One Student System loaded."
+);
 
 </script>
-
 
 </body>
 </html>
