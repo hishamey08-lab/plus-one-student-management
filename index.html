@@ -63,12 +63,79 @@ body{
   50%{ transform:translate(-50%,-50%) scale(1.25) rotate(50deg); }
 }
 
-@media (prefers-reduced-motion: reduce){
-  .bg-blobs span{ animation:none !important; }
+/* spectral particles drifting up through the void */
+.particles{ position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none; }
+.particles span{
+  position:absolute; bottom:-24px; border-radius:50%;
+  background:var(--pc); box-shadow:0 0 10px 2px var(--pc);
+  opacity:0; animation-name:particleRise; animation-timing-function:linear; animation-iteration-count:infinite;
+}
+@keyframes particleRise{
+  0%{ transform:translateY(0) translateX(0) scale(.6); opacity:0; }
+  8%{ opacity:.9; }
+  85%{ opacity:.5; }
+  100%{ transform:translateY(-112vh) translateX(24px) scale(1); opacity:0; }
 }
 
 .page{ display:none; }
-.page.active{ display:block; }
+.page.active{ display:block; animation:pageIn .55s ease both; }
+
+@keyframes pageIn{
+  from{ opacity:0; transform:translateY(16px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+
+/* staggered entrance for cards */
+.lobby-card, .feature-card, .form-card, .result-card, .password-box{
+  animation:cardIn .6s cubic-bezier(.22,.7,.3,1) both;
+}
+.lobby-container .lobby-card:nth-child(1),
+.feature-grid .feature-card:nth-child(1){ animation-delay:.05s; }
+.lobby-container .lobby-card:nth-child(2),
+.feature-grid .feature-card:nth-child(2){ animation-delay:.15s; }
+.feature-grid .feature-card:nth-child(3){ animation-delay:.25s; }
+.feature-grid .feature-card:nth-child(4){ animation-delay:.35s; }
+
+@keyframes cardIn{
+  from{ opacity:0; transform:translateY(26px) scale(.96); }
+  to{ opacity:1; transform:translateY(0) scale(1); }
+}
+
+/* gentle bob for emoji icons */
+.icon, .feature-icon{ animation:iconFloat 4.2s ease-in-out infinite; }
+@keyframes iconFloat{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(-7px); }
+}
+
+/* header title breathing glow */
+header h1{ animation:titleGlow 3.6s ease-in-out infinite; }
+@keyframes titleGlow{
+  0%,100%{ filter:drop-shadow(0 0 16px var(--glow)); }
+  50%{ filter:drop-shadow(0 0 30px var(--glow)); }
+}
+
+/* status messages slide in */
+.success, .error{ animation:msgIn .35s ease both; }
+@keyframes msgIn{
+  from{ opacity:0; transform:translateY(-6px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+
+/* spinning ring for loading states */
+.loading{ position:relative; }
+.loading::before{
+  content:''; display:inline-block; width:16px; height:16px; margin-right:10px; vertical-align:-3px;
+  border:3px solid var(--glass-border); border-top-color:var(--highlight);
+  border-radius:50%; animation:spin .8s linear infinite;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce){
+  .bg-blobs span, .particles span, .page.active, .lobby-card, .feature-card,
+  .form-card, .result-card, .password-box, .icon, .feature-icon, header h1,
+  .success, .error{ animation:none !important; }
+}
 
 /* =========================
    LIQUID GLASS + NEUMORPHIC SURFACE
@@ -309,6 +376,21 @@ footer{ text-align:center; padding:30px; color:var(--muted); font-size:13.5px; }
 <body>
 
 <div class="bg-blobs"><span></span><span></span><span></span></div>
+
+<div class="particles" aria-hidden="true">
+  <span style="left:6%;  width:3px; height:3px; animation-duration:14s; animation-delay:0s;   --pc:var(--highlight);"></span>
+  <span style="left:14%; width:2px; height:2px; animation-duration:11s; animation-delay:2s;   --pc:var(--accent-b);"></span>
+  <span style="left:23%; width:4px; height:4px; animation-duration:17s; animation-delay:1s;   --pc:var(--danger);"></span>
+  <span style="left:32%; width:2px; height:2px; animation-duration:13s; animation-delay:4s;   --pc:var(--highlight);"></span>
+  <span style="left:41%; width:3px; height:3px; animation-duration:16s; animation-delay:.5s;  --pc:var(--accent-a);"></span>
+  <span style="left:52%; width:2px; height:2px; animation-duration:12s; animation-delay:3s;   --pc:var(--highlight);"></span>
+  <span style="left:61%; width:4px; height:4px; animation-duration:18s; animation-delay:6s;   --pc:var(--accent-b);"></span>
+  <span style="left:70%; width:2px; height:2px; animation-duration:10s; animation-delay:1.5s; --pc:var(--danger);"></span>
+  <span style="left:78%; width:3px; height:3px; animation-duration:15s; animation-delay:5s;   --pc:var(--highlight);"></span>
+  <span style="left:86%; width:2px; height:2px; animation-duration:13s; animation-delay:2.5s; --pc:var(--accent-a);"></span>
+  <span style="left:92%; width:3px; height:3px; animation-duration:19s; animation-delay:7s;   --pc:var(--highlight);"></span>
+  <span style="left:48%; width:2px; height:2px; animation-duration:14s; animation-delay:8s;   --pc:var(--accent-b);"></span>
+</div>
 
 <!-- =====================================================
      HOME
