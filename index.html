@@ -1115,27 +1115,28 @@ footer{
 <div class="feature-grid">
 
   <div class="feature-card glass clickable"
-       onclick="openResultsPage()">
+       onclick="openRegisterLookupPage()">
 
-    <div class="feature-icon">📊</div>
+    <div class="feature-icon">🔢</div>
 
-    <h3>Exam Results</h3>
+    <h3>Enter Register Number</h3>
 
     <p>
-      Search and view examination marks and grades.
+      Enter your register number to open your personal student dashboard.
     </p>
 
   </div>
 
 
-  <div class="feature-card glass clickable">
+  <div class="feature-card glass clickable"
+       onclick="openNotesPage()">
 
     <div class="feature-icon">📚</div>
 
     <h3>Study Materials</h3>
 
     <p>
-      Subject-wise study materials will appear here.
+      Access subject-wise study materials, notes and PDF links.
     </p>
 
   </div>
@@ -1352,7 +1353,7 @@ footer{
 
 
   <div class="feature-card glass teacher-feature clickable"
-       onclick="loadTeacherStudents()">
+       onclick="openStudentManagement()">
 
     <div class="feature-icon">👨‍🎓</div>
 
@@ -1369,6 +1370,272 @@ footer{
 </main>
 
 </div>
+
+
+
+<!-- =====================================================
+     STUDENT REGISTER NUMBER LOOKUP
+====================================================== -->
+
+<div id="registerLookupPage" class="page">
+
+<header>
+  <h1>🔢 STUDENT ACCESS</h1>
+  <p>Enter your register number</p>
+</header>
+
+<main class="container">
+
+<button class="back-button" onclick="openStudentLobby()">
+  ← Back to Student Lobby
+</button>
+
+<div class="password-box glass">
+  <div class="icon">👨‍🎓</div>
+  <h2>Find Your Student Dashboard</h2>
+  <p>Enter your register number to view your personal information and exam results.</p>
+
+  <input
+    id="studentRegisterSearch"
+    type="text"
+    placeholder="Enter Register Number"
+    autocomplete="off"
+  >
+
+  <button onclick="findStudentByRegister()">
+    🔍 Continue
+  </button>
+
+  <div id="registerSearchError" class="error"></div>
+</div>
+
+</main>
+
+</div>
+
+
+<!-- =====================================================
+     PERSONAL STUDENT DASHBOARD
+====================================================== -->
+
+<div id="personalStudentDashboard" class="page">
+
+<header>
+  <h1>👨‍🎓 STUDENT DASHBOARD</h1>
+  <p id="personalStudentSubtitle">Your personal student area</p>
+</header>
+
+<main class="container">
+
+<button class="back-button" onclick="openRegisterLookupPage()">
+  ← Change Register Number
+</button>
+
+<div class="dashboard-title">
+  <h2 id="personalStudentWelcome">Welcome 👋</h2>
+  <p>Choose what you want to view.</p>
+</div>
+
+<div class="feature-grid">
+
+  <div class="feature-card glass clickable"
+       onclick="showPersonalStudentDetails()">
+
+    <div class="feature-icon">👤</div>
+    <h3 id="personalDetailsTitle">Student Details</h3>
+    <p>View your personal and academic details.</p>
+
+  </div>
+
+  <div class="feature-card glass clickable"
+       onclick="showPersonalExamResults()">
+
+    <div class="feature-icon">📊</div>
+    <h3 id="personalResultsTitle">Exam Results</h3>
+    <p>View your examination marks, grades and totals.</p>
+
+  </div>
+
+</div>
+
+</main>
+
+</div>
+
+
+<!-- =====================================================
+     PERSONAL STUDENT DETAILS
+====================================================== -->
+
+<div id="personalStudentDetailsPage" class="page">
+
+<header>
+  <h1>👤 STUDENT DETAILS</h1>
+  <p id="studentDetailsHeader">Personal student information</p>
+</header>
+
+<main class="container">
+
+<button class="back-button" onclick="openPersonalStudentDashboard()">
+  ← Back to My Dashboard
+</button>
+
+<div id="personalStudentDetailsContent">
+  <div class="loading">Loading student details...</div>
+</div>
+
+</main>
+
+</div>
+
+
+<!-- =====================================================
+     PERSONAL EXAM RESULTS
+====================================================== -->
+
+<div id="personalExamResultsPage" class="page">
+
+<header>
+  <h1>📊 EXAM RESULTS</h1>
+  <p id="studentResultsHeader">Personal examination results</p>
+</header>
+
+<main class="container">
+
+<button class="back-button" onclick="openPersonalStudentDashboard()">
+  ← Back to My Dashboard
+</button>
+
+<div id="personalExamResultsContent">
+  <div class="loading">Loading exam results...</div>
+</div>
+
+</main>
+
+</div>
+
+
+<!-- =====================================================
+     TEACHER STUDENT MANAGEMENT
+====================================================== -->
+
+<div id="studentManagementPage" class="page">
+
+<header>
+  <h1>👨‍🎓 STUDENT MANAGEMENT</h1>
+  <p>Add, edit and manage all student details</p>
+</header>
+
+<main class="container">
+
+<button class="back-button" onclick="openTeacherLobby()">
+  ← Back to Teacher Lobby
+</button>
+
+<div class="form-card glass">
+
+  <h2>➕ Add / Edit Student</h2>
+
+  <div class="form-grid">
+
+    <div class="form-group">
+      <label>Student Name *</label>
+      <input id="profileStudentName" placeholder="Student full name">
+    </div>
+
+    <div class="form-group">
+      <label>Register Number *</label>
+      <input id="profileRegisterNumber" placeholder="Unique register number">
+    </div>
+
+    <div class="form-group">
+      <label>Class *</label>
+      <input id="profileClassName" value="Plus One" placeholder="Plus One">
+    </div>
+
+    <div class="form-group">
+      <label>Stream</label>
+      <input id="profileStream" placeholder="Example: Computer Commerce">
+    </div>
+
+    <div class="form-group">
+      <label>Division</label>
+      <input id="profileDivision" placeholder="Example: A">
+    </div>
+
+    <div class="form-group">
+      <label>Date of Birth</label>
+      <input id="profileDob" type="date">
+    </div>
+
+    <div class="form-group">
+      <label>Gender</label>
+      <select id="profileGender">
+        <option value="">Select</option>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Parent / Guardian Name</label>
+      <input id="profileGuardianName" placeholder="Parent or guardian name">
+    </div>
+
+    <div class="form-group">
+      <label>Parent / Guardian Phone</label>
+      <input id="profileGuardianPhone" type="tel" placeholder="Phone number">
+    </div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input id="profileEmail" type="email" placeholder="Student email">
+    </div>
+
+    <div class="form-group full">
+      <label>Address</label>
+      <textarea id="profileAddress" placeholder="Student address"></textarea>
+    </div>
+
+  </div>
+
+  <button class="primary-button" onclick="saveStudentProfile()">
+    💾 Save Student
+  </button>
+
+  <button class="secondary-button" onclick="clearStudentProfileForm()">
+    Clear
+  </button>
+
+  <div id="studentProfileMessage"></div>
+
+</div>
+
+
+<div class="form-card glass">
+
+  <h2>📋 All Students</h2>
+
+  <div class="result-search">
+    <input
+      id="teacherStudentSearch"
+      type="text"
+      placeholder="Search by student name or register number"
+      oninput="filterTeacherStudentList()"
+    >
+  </div>
+
+  <div id="studentManagementList">
+    <div class="loading">Loading students...</div>
+  </div>
+
+</div>
+
+</main>
+
+</div>
+
 
 
 <!-- =====================================================
@@ -1412,11 +1679,11 @@ footer{
 
 <div class="form-group">
 
-<label>Roll Number</label>
+<label>Register Number</label>
 
 <input
   id="rollNumber"
-  placeholder="Roll number"
+  placeholder="Register number"
 >
 
 </div>
@@ -2244,71 +2511,28 @@ function validateMark(mark,maxMark){
 
 window.saveStudentResult = async function(){
 
-  const name =
-    document
-      .getElementById("studentName")
-      .value
-      .trim();
-
-
-  const rollNumber =
-    document
-      .getElementById("rollNumber")
-      .value
-      .trim();
-
-
-  const className =
-    document
-      .getElementById("className")
-      .value
-      .trim();
-
-
-  const exam =
-    document
-      .getElementById("examName")
-      .value
-      .trim();
-
+  const name = document.getElementById("studentName").value.trim();
+  const registerNumber = document.getElementById("rollNumber").value.trim();
+  const className = document.getElementById("className").value.trim();
+  const exam = document.getElementById("examName").value.trim();
 
   const english = getMark("englishMark");
   const englishMax = getMark("englishMax");
-
   const accountancy = getMark("accountancyMark");
   const accountancyMax = getMark("accountancyMax");
-
   const business = getMark("businessMark");
   const businessMax = getMark("businessMax");
-
   const computer = getMark("computerMark");
   const computerMax = getMark("computerMax");
 
+  const message = document.getElementById("saveMessage");
 
-  const message =
-    document.getElementById("saveMessage");
-
-
-  /* REQUIRED DETAILS */
-
-  if(
-    !name ||
-    !rollNumber ||
-    !className ||
-    !exam
-  ){
-
+  if(!name || !registerNumber || !className || !exam){
     message.className = "error";
     message.style.display = "block";
-
-    message.textContent =
-      "Please fill all student details.";
-
+    message.textContent = "Please fill all student details.";
     return;
   }
-
-
-  /* MARK VALIDATION */
 
   if(
     !validateMark(english,englishMax) ||
@@ -2316,257 +2540,92 @@ window.saveStudentResult = async function(){
     !validateMark(business,businessMax) ||
     !validateMark(computer,computerMax)
   ){
-
     message.className = "error";
     message.style.display = "block";
-
-    message.textContent =
-      "❌ Check marks. Obtained mark cannot be greater than total mark.";
-
+    message.textContent = "❌ Check marks. Obtained mark cannot be greater than total mark.";
     return;
   }
 
-
-  /* =====================================================
-     SUBJECT MARK OBJECT
-  ===================================================== */
-
   const marks = {
-
-    English:{
-      mark:english,
-      maxMark:englishMax,
-      grade:calculateGrade(
-        english,
-        englishMax
-      )
-    },
-
-    Accountancy:{
-      mark:accountancy,
-      maxMark:accountancyMax,
-      grade:calculateGrade(
-        accountancy,
-        accountancyMax
-      )
-    },
-
-    "Business Studies":{
-      mark:business,
-      maxMark:businessMax,
-      grade:calculateGrade(
-        business,
-        businessMax
-      )
-    },
-
-    "Computer Application":{
-      mark:computer,
-      maxMark:computerMax,
-      grade:calculateGrade(
-        computer,
-        computerMax
-      )
-    }
-
+    English:{mark:english,maxMark:englishMax,grade:calculateGrade(english,englishMax)},
+    Accountancy:{mark:accountancy,maxMark:accountancyMax,grade:calculateGrade(accountancy,accountancyMax)},
+    "Business Studies":{mark:business,maxMark:businessMax,grade:calculateGrade(business,businessMax)},
+    "Computer Application":{mark:computer,maxMark:computerMax,grade:calculateGrade(computer,computerMax)}
   };
 
-
-  /* =====================================================
-     TOTAL CALCULATION
-  ===================================================== */
-
-  const total =
-    english +
-    accountancy +
-    business +
-    computer;
-
-
-  const maxTotal =
-    englishMax +
-    accountancyMax +
-    businessMax +
-    computerMax;
-
-
-  const percentage =
-    (total / maxTotal) * 100;
-
-
-  /* =====================================================
-     RESULT OBJECT
-  ===================================================== */
+  const total = english + accountancy + business + computer;
+  const maxTotal = englishMax + accountancyMax + businessMax + computerMax;
+  const percentage = maxTotal ? Number(((total / maxTotal) * 100).toFixed(2)) : 0;
 
   const result = {
-
-    exam:exam,
-
-    marks:marks,
-
-    total:total,
-
-    maxTotal:maxTotal,
-
-    percentage:Number(
-      percentage.toFixed(2)
-    ),
-
+    exam,
+    marks,
+    total,
+    maxTotal,
+    percentage,
     savedAt:new Date().toISOString()
-
   };
 
-
   try{
-
-    const existing =
-      await getDocs(
-        collection(db,"students")
-      );
-
-
+    const snapshot = await getDocs(collection(db,"students"));
     let existingDoc = null;
 
+    snapshot.forEach(documentSnapshot => {
+      const data = documentSnapshot.data();
+      const storedRegister = String(
+        data.registerNumber || data.rollNumber || ""
+      ).toLowerCase();
 
-    existing.forEach(
-      documentSnapshot => {
-
-        const data =
-          documentSnapshot.data();
-
-
-        if(
-          String(data.rollNumber)
-            .toLowerCase() ===
-          rollNumber.toLowerCase()
-        ){
-
-          existingDoc =
-            documentSnapshot;
-
-        }
-
+      if(storedRegister === registerNumber.toLowerCase()){
+        existingDoc = documentSnapshot;
       }
-    );
-
-
-    /* =====================================================
-       UPDATE EXISTING STUDENT
-    ===================================================== */
+    });
 
     if(existingDoc){
-
-      const oldData =
-        existingDoc.data();
-
-
-      let results =
-        oldData.results || [];
-
-
-      const index =
-        results.findIndex(
-          item =>
-            String(item.exam || "")
-              .toLowerCase() ===
-            exam.toLowerCase()
-        );
-
-
-      if(index >= 0){
-
-        /*
-          Keep original creation date
-          but update the result date.
-        */
-
-        result.savedAt =
-          new Date().toISOString();
-
-        results[index] = result;
-
-      }else{
-
-        results.push(result);
-
-      }
-
-
-      await updateDoc(
-        doc(
-          db,
-          "students",
-          existingDoc.id
-        ),
-        {
-
-          name:name,
-
-          rollNumber:rollNumber,
-
-          className:className,
-
-          results:results,
-
-          updatedAt:serverTimestamp()
-
-        }
+      const oldData = existingDoc.data();
+      const results = oldData.results || [];
+      const index = results.findIndex(
+        item => String(item.exam || "").toLowerCase() === exam.toLowerCase()
       );
 
+      if(index >= 0) results[index] = result;
+      else results.push(result);
+
+      await updateDoc(doc(db,"students",existingDoc.id),{
+        name:name || oldData.name || "",
+        registerNumber,
+        rollNumber:registerNumber,
+        className:className || oldData.className || "",
+        results,
+        updatedAt:serverTimestamp()
+      });
 
     }else{
-
-      /* =================================================
-         CREATE NEW STUDENT
-      ================================================= */
-
-      await addDoc(
-        collection(db,"students"),
-        {
-
-          name:name,
-
-          rollNumber:rollNumber,
-
-          className:className,
-
-          results:[result],
-
-          createdAt:serverTimestamp(),
-
-          updatedAt:serverTimestamp()
-
-        }
-      );
-
+      await addDoc(collection(db,"students"),{
+        name,
+        registerNumber,
+        rollNumber:registerNumber,
+        className,
+        results:[result],
+        createdAt:serverTimestamp(),
+        createdAtLocal:new Date().toISOString(),
+        updatedAt:serverTimestamp()
+      });
     }
-
 
     message.className = "success";
     message.style.display = "block";
-
-    message.textContent =
-      "✅ Result saved successfully!";
-
+    message.textContent = "✅ Result saved successfully!";
 
     clearResultForm();
-
-
     await loadTeacherStudents();
 
-
   }catch(errorObject){
-
     console.error(errorObject);
-
     message.className = "error";
     message.style.display = "block";
-
-    message.textContent =
-      "❌ Could not save result. Check Firestore Rules.";
-
+    message.textContent = "❌ Could not save result. Check Firestore Rules.";
   }
-
 };
 
 
@@ -4035,6 +4094,512 @@ function escapeAttribute(value){
     );
 
 }
+
+
+
+/* =========================================================
+   NEW STUDENT MANAGEMENT + REGISTER NUMBER SYSTEM
+========================================================= */
+
+let selectedStudentDocId = null;
+let currentPersonalStudent = null;
+
+window.openStudentManagement = async function(){
+  hideAllPages();
+  document.getElementById("studentManagementPage").classList.add("active");
+  selectedStudentDocId = null;
+  clearStudentProfileForm();
+  await loadStudentManagementList();
+};
+
+window.openRegisterLookupPage = function(){
+  hideAllPages();
+  document.getElementById("registerLookupPage").classList.add("active");
+  document.getElementById("studentRegisterSearch").value = "";
+  document.getElementById("registerSearchError").style.display = "none";
+};
+
+window.openPersonalStudentDashboard = function(){
+  if(!currentPersonalStudent){
+    openRegisterLookupPage();
+    return;
+  }
+
+  hideAllPages();
+  document.getElementById("personalStudentDashboard").classList.add("active");
+
+  const name = currentPersonalStudent.data.name || "Student";
+  document.getElementById("personalStudentWelcome").textContent = `Welcome 👋 ${name}`;
+  document.getElementById("personalStudentSubtitle").textContent =
+    `${name}'s personal student dashboard`;
+  document.getElementById("personalDetailsTitle").textContent =
+    `${name}'s Details`;
+  document.getElementById("personalResultsTitle").textContent =
+    `${name}'s Exam Results`;
+};
+
+window.saveStudentProfile = async function(){
+
+  const name = document.getElementById("profileStudentName").value.trim();
+  const registerNumber = document.getElementById("profileRegisterNumber").value.trim();
+  const className = document.getElementById("profileClassName").value.trim();
+  const stream = document.getElementById("profileStream").value.trim();
+  const division = document.getElementById("profileDivision").value.trim();
+  const dob = document.getElementById("profileDob").value;
+  const gender = document.getElementById("profileGender").value;
+  const guardianName = document.getElementById("profileGuardianName").value.trim();
+  const guardianPhone = document.getElementById("profileGuardianPhone").value.trim();
+  const email = document.getElementById("profileEmail").value.trim();
+  const address = document.getElementById("profileAddress").value.trim();
+  const message = document.getElementById("studentProfileMessage");
+
+  if(!name || !registerNumber || !className){
+    message.className = "error";
+    message.style.display = "block";
+    message.textContent = "Please enter Student Name, Register Number and Class.";
+    return;
+  }
+
+  try{
+    const snapshot = await getDocs(collection(db,"students"));
+    let duplicateDoc = null;
+
+    snapshot.forEach(item => {
+      const data = item.data();
+      const existingRegister = String(
+        data.registerNumber || data.rollNumber || ""
+      ).toLowerCase();
+
+      if(existingRegister === registerNumber.toLowerCase() &&
+         item.id !== selectedStudentDocId){
+        duplicateDoc = item;
+      }
+    });
+
+    if(duplicateDoc){
+      message.className = "error";
+      message.style.display = "block";
+      message.textContent = "❌ This Register Number already belongs to another student.";
+      return;
+    }
+
+    const profileData = {
+      name,
+      registerNumber,
+      rollNumber:registerNumber,
+      className,
+      stream,
+      division,
+      dob,
+      gender,
+      guardianName,
+      guardianPhone,
+      email,
+      address,
+      updatedAt:serverTimestamp(),
+      updatedAtLocal:new Date().toISOString()
+    };
+
+    if(selectedStudentDocId){
+      await updateDoc(
+        doc(db,"students",selectedStudentDocId),
+        profileData
+      );
+    }else{
+      await addDoc(collection(db,"students"),{
+        ...profileData,
+        results:[],
+        createdAt:serverTimestamp(),
+        createdAtLocal:new Date().toISOString()
+      });
+    }
+
+    message.className = "success";
+    message.style.display = "block";
+    message.textContent = "✅ Student saved successfully!";
+
+    selectedStudentDocId = null;
+    clearStudentProfileForm(false);
+    await loadStudentManagementList();
+
+  }catch(errorObject){
+    console.error(errorObject);
+    message.className = "error";
+    message.style.display = "block";
+    message.textContent = "❌ Could not save student. Check Firestore Rules.";
+  }
+};
+
+window.clearStudentProfileForm = function(clearMessage = true){
+  const ids = [
+    "profileStudentName","profileRegisterNumber","profileStream",
+    "profileDivision","profileDob","profileGuardianName",
+    "profileGuardianPhone","profileEmail","profileAddress"
+  ];
+
+  ids.forEach(id => document.getElementById(id).value = "");
+  document.getElementById("profileClassName").value = "Plus One";
+  document.getElementById("profileGender").value = "";
+  selectedStudentDocId = null;
+
+  if(clearMessage){
+    document.getElementById("studentProfileMessage").style.display = "none";
+  }
+};
+
+window.loadStudentManagementList = async function(){
+  const container = document.getElementById("studentManagementList");
+  container.innerHTML = '<div class="loading">Loading students...</div>';
+
+  try{
+    const snapshot = await getDocs(collection(db,"students"));
+
+    if(snapshot.empty){
+      container.innerHTML = '<div class="empty">No students added yet.</div>';
+      return;
+    }
+
+    let students = [];
+    snapshot.forEach(item => students.push({id:item.id,data:item.data()}));
+
+    students.sort((a,b) =>
+      String(a.data.name || "").localeCompare(String(b.data.name || ""))
+    );
+
+    window.allManagedStudents = students;
+
+    container.innerHTML = renderStudentManagementTable(students);
+
+  }catch(errorObject){
+    console.error(errorObject);
+    container.innerHTML =
+      '<div class="empty">Could not load students. Check Firestore Rules.</div>';
+  }
+};
+
+function renderStudentManagementTable(students){
+
+  if(!students.length){
+    return '<div class="empty">No matching students found.</div>';
+  }
+
+  let html = `
+    <div class="student-list">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Register No.</th>
+            <th>Class</th>
+            <th>Stream / Division</th>
+            <th>Exams</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+
+  students.forEach(student => {
+    const data = student.data;
+    const registerNumber = data.registerNumber || data.rollNumber || "";
+    const streamDivision =
+      [data.stream || "", data.division || ""].filter(Boolean).join(" / ") || "-";
+
+    html += `
+      <tr>
+        <td>${escapeHTML(data.name || "")}</td>
+        <td>${escapeHTML(registerNumber)}</td>
+        <td>${escapeHTML(data.className || "")}</td>
+        <td>${escapeHTML(streamDivision)}</td>
+        <td>${(data.results || []).length}</td>
+        <td>
+          <button class="edit-button"
+            onclick="editManagedStudent('${student.id}')">Edit</button>
+          <button class="danger-button"
+            onclick="deleteManagedStudent('${student.id}')">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+
+  html += '</tbody></table></div>';
+  return html;
+}
+
+window.filterTeacherStudentList = function(){
+  const search = document.getElementById("teacherStudentSearch").value
+    .trim().toLowerCase();
+
+  const students = (window.allManagedStudents || []).filter(student => {
+    const data = student.data;
+    const registerNumber = String(
+      data.registerNumber || data.rollNumber || ""
+    ).toLowerCase();
+
+    return String(data.name || "").toLowerCase().includes(search) ||
+           registerNumber.includes(search);
+  });
+
+  document.getElementById("studentManagementList").innerHTML =
+    renderStudentManagementTable(students);
+};
+
+window.editManagedStudent = function(id){
+  const student = (window.allManagedStudents || [])
+    .find(item => item.id === id);
+
+  if(!student) return;
+
+  const data = student.data;
+  selectedStudentDocId = id;
+
+  document.getElementById("profileStudentName").value = data.name || "";
+  document.getElementById("profileRegisterNumber").value =
+    data.registerNumber || data.rollNumber || "";
+  document.getElementById("profileClassName").value =
+    data.className || "Plus One";
+  document.getElementById("profileStream").value = data.stream || "";
+  document.getElementById("profileDivision").value = data.division || "";
+  document.getElementById("profileDob").value = data.dob || "";
+  document.getElementById("profileGender").value = data.gender || "";
+  document.getElementById("profileGuardianName").value =
+    data.guardianName || "";
+  document.getElementById("profileGuardianPhone").value =
+    data.guardianPhone || "";
+  document.getElementById("profileEmail").value = data.email || "";
+  document.getElementById("profileAddress").value = data.address || "";
+
+  document.getElementById("studentProfileMessage").style.display = "none";
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+window.deleteManagedStudent = async function(id){
+  if(!confirm("Delete this student and all of this student's saved results?")){
+    return;
+  }
+
+  try{
+    await deleteDoc(doc(db,"students",id));
+    await loadStudentManagementList();
+  }catch(errorObject){
+    console.error(errorObject);
+    alert("Could not delete student.");
+  }
+};
+
+window.findStudentByRegister = async function(){
+  const registerNumber =
+    document.getElementById("studentRegisterSearch").value.trim();
+
+  const error = document.getElementById("registerSearchError");
+  error.style.display = "none";
+
+  if(!registerNumber){
+    error.textContent = "Please enter your register number.";
+    error.style.display = "block";
+    return;
+  }
+
+  try{
+    const snapshot = await getDocs(collection(db,"students"));
+    let found = null;
+
+    snapshot.forEach(item => {
+      const data = item.data();
+      const storedRegister = String(
+        data.registerNumber || data.rollNumber || ""
+      ).toLowerCase();
+
+      if(storedRegister === registerNumber.toLowerCase()){
+        found = {id:item.id,data};
+      }
+    });
+
+    if(!found){
+      error.textContent = "❌ Student not found. Please check your register number.";
+      error.style.display = "block";
+      return;
+    }
+
+    currentPersonalStudent = found;
+    openPersonalStudentDashboard();
+
+  }catch(errorObject){
+    console.error(errorObject);
+    error.textContent = "❌ Could not search student details.";
+    error.style.display = "block";
+  }
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  const registerInput = document.getElementById("studentRegisterSearch");
+  if(registerInput){
+    registerInput.addEventListener("keydown", event => {
+      if(event.key === "Enter") findStudentByRegister();
+    });
+  }
+});
+
+window.showPersonalStudentDetails = function(){
+  if(!currentPersonalStudent) return openRegisterLookupPage();
+
+  hideAllPages();
+  document.getElementById("personalStudentDetailsPage").classList.add("active");
+
+  const data = currentPersonalStudent.data;
+  const name = data.name || "Student";
+  const registerNumber = data.registerNumber || data.rollNumber || "";
+
+  document.getElementById("studentDetailsHeader").textContent =
+    `${name}'s student details`;
+
+  const fields = [
+    ["Student Name", name],
+    ["Register Number", registerNumber],
+    ["Class", data.className || ""],
+    ["Stream", data.stream || ""],
+    ["Division", data.division || ""],
+    ["Date of Birth", data.dob || ""],
+    ["Gender", data.gender || ""],
+    ["Parent / Guardian", data.guardianName || ""],
+    ["Parent Phone", data.guardianPhone || ""],
+    ["Email", data.email || ""],
+    ["Address", data.address || ""]
+  ].filter(([,value]) => String(value).trim() !== "");
+
+  let html = `
+    <div class="result-card glass">
+      <div class="student-header">
+        <div>
+          <h2>${escapeHTML(name)}</h2>
+          <p>Register Number: ${escapeHTML(registerNumber)}</p>
+        </div>
+      </div>
+  `;
+
+  fields.forEach(([label,value]) => {
+    html += `
+      <div class="total-box">
+        <span>${escapeHTML(label)}</span>
+        <span>${escapeHTML(value)}</span>
+      </div>
+    `;
+  });
+
+  html += '</div>';
+  document.getElementById("personalStudentDetailsContent").innerHTML = html;
+};
+
+window.showPersonalExamResults = function(){
+  if(!currentPersonalStudent) return openRegisterLookupPage();
+
+  hideAllPages();
+  document.getElementById("personalExamResultsPage").classList.add("active");
+
+  const data = currentPersonalStudent.data;
+  const name = data.name || "Student";
+  const results = data.results || [];
+
+  document.getElementById("studentResultsHeader").textContent =
+    `${name}'s examination results`;
+
+  if(!results.length){
+    document.getElementById("personalExamResultsContent").innerHTML =
+      '<div class="empty">No exam results available yet.</div>';
+    return;
+  }
+
+  let html = '';
+
+  results.forEach(result => {
+    html += `
+      <div class="result-card glass">
+        <div class="student-header">
+          <div>
+            <h2>${escapeHTML(result.exam || "Exam")}</h2>
+            <p>${escapeHTML(name)}</p>
+          </div>
+        </div>
+
+        <table class="marks-table">
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>Mark</th>
+              <th>Grade</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+
+    Object.entries(result.marks || {}).forEach(([subject,value]) => {
+      const mark = value.mark ?? "";
+      const maxMark = value.maxMark;
+      const markText =
+        maxMark !== undefined && maxMark !== null
+          ? `${mark} / ${maxMark}`
+          : mark;
+
+      html += `
+        <tr>
+          <td>${escapeHTML(subject)}</td>
+          <td>${escapeHTML(markText)}</td>
+          <td class="grade">${escapeHTML(value.grade || "")}</td>
+        </tr>
+      `;
+    });
+
+    html += `
+          </tbody>
+        </table>
+
+        <div class="total-box">
+          <span>Total</span>
+          <span>${escapeHTML(`${result.total ?? ""} / ${result.maxTotal ?? ""}`)}</span>
+        </div>
+
+        <div class="percentage-box">
+          <span>Percentage</span>
+          <span>${escapeHTML(`${result.percentage ?? ""}%`)}</span>
+        </div>
+
+        <p class="date-text">
+          📅 Last updated: ${escapeHTML(formatDate(result.savedAt))}
+        </p>
+      </div>
+    `;
+  });
+
+  document.getElementById("personalExamResultsContent").innerHTML = html;
+};
+
+/* Override old student list function so it never opens a hidden list by mistake. */
+window.loadTeacherStudents = async function(){
+  const snapshot = await getDocs(collection(db,"students"));
+  const container = document.getElementById("teacherStudentList");
+
+  if(!container) return;
+
+  if(snapshot.empty){
+    container.innerHTML = '<div class="empty">No students added yet.</div>';
+    return;
+  }
+
+  let html = '<div class="student-list"><table class="data-table"><thead><tr><th>Name</th><th>Register No.</th><th>Class</th><th>Exams</th></tr></thead><tbody>';
+
+  snapshot.forEach(item => {
+    const data = item.data();
+    html += `<tr>
+      <td>${escapeHTML(data.name || "")}</td>
+      <td>${escapeHTML(data.registerNumber || data.rollNumber || "")}</td>
+      <td>${escapeHTML(data.className || "")}</td>
+      <td>${(data.results || []).length}</td>
+    </tr>`;
+  });
+
+  html += '</tbody></table></div>';
+  container.innerHTML = html;
+};
 
 
 console.log(
