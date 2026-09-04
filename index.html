@@ -7,6 +7,7 @@
 <title>Plus One Student System</title>
 
 <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
@@ -1279,7 +1280,2678 @@ Loading announcements...
      FIREBASE
 ====================================================== -->
 
-<script type="module" src="app.js"></script>
+
+<script type="module">
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  updateDoc,
+  deleteDoc,
+  serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+/* =========================================================
+   FIREBASE CONFIG
+========================================================= */
+
+const firebaseConfig = {
+
+  apiKey:"AIzaSyBCfKnTHrLVR1KdGbF1dDaj-Q0ZMdbBcgk",
+
+  authDomain:"plus-one-student-web.firebaseapp.com",
+
+  projectId:"plus-one-student-web",
+
+  storageBucket:"plus-one-student-web.firebasestorage.app",
+
+  messagingSenderId:"845465703333",
+
+  appId:"1:845465703333:web:dc78c09173e27d69f04e4c"
+
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+
+/* =========================================================
+   TEACHER EMAIL
+========================================================= */
+
+const TEACHER_EMAIL =
+"teacher@plusone-school.web.app";
+
+
+/* =========================================================
+   PAGE CONTROL
+========================================================= */
+
+window.hideAllPages = function(){
+
+  document
+    .querySelectorAll(".page")
+    .forEach(page =>
+      page.classList.remove("active")
+    );
+
+};
+
+
+window.goHome = function(){
+
+  hideAllPages();
+
+  document
+    .getElementById("homePage")
+    .classList.add("active");
+
+};
+
+
+window.openStudentLobby = function(){
+
+  hideAllPages();
+
+  document
+    .getElementById("studentLobby")
+    .classList.add("active");
+
+};
+
+
+window.openTeacherLogin = function(){
+
+  hideAllPages();
+
+  document
+    .getElementById("teacherLogin")
+    .classList.add("active");
+
+};
+
+
+window.openTeacherLobby = function(){
+
+  hideAllPages();
+
+  document
+    .getElementById("teacherLobby")
+    .classList.add("active");
+
+};
+
+
+window.openResultsPage = function(){
+
+  hideAllPages();
+
+  document
+    .getElementById("resultsPage")
+    .classList.add("active");
+
+};
+
+
+window.openTeacherResults = async function(){
+
+  hideAllPages();
+
+  document
+    .getElementById("teacherResults")
+    .classList.add("active");
+
+  await loadTeacherStudents();
+
+};
+
+
+window.openTeacherNotes = async function(){
+
+  hideAllPages();
+
+  document
+    .getElementById("teacherNotes")
+    .classList.add("active");
+
+  await loadTeacherNotes();
+
+};
+
+
+window.openNotesPage = async function(){
+
+  hideAllPages();
+
+  document
+    .getElementById("notesPage")
+    .classList.add("active");
+
+  await loadStudentNotes();
+
+};
+
+
+window.openTeacherAnnouncements = async function(){
+
+  hideAllPages();
+
+  document
+    .getElementById("teacherAnnouncements")
+    .classList.add("active");
+
+  await loadTeacherAnnouncements();
+
+};
+
+
+window.openAnnouncementsPage = async function(){
+
+  hideAllPages();
+
+  document
+    .getElementById("announcementsPage")
+    .classList.add("active");
+
+  await loadStudentAnnouncements();
+
+};
+
+
+/* =========================================================
+   TEACHER LOGIN
+========================================================= */
+
+window.checkTeacherPassword = async function(){
+
+  const password =
+    document
+      .getElementById("teacherPassword")
+      .value
+      .trim();
+
+  const error =
+    document.getElementById("passwordError");
+
+  error.style.display = "none";
+
+
+  if(!password){
+
+    error.textContent =
+      "Please enter the teacher password.";
+
+    error.style.display = "block";
+
+    return;
+  }
+
+
+  try{
+
+    await signInWithEmailAndPassword(
+      auth,
+      TEACHER_EMAIL,
+      password
+    );
+
+
+    document
+      .getElementById("teacherPassword")
+      .value = "";
+
+
+    openTeacherLobby();
+
+
+  }catch(errorObject){
+
+    console.error(errorObject);
+
+    error.textContent =
+      "Incorrect teacher password.";
+
+    error.style.display = "block";
+
+  }
+
+};
+
+
+document
+  .getElementById("teacherPassword")
+  .addEventListener(
+    "keydown",
+    function(event){
+
+      if(event.key === "Enter"){
+
+        checkTeacherPassword();
+
+      }
+
+    }
+  );
+
+
+/* =========================================================
+   GRADE CALCULATOR
+   Grade is based on PERCENTAGE.
+========================================================= */
+
+function calculateGrade(mark,maxMark){
+
+  mark = Number(mark);
+  maxMark = Number(maxMark);
+
+  if(!maxMark || maxMark <= 0){
+    return "-";
+  }
+
+  const percentage =
+    (mark / maxMark) * 100;
+
+
+  if(percentage >= 90) return "A+";
+  if(percentage >= 80) return "A";
+  if(percentage >= 70) return "B+";
+  if(percentage >= 60) return "B";
+  if(percentage >= 50) return "C+";
+  if(percentage >= 40) return "C";
+  if(percentage >= 30) return "D";
+
+  return "E";
+}
+
+
+/* =========================================================
+   NUMBER VALIDATION
+========================================================= */
+
+function getMark(id){
+
+  const value =
+    Number(
+      document
+        .getElementById(id)
+        .value
+    );
+
+  return value;
+}
+
+
+function validateMark(mark,maxMark){
+
+  if(
+    Number.isNaN(mark) ||
+    Number.isNaN(maxMark)
+  ){
+    return false;
+  }
+
+  if(maxMark <= 0){
+    return false;
+  }
+
+  if(mark < 0){
+    return false;
+  }
+
+  if(mark > maxMark){
+    return false;
+  }
+
+  return true;
+}
+
+
+/* =========================================================
+   SAVE STUDENT RESULT
+========================================================= */
+
+window.saveStudentResult = async function(){
+
+  const name = document.getElementById("studentName").value.trim();
+  const registerNumber = document.getElementById("rollNumber").value.trim();
+  const className = document.getElementById("className").value.trim();
+  const exam = document.getElementById("examName").value.trim();
+
+  const english = getMark("englishMark");
+  const englishMax = getMark("englishMax");
+  const accountancy = getMark("accountancyMark");
+  const accountancyMax = getMark("accountancyMax");
+  const business = getMark("businessMark");
+  const businessMax = getMark("businessMax");
+  const computer = getMark("computerMark");
+  const computerMax = getMark("computerMax");
+
+  const message = document.getElementById("saveMessage");
+
+  if(!name || !registerNumber || !className || !exam){
+    message.className = "error";
+    message.style.display = "block";
+    message.textContent = "Please fill all student details.";
+    return;
+  }
+
+  if(
+    !validateMark(english,englishMax) ||
+    !validateMark(accountancy,accountancyMax) ||
+    !validateMark(business,businessMax) ||
+    !validateMark(computer,computerMax)
+  ){
+    message.className = "error";
+    message.style.display = "block";
+    message.textContent = "❌ Check marks. Obtained mark cannot be greater than total mark.";
+    return;
+  }
+
+  const marks = {
+    English:{mark:english,maxMark:englishMax,grade:calculateGrade(english,englishMax)},
+    Accountancy:{mark:accountancy,maxMark:accountancyMax,grade:calculateGrade(accountancy,accountancyMax)},
+    "Business Studies":{mark:business,maxMark:businessMax,grade:calculateGrade(business,businessMax)},
+    "Computer Application":{mark:computer,maxMark:computerMax,grade:calculateGrade(computer,computerMax)}
+  };
+
+  const total = english + accountancy + business + computer;
+  const maxTotal = englishMax + accountancyMax + businessMax + computerMax;
+  const percentage = maxTotal ? Number(((total / maxTotal) * 100).toFixed(2)) : 0;
+
+  const result = {
+    exam,
+    marks,
+    total,
+    maxTotal,
+    percentage,
+    savedAt:new Date().toISOString()
+  };
+
+  try{
+    const snapshot = await getDocs(collection(db,"students"));
+    let existingDoc = null;
+
+    snapshot.forEach(documentSnapshot => {
+      const data = documentSnapshot.data();
+      const storedRegister = String(
+        data.registerNumber || data.rollNumber || ""
+      ).toLowerCase();
+
+      if(storedRegister === registerNumber.toLowerCase()){
+        existingDoc = documentSnapshot;
+      }
+    });
+
+    if(existingDoc){
+      const oldData = existingDoc.data();
+      const results = oldData.results || [];
+      const index = results.findIndex(
+        item => String(item.exam || "").toLowerCase() === exam.toLowerCase()
+      );
+
+      if(index >= 0) results[index] = result;
+      else results.push(result);
+
+      await updateDoc(doc(db,"students",existingDoc.id),{
+        name:name || oldData.name || "",
+        registerNumber,
+        rollNumber:registerNumber,
+        className:className || oldData.className || "",
+        results,
+        updatedAt:serverTimestamp()
+      });
+
+    }else{
+      await addDoc(collection(db,"students"),{
+        name,
+        registerNumber,
+        rollNumber:registerNumber,
+        className,
+        results:[result],
+        createdAt:serverTimestamp(),
+        createdAtLocal:new Date().toISOString(),
+        updatedAt:serverTimestamp()
+      });
+    }
+
+    message.className = "success";
+    message.style.display = "block";
+    message.textContent = "✅ Result saved successfully!";
+
+    clearResultForm();
+    await loadTeacherStudents();
+
+  }catch(errorObject){
+    console.error(errorObject);
+    message.className = "error";
+    message.style.display = "block";
+    message.textContent = "❌ Could not save result. Check Firestore Rules.";
+  }
+};
+
+
+/* =========================================================
+   LOAD TEACHER STUDENTS
+========================================================= */
+
+window.loadTeacherStudents = async function(){
+
+  const container =
+    document.getElementById(
+      "teacherStudentList"
+    );
+
+
+  container.innerHTML =
+    '<div class="loading">Loading...</div>';
+
+
+  try{
+
+    const snapshot =
+      await getDocs(
+        collection(db,"students")
+      );
+
+
+    if(snapshot.empty){
+
+      container.innerHTML =
+        '<div class="empty">No students added yet.</div>';
+
+      return;
+
+    }
+
+
+    let html = `
+
+      <div class="student-list">
+
+      <table class="data-table">
+
+      <thead>
+
+        <tr>
+
+          <th>Name</th>
+          <th>Roll</th>
+          <th>Class</th>
+          <th>Exams</th>
+          <th>Actions</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+    `;
+
+
+    snapshot.forEach(
+      documentSnapshot => {
+
+        const data =
+          documentSnapshot.data();
+
+
+        const results =
+          data.results || [];
+
+
+        html += `
+
+          <tr>
+
+            <td>
+              ${escapeHTML(data.name || "")}
+            </td>
+
+            <td>
+              ${escapeHTML(data.rollNumber || "")}
+            </td>
+
+            <td>
+              ${escapeHTML(data.className || "")}
+            </td>
+
+            <td>
+              ${results.length}
+            </td>
+
+            <td>
+
+              <button
+                class="edit-button"
+                onclick="editStudent('${documentSnapshot.id}')">
+                Edit
+              </button>
+
+              <button
+                class="danger-button"
+                onclick="deleteStudent('${documentSnapshot.id}')">
+                Delete
+              </button>
+
+            </td>
+
+          </tr>
+
+        `;
+
+      }
+    );
+
+
+    html += `
+      </tbody>
+      </table>
+      </div>
+    `;
+
+
+    container.innerHTML = html;
+
+
+  }catch(errorObject){
+
+    console.error(errorObject);
+
+    container.innerHTML =
+      '<div class="empty">Could not load students.</div>';
+
+  }
+
+};
+
+
+/* =========================================================
+   EDIT STUDENT
+========================================================= */
+
+window.editStudent = async function(id){
+
+  try{
+
+    const snapshot =
+      await getDocs(
+        collection(db,"students")
+      );
+
+
+    let selected = null;
+
+
+    snapshot.forEach(
+      item => {
+
+        if(item.id === id){
+
+          selected = item;
+
+        }
+
+      }
+    );
+
+
+    if(!selected) return;
+
+
+    const data =
+      selected.data();
+
+
+    const results =
+      data.results || [];
+
+
+    if(results.length === 0) return;
+
+
+    const result =
+      results[results.length - 1];
+
+
+    document.getElementById(
+      "studentName"
+    ).value =
+      data.name || "";
+
+
+    document.getElementById(
+      "rollNumber"
+    ).value =
+      data.rollNumber || "";
+
+
+    document.getElementById(
+      "className"
+    ).value =
+      data.className || "";
+
+
+    document.getElementById(
+      "examName"
+    ).value =
+      result.exam || "";
+
+
+    document.getElementById(
+      "englishMark"
+    ).value =
+      result.marks?.English?.mark ?? "";
+
+
+    document.getElementById(
+      "englishMax"
+    ).value =
+      result.marks?.English?.maxMark ?? 100;
+
+
+    document.getElementById(
+      "accountancyMark"
+    ).value =
+      result.marks?.Accountancy?.mark ?? "";
+
+
+    document.getElementById(
+      "accountancyMax"
+    ).value =
+      result.marks?.Accountancy?.maxMark ?? 100;
+
+
+    document.getElementById(
+      "businessMark"
+    ).value =
+      result.marks?.["Business Studies"]?.mark ?? "";
+
+
+    document.getElementById(
+      "businessMax"
+    ).value =
+      result.marks?.["Business Studies"]?.maxMark ?? 100;
+
+
+    document.getElementById(
+      "computerMark"
+    ).value =
+      result.marks?.["Computer Application"]?.mark ?? "";
+
+
+    document.getElementById(
+      "computerMax"
+    ).value =
+      result.marks?.["Computer Application"]?.maxMark ?? 100;
+
+
+    window.scrollTo({
+      top:0,
+      behavior:"smooth"
+    });
+
+
+  }catch(errorObject){
+
+    console.error(errorObject);
+
+  }
+
+};
+
+
+/* =========================================================
+   DELETE STUDENT
+========================================================= */
+
+window.deleteStudent = async function(id){
+
+  const confirmDelete =
+    confirm(
+      "Delete this student's complete result data?"
+    );
+
+
+  if(!confirmDelete) return;
+
+
+  try{
+
+    await deleteDoc(
+      doc(
+        db,
+        "students",
+        id
+      )
+    );
+
+
+    await loadTeacherStudents();
+
+
+  }catch(errorObject){
+
+    console.error(errorObject);
+
+    alert(
+      "Could not delete student."
+    );
+
+  }
+
+};
+
+
+/* =========================================================
+   CLEAR RESULT FORM
+========================================================= */
+
+window.clearResultForm = function(){
+
+  const ids = [
+
+    "studentName",
+    "rollNumber",
+    "examName",
+
+    "englishMark",
+    "accountancyMark",
+    "businessMark",
+    "computerMark"
+
+  ];
+
+
+  ids.forEach(
+    id => {
+
+      document.getElementById(id).value = "";
+
+    }
+  );
+
+
+  document.getElementById(
+    "className"
+  ).value = "Plus One";
+
+
+  document.getElementById(
+    "englishMax"
+  ).value = 100;
+
+
+  document.getElementById(
+    "accountancyMax"
+  ).value = 100;
+
+
+  document.getElementById(
+    "businessMax"
+  ).value = 100;
+
+
+  document.getElementById(
+    "computerMax"
+  ).value = 100;
+
+
+  document.getElementById(
+    "saveMessage"
+  ).style.display = "none";
+
+};
+
+
+/* =========================================================
+   SEARCH RESULTS
+========================================================= */
+
+window.searchResults = async function(){
+
+  const search =
+    document
+      .getElementById("studentSearch")
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  const container =
+    document.getElementById(
+      "studentResults"
+    );
+
+
+  if(!search){
+
+    container.innerHTML =
+      '<div class="empty">Enter a roll number or name.</div>';
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    '<div class="loading">Searching...</div>';
+
+
+  try{
+
+    const snapshot =
+      await getDocs(
+        collection(db,"students")
+      );
+
+
+    let found = [];
+
+
+    snapshot.forEach(
+      documentSnapshot => {
+
+        const data =
+          documentSnapshot.data();
+
+
+        const name =
+          String(
+            data.name || ""
+          ).toLowerCase();
+
+
+        const roll =
+          String(
+            data.rollNumber || ""
+          ).toLowerCase();
+
+
+        if(
+          name.includes(search) ||
+          roll.includes(search)
+        ){
+
+          found.push(data);
+
+        }
+
+      }
+    );
+
+
+    if(found.length === 0){
+
+      container.innerHTML =
+        '<div class="empty">❌ Student not found.</div>';
+
+      return;
+
+    }
+
+
+    let html = "";
+
+
+    found.forEach(
+      student => {
+
+        const results =
+          student.results || [];
+
+
+        html += `
+
+          <div class="result-card glass">
+
+            <div class="student-header">
+
+              <div>
+
+                <h2>
+                  ${escapeHTML(student.name || "")}
+                </h2>
+
+                <p>
+                  Roll No:
+                  ${escapeHTML(student.rollNumber || "")}
+                </p>
+
+                <p>
+                  Class:
+                  ${escapeHTML(student.className || "")}
+                </p>
+
+              </div>
+
+            </div>
+
+        `;
+
+
+        if(results.length === 0){
+
+          html += `
+            <p>No results available.</p>
+          `;
+
+        }
+
+
+        results.forEach(
+          result => {
+
+            const dateText =
+              formatDate(result.savedAt);
+
+
+            html += `
+
+              <div>
+
+                <span class="exam-title">
+
+                  ${escapeHTML(result.exam || "")}
+
+                </span>
+
+                <span class="exam-date">
+
+                  📅 ${dateText}
+
+                </span>
+
+
+                <table class="marks-table">
+
+                  <thead>
+
+                    <tr>
+
+                      <th>Subject</th>
+                      <th>Mark</th>
+                      <th>Total</th>
+                      <th>Grade</th>
+
+                    </tr>
+
+                  </thead>
+
+                  <tbody>
+
+            `;
+
+
+            Object.entries(
+              result.marks || {}
+            ).forEach(
+              ([subject,value]) => {
+
+                html += `
+
+                  <tr>
+
+                    <td>
+                      ${escapeHTML(subject)}
+                    </td>
+
+                    <td>
+                      ${value.mark}
+                    </td>
+
+                    <td>
+                      ${value.maxMark}
+                    </td>
+
+                    <td class="grade">
+                      ${escapeHTML(value.grade)}
+                    </td>
+
+                  </tr>
+
+                `;
+
+              }
+            );
+
+
+            html += `
+
+                  </tbody>
+
+                </table>
+
+
+                <div class="total-box">
+
+                  <span>
+                    Total
+                  </span>
+
+                  <span>
+                    ${result.total}
+                    /
+                    ${result.maxTotal}
+                  </span>
+
+                </div>
+
+
+                <div class="percentage-box">
+
+                  <span>
+                    Percentage
+                  </span>
+
+                  <span>
+                    ${result.percentage}%
+                  </span>
+
+                </div>
+
+
+              </div>
+
+            `;
+
+          }
+        );
+
+
+        html += `
+          </div>
+        `;
+
+      }
+    );
+
+
+    container.innerHTML = html;
+
+
+  }catch(errorObject){
+
+    console.error(errorObject);
+
+    container.innerHTML =
+      '<div class="empty">Could not load results.</div>';
+
+  }
+
+};
+
+
+/* =========================================================
+   NOTES
+========================================================= */
+
+window.saveNote = async function(){
+
+  const title =
+    document
+      .getElementById("noteTitle")
+      .value
+      .trim();
+
+
+  const subject =
+    document
+      .getElementById("noteSubject")
+      .value
+      .trim();
+
+
+  const url =
+    document
+      .getElementById("noteUrl")
+      .value
+      .trim();
+
+
+  const message =
+    document.getElementById(
+      "noteMessage"
+    );
+
+
+  if(
+    !title ||
+    !subject ||
+    !url
+  ){
+
+    message.className = "error";
+
+    message.style.display = "block";
+
+    message.textContent =
+      "Please fill all fields.";
+
+    return;
+
+  }
+
+
+  try{
+
+    await addDoc(
+      collection(db,"notes"),
+      {
+
+        title:title,
+
+        subject:subject,
+
+        url:url,
+
+        createdAt:serverTimestamp(),
+
+        uploadedAt:new Date().toISOString()
+
+      }
+    );
+
+
+    message.className = "success";
+
+    message.style.display = "block";
+
+    message.textContent =
+      "✅ Note added successfully!";
+
+
+    document.getElementById(
+      "noteTitle"
+    ).value = "";
+
+
+    document.getElementById(
+      "noteSubject"
+    ).value = "";
+
+
+    document.getElementById(
+      "noteUrl"
+    ).value = "";
+
+
+    await loadTeacherNotes();
+
+
+  }catch(errorObject){
+
+    console.error(errorObject);
+
+    message.className = "error";
+
+    message.style.display = "block";
+
+    message.textContent =
+      "❌ Could not save note.";
+
+  }
+
+};
+
+
+async function loadTeacherNotes(){
+
+  const container =
+    document.getElementById(
+      "teacherNotesList"
+    );
+
+
+  try{
+
+    const snapshot =
+      await getDocs(
+        collection(db,"notes")
+      );
+
+
+    if(snapshot.empty){
+
+      container.innerHTML =
+        '<div class="empty">No notes added.</div>';
+
+      return;
+
+    }
+
+
+    let html = "";
+
+
+    snapshot.forEach(
+      item => {
+
+        const data =
+          item.data();
+
+
+        html += `
+
+          <div class="result-card glass">
+
+            <h3>
+              ${escapeHTML(data.title || "")}
+            </h3>
+
+            <p>
+              Subject:
+              ${escapeHTML(data.subject || "")}
+            </p>
+
+            <p class="date-text">
+              📅 Uploaded:
+              ${formatDate(
+                data.uploadedAt
+              )}
+            </p>
+
+            <br>
+
+            <a
+              href="${escapeAttribute(data.url || "#")}"
+              target="_blank"
+              rel="noopener">
+
+              📄 Open PDF / Material
+
+            </a>
+
+            <br>
+            <br>
+
+            <button
+              class="danger-button"
+              onclick="deleteNote('${item.id}')">
+
+              Delete
+
+            </button>
+
+          </div>
+
+        `;
+
+      }
+    );
+
+
+    container.innerHTML = html;
+
+
+  }catch(errorObject){
+
+    console.error(errorObject);
+
+    container.innerHTML =
+      "Could not load notes.";
+
+  }
+
+}
+
+
+window.loadTeacherNotes =
+  loadTeacherNotes;
+
+
+/* =========================================================
+   DELETE NOTE
+========================================================= */
+
+window.deleteNote = async function(id){
+
+  if(!confirm("Delete this note?")) return;
+
+
+  try{
+
+    await deleteDoc(
+      doc(
+        db,
+        "notes",
+        id
+      )
+    );
+
+
+    await loadTeacherNotes();
+
+
+  }catch(errorObject){
+
+    console.error(errorObject);
+
+  }
+
+};
+
+
+/* =========================================================
+   STUDENT NOTES
+========================================================= */
+
+async function loadStudentNotes(){
+
+  const container =
+    document.getElementById(
+      "studentNotesList"
+    );
+
+
+  try{
+
+    const snapshot =
+      await getDocs(
+        collection(db,"notes")
+      );
+
+
+    if(snapshot.empty){
+
+      container.innerHTML =
+        '<div class="empty">No notes available yet.</div>';
+
+      return;
+
+    }
+
+
+    let html = "";
+
+
+    snapshot.forEach(
+      item => {
+
+        const data =
+          item.data();
+
+
+        html += `
+
+          <div class="result-card glass">
+
+            <h2>
+              📄
+              ${escapeHTML(data.title || "")}
+            </h2>
+
+            <p>
+              Subject:
+              ${escapeHTML(data.subject || "")}
+            </p>
+
+            <p class="date-text">
+
+              📅 Uploaded:
+              ${formatDate(
+                data.uploadedAt
+              )}
+
+            </p>
+
+            <br>
+
+            <a
+              href="${escapeAttribute(data.url || "#")}"
+              target="_blank"
+              rel="noopener">
+
+              📖 Open Material
+
+            </a>
+
+          </div>
+
+        `;
+
+      }
+    );
+
+
+    container.innerHTML = html;
+
+
+  }catch(errorObject){
+
+    console.error(errorObject);
+
+    container.innerHTML =
+      '<div class="empty">Could not load notes.</div>';
+
+  }
+
+}
+
+
+/* =========================================================
+   ANNOUNCEMENTS
+========================================================= */
+
+window.saveAnnouncement = async function(){
+
+  const title =
+    document
+      .getElementById(
+        "announcementTitle"
+      )
+      .value
+      .trim();
+
+
+  const message =
+    document
+      .getElementById(
+        "announcementMessage"
+      )
+      .value
+      .trim();
+
+
+  const box =
+    document.getElementById(
+      "announcementMessageBox"
+    );
+
+
+  if(!title || !message){
+
+    box.className = "error";
+
+    box.style.display = "block";
+
+    box.textContent =
+      "Please fill both fields.";
+
+    return;
+
+  }
+
+
+  try{
+
+    await addDoc(
+      collection(db,"announcements"),
+      {
+
+        title:title,
+
+        message:message,
+
+        createdAt:serverTimestamp(),
+
+        publishedAt:new Date().toISOString()
+
+      }
+    );
+
+
+    box.className = "success";
+
+    box.style.display = "block";
+
+    box.textContent =
+      "✅ Announcement published!";
+
+
+    document.getElementById(
+      "announcementTitle"
+    ).value = "";
+
+
+    document.getElementById(
+      "announcementMessage"
+    ).value = "";
+
+
+    await loadTeacherAnnouncements();
+
+
+  }catch(errorObject){
+
+    console.error(errorObject);
+
+    box.className = "error";
+
+    box.style.display = "block";
+
+    box.textContent =
+      "❌ Could not publish announcement.";
+
+  }
+
+};
+
+
+async function loadTeacherAnnouncements(){
+
+  const container =
+    document.getElementById(
+      "teacherAnnouncementsList"
+    );
+
+
+  try{
+
+    const snapshot =
+      await getDocs(
+        collection(db,"announcements")
+      );
+
+
+    if(snapshot.empty){
+
+      container.innerHTML =
+        '<div class="empty">No announcements.</div>';
+
+      return;
+
+    }
+
+
+    let html = "";
+
+
+    snapshot.forEach(
+      item => {
+
+        const data =
+          item.data();
+
+
+        html += `
+
+          <div class="result-card glass">
+
+            <h3>
+
+              📢
+              ${escapeHTML(data.title || "")}
+
+            </h3>
+
+            <p>
+
+              ${escapeHTML(
+                data.message || ""
+              )}
+
+            </p>
+
+            <p class="date-text">
+
+              📅 Published:
+              ${formatDate(
+                data.publishedAt
+              )}
+
+            </p>
+
+            <br>
+
+            <button
+              class="danger-button"
+              onclick="deleteAnnouncement('${item.id}')">
+
+              Delete
+
+            </button>
+
+          </div>
+
+        `;
+
+      }
+    );
+
+
+    container.innerHTML = html;
+
+
+  }catch(errorObject){
+
+    console.error(errorObject);
+
+    container.innerHTML =
+      "Could not load announcements.";
+
+  }
+
+}
+
+
+window.loadTeacherAnnouncements =
+  loadTeacherAnnouncements;
+
+
+/* =========================================================
+   DELETE ANNOUNCEMENT
+========================================================= */
+
+window.deleteAnnouncement =
+async function(id){
+
+  if(
+    !confirm(
+      "Delete this announcement?"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  try{
+
+    await deleteDoc(
+      doc(
+        db,
+        "announcements",
+        id
+      )
+    );
+
+
+    await loadTeacherAnnouncements();
+
+
+  }catch(errorObject){
+
+    console.error(errorObject);
+
+  }
+
+};
+
+
+/* =========================================================
+   STUDENT ANNOUNCEMENTS
+========================================================= */
+
+async function loadStudentAnnouncements(){
+
+  const container =
+    document.getElementById(
+      "studentAnnouncementsList"
+    );
+
+
+  try{
+
+    const snapshot =
+      await getDocs(
+        collection(db,"announcements")
+      );
+
+
+    if(snapshot.empty){
+
+      container.innerHTML =
+        '<div class="empty">No announcements available.</div>';
+
+      return;
+
+    }
+
+
+    let html = "";
+
+
+    snapshot.forEach(
+      item => {
+
+        const data =
+          item.data();
+
+
+        html += `
+
+          <div class="result-card glass">
+
+            <h2>
+
+              📢
+              ${escapeHTML(
+                data.title || ""
+              )}
+
+            </h2>
+
+            <br>
+
+            <p>
+
+              ${escapeHTML(
+                data.message || ""
+              )}
+
+            </p>
+
+            <p class="date-text">
+
+              📅 Published:
+              ${formatDate(
+                data.publishedAt
+              )}
+
+            </p>
+
+          </div>
+
+        `;
+
+      }
+    );
+
+
+    container.innerHTML = html;
+
+
+  }catch(errorObject){
+
+    console.error(errorObject);
+
+    container.innerHTML =
+      '<div class="empty">Could not load announcements.</div>';
+
+  }
+
+}
+
+
+/* =========================================================
+   DATE FORMATTER
+========================================================= */
+
+function formatDate(value){
+
+  if(!value){
+
+    return "Date unavailable";
+
+  }
+
+
+  let date;
+
+
+  /*
+    New data:
+    ISO string
+  */
+
+  if(typeof value === "string"){
+
+    date = new Date(value);
+
+  }
+
+
+  /*
+    Firestore Timestamp
+  */
+
+  else if(
+    typeof value.toDate === "function"
+  ){
+
+    date = value.toDate();
+
+  }
+
+
+  else{
+
+    date = new Date(value);
+
+  }
+
+
+  if(
+    Number.isNaN(
+      date.getTime()
+    )
+  ){
+
+    return "Date unavailable";
+
+  }
+
+
+  return date.toLocaleString(
+    "en-IN",
+    {
+
+      day:"2-digit",
+
+      month:"short",
+
+      year:"numeric",
+
+      hour:"2-digit",
+
+      minute:"2-digit"
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   HTML SECURITY HELPERS
+========================================================= */
+
+function escapeHTML(value){
+
+  return String(value)
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+function escapeAttribute(value){
+
+  return String(value)
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+
+/* =========================================================
+   NEW STUDENT MANAGEMENT + REGISTER NUMBER SYSTEM
+========================================================= */
+
+let selectedStudentDocId = null;
+let currentPersonalStudent = null;
+
+window.openStudentManagement = async function(){
+  hideAllPages();
+  document.getElementById("studentManagementPage").classList.add("active");
+  selectedStudentDocId = null;
+  clearStudentProfileForm();
+  await loadStudentManagementList();
+};
+
+window.openRegisterLookupPage = function(){
+  hideAllPages();
+  document.getElementById("registerLookupPage").classList.add("active");
+  document.getElementById("studentRegisterSearch").value = "";
+  document.getElementById("registerSearchError").style.display = "none";
+};
+
+window.openPersonalStudentDashboard = function(){
+  if(!currentPersonalStudent){
+    openRegisterLookupPage();
+    return;
+  }
+
+  hideAllPages();
+  document.getElementById("personalStudentDashboard").classList.add("active");
+
+  const name = currentPersonalStudent.data.name || "Student";
+  document.getElementById("personalStudentWelcome").textContent = `Welcome 👋 ${name}`;
+  document.getElementById("personalStudentSubtitle").textContent =
+    `${name}'s personal student dashboard`;
+  document.getElementById("personalDetailsTitle").textContent =
+    `${name}'s Details`;
+  document.getElementById("personalResultsTitle").textContent =
+    `${name}'s Exam Results`;
+  const attendanceTitle = document.getElementById("personalAttendanceTitle");
+  if(attendanceTitle) attendanceTitle.textContent = `${name}'s Attendance`;
+};
+
+window.saveStudentProfile = async function(){
+
+  const name = document.getElementById("profileStudentName").value.trim();
+  const registerNumber = document.getElementById("profileRegisterNumber").value.trim();
+  const className = document.getElementById("profileClassName").value.trim();
+  const stream = document.getElementById("profileStream").value.trim();
+  const division = document.getElementById("profileDivision").value.trim();
+  const dob = document.getElementById("profileDob").value;
+  const gender = document.getElementById("profileGender").value;
+  const guardianName = document.getElementById("profileGuardianName").value.trim();
+  const guardianPhone = document.getElementById("profileGuardianPhone").value.trim();
+  const email = document.getElementById("profileEmail").value.trim();
+  const address = document.getElementById("profileAddress").value.trim();
+  const message = document.getElementById("studentProfileMessage");
+
+  if(!name || !registerNumber || !className){
+    message.className = "error";
+    message.style.display = "block";
+    message.textContent = "Please enter Student Name, Register Number and Class.";
+    return;
+  }
+
+  try{
+    const snapshot = await getDocs(collection(db,"students"));
+    let duplicateDoc = null;
+
+    snapshot.forEach(item => {
+      const data = item.data();
+      const existingRegister = String(
+        data.registerNumber || data.rollNumber || ""
+      ).toLowerCase();
+
+      if(existingRegister === registerNumber.toLowerCase() &&
+         item.id !== selectedStudentDocId){
+        duplicateDoc = item;
+      }
+    });
+
+    if(duplicateDoc){
+      message.className = "error";
+      message.style.display = "block";
+      message.textContent = "❌ This Register Number already belongs to another student.";
+      return;
+    }
+
+    const profileData = {
+      name,
+      registerNumber,
+      rollNumber:registerNumber,
+      className,
+      stream,
+      division,
+      dob,
+      gender,
+      guardianName,
+      guardianPhone,
+      email,
+      address,
+      updatedAt:serverTimestamp(),
+      updatedAtLocal:new Date().toISOString()
+    };
+
+    if(selectedStudentDocId){
+      await updateDoc(
+        doc(db,"students",selectedStudentDocId),
+        profileData
+      );
+    }else{
+      await addDoc(collection(db,"students"),{
+        ...profileData,
+        results:[],
+        createdAt:serverTimestamp(),
+        createdAtLocal:new Date().toISOString()
+      });
+    }
+
+    message.className = "success";
+    message.style.display = "block";
+    message.textContent = "✅ Student saved successfully!";
+
+    selectedStudentDocId = null;
+    clearStudentProfileForm(false);
+    await loadStudentManagementList();
+
+  }catch(errorObject){
+    console.error(errorObject);
+    message.className = "error";
+    message.style.display = "block";
+    message.textContent = "❌ Could not save student. Check Firestore Rules.";
+  }
+};
+
+window.clearStudentProfileForm = function(clearMessage = true){
+  const ids = [
+    "profileStudentName","profileRegisterNumber","profileStream",
+    "profileDivision","profileDob","profileGuardianName",
+    "profileGuardianPhone","profileEmail","profileAddress"
+  ];
+
+  ids.forEach(id => document.getElementById(id).value = "");
+  document.getElementById("profileClassName").value = "Plus One";
+  document.getElementById("profileGender").value = "";
+  selectedStudentDocId = null;
+
+  if(clearMessage){
+    document.getElementById("studentProfileMessage").style.display = "none";
+  }
+};
+
+window.loadStudentManagementList = async function(){
+  const container = document.getElementById("studentManagementList");
+  container.innerHTML = '<div class="loading">Loading students...</div>';
+
+  try{
+    const snapshot = await getDocs(collection(db,"students"));
+
+    if(snapshot.empty){
+      container.innerHTML = '<div class="empty">No students added yet.</div>';
+      return;
+    }
+
+    let students = [];
+    snapshot.forEach(item => students.push({id:item.id,data:item.data()}));
+
+    students.sort((a,b) =>
+      String(a.data.name || "").localeCompare(String(b.data.name || ""))
+    );
+
+    window.allManagedStudents = students;
+
+    container.innerHTML = renderStudentManagementTable(students);
+
+  }catch(errorObject){
+    console.error(errorObject);
+    container.innerHTML =
+      '<div class="empty">Could not load students. Check Firestore Rules.</div>';
+  }
+};
+
+function renderStudentManagementTable(students){
+
+  if(!students.length){
+    return '<div class="empty">No matching students found.</div>';
+  }
+
+  let html = `
+    <div class="student-list">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Register No.</th>
+            <th>Class</th>
+            <th>Stream / Division</th>
+            <th>Exams</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+
+  students.forEach(student => {
+    const data = student.data;
+    const registerNumber = data.registerNumber || data.rollNumber || "";
+    const streamDivision =
+      [data.stream || "", data.division || ""].filter(Boolean).join(" / ") || "-";
+
+    html += `
+      <tr>
+        <td>${escapeHTML(data.name || "")}</td>
+        <td>${escapeHTML(registerNumber)}</td>
+        <td>${escapeHTML(data.className || "")}</td>
+        <td>${escapeHTML(streamDivision)}</td>
+        <td>${(data.results || []).length}</td>
+        <td>
+          <button class="edit-button"
+            onclick="editManagedStudent('${student.id}')">Edit</button>
+          <button class="danger-button"
+            onclick="deleteManagedStudent('${student.id}')">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+
+  html += '</tbody></table></div>';
+  return html;
+}
+
+window.filterTeacherStudentList = function(){
+  const search = document.getElementById("teacherStudentSearch").value
+    .trim().toLowerCase();
+
+  const students = (window.allManagedStudents || []).filter(student => {
+    const data = student.data;
+    const registerNumber = String(
+      data.registerNumber || data.rollNumber || ""
+    ).toLowerCase();
+
+    return String(data.name || "").toLowerCase().includes(search) ||
+           registerNumber.includes(search);
+  });
+
+  document.getElementById("studentManagementList").innerHTML =
+    renderStudentManagementTable(students);
+};
+
+window.editManagedStudent = function(id){
+  const student = (window.allManagedStudents || [])
+    .find(item => item.id === id);
+
+  if(!student) return;
+
+  const data = student.data;
+  selectedStudentDocId = id;
+
+  document.getElementById("profileStudentName").value = data.name || "";
+  document.getElementById("profileRegisterNumber").value =
+    data.registerNumber || data.rollNumber || "";
+  document.getElementById("profileClassName").value =
+    data.className || "Plus One";
+  document.getElementById("profileStream").value = data.stream || "";
+  document.getElementById("profileDivision").value = data.division || "";
+  document.getElementById("profileDob").value = data.dob || "";
+  document.getElementById("profileGender").value = data.gender || "";
+  document.getElementById("profileGuardianName").value =
+    data.guardianName || "";
+  document.getElementById("profileGuardianPhone").value =
+    data.guardianPhone || "";
+  document.getElementById("profileEmail").value = data.email || "";
+  document.getElementById("profileAddress").value = data.address || "";
+
+  document.getElementById("studentProfileMessage").style.display = "none";
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+window.deleteManagedStudent = async function(id){
+  if(!confirm("Delete this student and all of this student's saved results?")){
+    return;
+  }
+
+  try{
+    await deleteDoc(doc(db,"students",id));
+    await loadStudentManagementList();
+  }catch(errorObject){
+    console.error(errorObject);
+    alert("Could not delete student.");
+  }
+};
+
+window.findStudentByRegister = async function(){
+  const registerNumber =
+    document.getElementById("studentRegisterSearch").value.trim();
+
+  const error = document.getElementById("registerSearchError");
+  error.style.display = "none";
+
+  if(!registerNumber){
+    error.textContent = "Please enter your register number.";
+    error.style.display = "block";
+    return;
+  }
+
+  try{
+    const snapshot = await getDocs(collection(db,"students"));
+    let found = null;
+
+    snapshot.forEach(item => {
+      const data = item.data();
+      const storedRegister = String(
+        data.registerNumber || data.rollNumber || ""
+      ).toLowerCase();
+
+      if(storedRegister === registerNumber.toLowerCase()){
+        found = {id:item.id,data};
+      }
+    });
+
+    if(!found){
+      error.textContent = "❌ Student not found. Please check your register number.";
+      error.style.display = "block";
+      return;
+    }
+
+    currentPersonalStudent = found;
+    openPersonalStudentDashboard();
+
+  }catch(errorObject){
+    console.error(errorObject);
+    error.textContent = "❌ Could not search student details.";
+    error.style.display = "block";
+  }
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  const registerInput = document.getElementById("studentRegisterSearch");
+  if(registerInput){
+    registerInput.addEventListener("keydown", event => {
+      if(event.key === "Enter") findStudentByRegister();
+    });
+  }
+});
+
+window.showPersonalStudentDetails = function(){
+  if(!currentPersonalStudent) return openRegisterLookupPage();
+
+  hideAllPages();
+  document.getElementById("personalStudentDetailsPage").classList.add("active");
+
+  const data = currentPersonalStudent.data;
+  const name = data.name || "Student";
+  const registerNumber = data.registerNumber || data.rollNumber || "";
+
+  document.getElementById("studentDetailsHeader").textContent =
+    `${name}'s student details`;
+
+  const fields = [
+    ["Student Name", name],
+    ["Register Number", registerNumber],
+    ["Class", data.className || ""],
+    ["Stream", data.stream || ""],
+    ["Division", data.division || ""],
+    ["Date of Birth", data.dob || ""],
+    ["Gender", data.gender || ""],
+    ["Parent / Guardian", data.guardianName || ""],
+    ["Parent Phone", data.guardianPhone || ""],
+    ["Email", data.email || ""],
+    ["Address", data.address || ""]
+  ].filter(([,value]) => String(value).trim() !== "");
+
+  let html = `
+    <div class="result-card glass">
+      <div class="student-header">
+        <div>
+          <h2>${escapeHTML(name)}</h2>
+          <p>Register Number: ${escapeHTML(registerNumber)}</p>
+        </div>
+      </div>
+  `;
+
+  fields.forEach(([label,value]) => {
+    html += `
+      <div class="total-box">
+        <span>${escapeHTML(label)}</span>
+        <span>${escapeHTML(value)}</span>
+      </div>
+    `;
+  });
+
+  html += '</div>';
+  document.getElementById("personalStudentDetailsContent").innerHTML = html;
+};
+
+window.showPersonalExamResults = function(){
+  if(!currentPersonalStudent) return openRegisterLookupPage();
+
+  hideAllPages();
+  document.getElementById("personalExamResultsPage").classList.add("active");
+
+  const data = currentPersonalStudent.data;
+  const name = data.name || "Student";
+  const results = data.results || [];
+
+  document.getElementById("studentResultsHeader").textContent =
+    `${name}'s examination results`;
+
+  if(!results.length){
+    document.getElementById("personalExamResultsContent").innerHTML =
+      '<div class="empty">No exam results available yet.</div>';
+    return;
+  }
+
+  let html = '';
+
+  results.forEach(result => {
+    html += `
+      <div class="result-card glass">
+        <div class="student-header">
+          <div>
+            <h2>${escapeHTML(result.exam || "Exam")}</h2>
+            <p>${escapeHTML(name)}</p>
+          </div>
+        </div>
+
+        <table class="marks-table">
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>Mark</th>
+              <th>Grade</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+
+    Object.entries(result.marks || {}).forEach(([subject,value]) => {
+      const mark = value.mark ?? "";
+      const maxMark = value.maxMark;
+      const markText =
+        maxMark !== undefined && maxMark !== null
+          ? `${mark} / ${maxMark}`
+          : mark;
+
+      html += `
+        <tr>
+          <td>${escapeHTML(subject)}</td>
+          <td>${escapeHTML(markText)}</td>
+          <td class="grade">${escapeHTML(value.grade || "")}</td>
+        </tr>
+      `;
+    });
+
+    html += `
+          </tbody>
+        </table>
+
+        <div class="total-box">
+          <span>Total</span>
+          <span>${escapeHTML(`${result.total ?? ""} / ${result.maxTotal ?? ""}`)}</span>
+        </div>
+
+        <div class="percentage-box">
+          <span>Percentage</span>
+          <span>${escapeHTML(`${result.percentage ?? ""}%`)}</span>
+        </div>
+
+        <p class="date-text">
+          📅 Last updated: ${escapeHTML(formatDate(result.savedAt))}
+        </p>
+      </div>
+    `;
+  });
+
+  document.getElementById("personalExamResultsContent").innerHTML = html;
+};
+
+/* Override old student list function so it never opens a hidden list by mistake. */
+window.loadTeacherStudents = async function(){
+  const snapshot = await getDocs(collection(db,"students"));
+  const container = document.getElementById("teacherStudentList");
+
+  if(!container) return;
+
+  if(snapshot.empty){
+    container.innerHTML = '<div class="empty">No students added yet.</div>';
+    return;
+  }
+
+  let html = '<div class="student-list"><table class="data-table"><thead><tr><th>Name</th><th>Register No.</th><th>Class</th><th>Exams</th></tr></thead><tbody>';
+
+  snapshot.forEach(item => {
+    const data = item.data();
+    html += `<tr>
+      <td>${escapeHTML(data.name || "")}</td>
+      <td>${escapeHTML(data.registerNumber || data.rollNumber || "")}</td>
+      <td>${escapeHTML(data.className || "")}</td>
+      <td>${(data.results || []).length}</td>
+    </tr>`;
+  });
+
+  html += '</tbody></table></div>';
+  container.innerHTML = html;
+};
+
+
+
+/* =========================================================
+   ATTENDANCE SYSTEM
+========================================================= */
+let attendanceSelections = {};
+let teacherAttendanceStudents = [];
+
+function attendanceToday(){
+  const d = new Date();
+  const offset = d.getTimezoneOffset();
+  return new Date(d.getTime() - offset * 60000).toISOString().slice(0,10);
+}
+
+function attendanceDateText(value){
+  if(!value) return "Date unavailable";
+  return new Date(value + "T00:00:00").toLocaleDateString("en-IN",{
+    day:"2-digit",month:"short",year:"numeric"
+  });
+}
+
+window.openTeacherAttendance = async function(){
+  hideAllPages();
+  document.getElementById("teacherAttendancePage").classList.add("active");
+  const input = document.getElementById("teacherAttendanceDate");
+  if(!input.value) input.value = attendanceToday();
+  await loadTeacherAttendanceStudents();
+};
+
+window.loadTeacherAttendanceStudents = async function(){
+  const date = document.getElementById("teacherAttendanceDate").value;
+  const container = document.getElementById("teacherAttendanceList");
+  container.innerHTML = '<div class="loading">Loading students...</div>';
+  try{
+    const studentsSnapshot = await getDocs(collection(db,"students"));
+    teacherAttendanceStudents = [];
+    studentsSnapshot.forEach(item => teacherAttendanceStudents.push({id:item.id,data:item.data()}));
+    teacherAttendanceStudents.sort((a,b)=>String(a.data.name||"").localeCompare(String(b.data.name||"")));
+    if(!teacherAttendanceStudents.length){
+      container.innerHTML = '<div class="empty">No students added yet. Add students first.</div>';
+      return;
+    }
+    const attendanceSnapshot = await getDocs(collection(db,"attendance"));
+    let oldAttendance = null;
+    attendanceSnapshot.forEach(item => { if(item.data().date === date) oldAttendance = item.data(); });
+    attendanceSelections = {};
+    teacherAttendanceStudents.forEach(student => {
+      attendanceSelections[student.id] = oldAttendance?.records?.[student.id]?.status || "present";
+    });
+    renderTeacherAttendance();
+  }catch(errorObject){
+    console.error(errorObject);
+    container.innerHTML = '<div class="empty">Could not load students.</div>';
+  }
+};
+
+function renderTeacherAttendance(){
+  const container = document.getElementById("teacherAttendanceList");
+  let html = "";
+  teacherAttendanceStudents.forEach(student => {
+    const data = student.data;
+    const status = attendanceSelections[student.id] || "present";
+    const registerNumber = data.registerNumber || data.rollNumber || "";
+    html += `<div class="attendance-row"><div><h3>👤 ${escapeHTML(data.name||"Student")}</h3><p>Register No: ${escapeHTML(registerNumber)}</p></div><div class="attendance-actions"><button class="attendance-btn present ${status==="present"?"active":""}" onclick="setAttendanceStatus('${student.id}','present')">✅ Present</button><button class="attendance-btn late ${status==="late"?"active":""}" onclick="setAttendanceStatus('${student.id}','late')">🕒 Present + Late</button><button class="attendance-btn absent ${status==="absent"?"active":""}" onclick="setAttendanceStatus('${student.id}','absent')">❌ Absent</button></div></div>`;
+  });
+  container.innerHTML = html;
+}
+
+window.setAttendanceStatus = function(studentId,status){
+  attendanceSelections[studentId] = status;
+  renderTeacherAttendance();
+};
+
+window.saveAttendance = async function(){
+  const date = document.getElementById("teacherAttendanceDate").value;
+  const box = document.getElementById("teacherAttendanceMessage");
+  if(!date){ box.className="error"; box.style.display="block"; box.textContent="Please select a date."; return; }
+  const records = {};
+  teacherAttendanceStudents.forEach(student => {
+    const data = student.data;
+    records[student.id] = {
+      name:data.name||"Student",
+      registerNumber:data.registerNumber||data.rollNumber||"",
+      status:attendanceSelections[student.id]||"present"
+    };
+  });
+  try{
+    const snapshot = await getDocs(collection(db,"attendance"));
+    let existingId = null;
+    snapshot.forEach(item => { if(item.data().date === date) existingId = item.id; });
+    const payload = {date,records,updatedAt:serverTimestamp(),updatedAtLocal:new Date().toISOString()};
+    if(existingId) await updateDoc(doc(db,"attendance",existingId),payload);
+    else await addDoc(collection(db,"attendance"),{...payload,createdAt:serverTimestamp(),createdAtLocal:new Date().toISOString()});
+    box.className="success"; box.style.display="block"; box.textContent="✅ Attendance saved successfully!";
+  }catch(errorObject){
+    console.error(errorObject);
+    box.className="error"; box.style.display="block"; box.textContent="❌ Could not save attendance. Check Firestore Rules.";
+  }
+};
+
+window.showPersonalAttendance = async function(){
+  if(!currentPersonalStudent) return openRegisterLookupPage();
+  hideAllPages();
+  document.getElementById("personalAttendancePage").classList.add("active");
+  const data = currentPersonalStudent.data;
+  const name = data.name || "Student";
+  document.getElementById("personalAttendanceHeader").textContent = `${name}'s personal attendance history`;
+  document.getElementById("personalAttendanceTitle").textContent = `${name}'s Attendance`;
+  const container = document.getElementById("personalAttendanceContent");
+  container.innerHTML = '<div class="loading">Loading attendance...</div>';
+  try{
+    const snapshot = await getDocs(collection(db,"attendance"));
+    const history = [];
+    snapshot.forEach(item => {
+      const attendance = item.data();
+      const record = attendance.records?.[currentPersonalStudent.id];
+      if(record) history.push({date:attendance.date,status:record.status});
+    });
+    history.sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+    const total = history.length;
+    const present = history.filter(item=>item.status==="present"||item.status==="late").length;
+    const late = history.filter(item=>item.status==="late").length;
+    const absent = history.filter(item=>item.status==="absent").length;
+    const percentage = total ? ((present/total)*100).toFixed(2) : "0.00";
+    let html = `<div class="result-card glass"><h2>📊 Attendance Summary</h2><div class="attendance-summary"><div class="attendance-stat"><span>Total Working Days</span><strong>${total}</strong></div><div class="attendance-stat"><span>✅ Present</span><strong>${present}</strong></div><div class="attendance-stat"><span>🕒 Late</span><strong>${late}</strong></div><div class="attendance-stat"><span>❌ Absent</span><strong>${absent}</strong></div><div class="attendance-stat"><span>📊 Attendance</span><strong>${percentage}%</strong></div></div></div><div class="result-card glass"><h2>📅 Day-by-Day Attendance</h2>`;
+    if(!history.length) html += '<div class="empty">No attendance marked yet.</div>';
+    history.forEach(item => {
+      html += `<div class="total-box"><span>📅 ${attendanceDateText(item.date)}</span><span class="attendance-status ${item.status}">${item.status==="present"?"✅ Present":item.status==="late"?"🕒 Present + Late":"❌ Absent"}</span></div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+  }catch(errorObject){
+    console.error(errorObject);
+    container.innerHTML = '<div class="empty">Could not load attendance.</div>';
+  }
+};
+
+window.openClassAttendancePage = function(){
+  hideAllPages();
+  document.getElementById("classAttendancePage").classList.add("active");
+  const input = document.getElementById("publicAttendanceDate");
+  if(!input.value) input.value = attendanceToday();
+};
+
+window.loadPublicClassAttendance = async function(){
+  const date = document.getElementById("publicAttendanceDate").value;
+  const container = document.getElementById("publicClassAttendanceContent");
+  if(!date){ container.innerHTML='<div class="empty">Please select a date.</div>'; return; }
+  container.innerHTML = '<div class="loading">Loading attendance...</div>';
+  try{
+    const snapshot = await getDocs(collection(db,"attendance"));
+    let attendance = null;
+    snapshot.forEach(item => { if(item.data().date === date) attendance = item.data(); });
+    if(!attendance){ container.innerHTML='<div class="empty">No attendance available for this date.</div>'; return; }
+    const records = Object.values(attendance.records||{}).sort((a,b)=>String(a.name||"").localeCompare(String(b.name||"")));
+    const present = records.filter(item=>item.status==="present"||item.status==="late").length;
+    const late = records.filter(item=>item.status==="late").length;
+    const absent = records.filter(item=>item.status==="absent").length;
+    let html = `<div class="result-card glass"><h2>📅 ${attendanceDateText(date)}</h2><div class="attendance-summary"><div class="attendance-stat"><span>Total Students</span><strong>${records.length}</strong></div><div class="attendance-stat"><span>✅ Present</span><strong>${present}</strong></div><div class="attendance-stat"><span>🕒 Late</span><strong>${late}</strong></div><div class="attendance-stat"><span>❌ Absent</span><strong>${absent}</strong></div><div class="attendance-stat"><span>Attendance</span><strong>${records.length?((present/records.length)*100).toFixed(2):0}%</strong></div></div>`;
+    records.forEach(record => { html += `<div class="total-box"><span>👤 ${escapeHTML(record.name||"Student")} — Reg No: ${escapeHTML(record.registerNumber||"")}</span><span class="attendance-status ${record.status}">${record.status==="present"?"✅ Present":record.status==="late"?"🕒 Present + Late":"❌ Absent"}</span></div>`; });
+    html += '</div>';
+    container.innerHTML = html;
+  }catch(errorObject){ console.error(errorObject); container.innerHTML='<div class="empty">Could not load class attendance.</div>'; }
+};
+
+/* =========================================================
+   DISCIPLINE SYSTEM
+========================================================= */
+const WORKSHEET_SUBJECTS=["English","Accountancy","Business Studies","Computer Application"];
+let worksheetSelections={};
+
+window.openTeacherDiscipline = async function(){
+  hideAllPages(); document.getElementById("teacherDisciplinePage").classList.add("active");
+  await loadDisciplineStudents(); await loadWorksheetStudents(); renderWorksheetGrid(); await loadTeacherDiscipline();
+};
+async function loadDisciplineStudents(){
+  const select=document.getElementById("disciplineStudentSelect"); select.innerHTML='<option value="">Loading students...</option>';
+  try{const snap=await getDocs(collection(db,"students"));let arr=[];snap.forEach(item=>arr.push({id:item.id,data:item.data()}));arr.sort((a,b)=>String(a.data.name||"").localeCompare(String(b.data.name||"")));
+  const opts='<option value="">Select Student</option>'+arr.map(x=>`<option value="${x.id}">${escapeHTML(x.data.name||"Student")} — ${escapeHTML(x.data.registerNumber||x.data.rollNumber||"")}</option>`).join(""); select.innerHTML=opts;
+  }catch(e){console.error(e);select.innerHTML='<option value="">Could not load students</option>';}}
+async function loadWorksheetStudents(){const a=document.getElementById("disciplineStudentSelect"),b=document.getElementById("worksheetStudentSelect"); b.innerHTML=a.innerHTML||'<option value="">Select Student</option>';}
+function renderWorksheetGrid(){const box=document.getElementById("worksheetGrid");box.innerHTML=WORKSHEET_SUBJECTS.map(sub=>{const st=worksheetSelections[sub]||"complete";return `<div class="worksheet-row"><strong>${sub}</strong><div class="worksheet-actions"><button class="worksheet-btn complete ${st==="complete"?"active":""}" onclick="setWorksheetStatus('${sub}','complete')">✅ Complete</button><button class="worksheet-btn incomplete ${st==="incomplete"?"active":""}" onclick="setWorksheetStatus('${sub}','incomplete')">❌ Not Complete</button></div></div>`}).join("");}
+window.setWorksheetStatus=function(subject,status){worksheetSelections[subject]=status;renderWorksheetGrid();};
+window.saveDisciplineRecord=async function(){const studentId=document.getElementById("disciplineStudentSelect").value,note=document.getElementById("disciplineNote").value.trim(),box=document.getElementById("disciplineMessage");if(!studentId||!note){box.className="error";box.style.display="block";box.textContent="Please select a student and write a discipline note.";return;}try{const snap=await getDocs(collection(db,"students"));let student=null;snap.forEach(x=>{if(x.id===studentId)student=x.data();});await addDoc(collection(db,"discipline"),{studentId,studentName:student?.name||"Student",registerNumber:student?.registerNumber||student?.rollNumber||"",note,createdAt:serverTimestamp(),createdAtLocal:new Date().toISOString()});box.className="success";box.style.display="block";box.textContent="✅ Discipline record saved!";document.getElementById("disciplineNote").value="";await loadTeacherDiscipline();}catch(e){console.error(e);box.className="error";box.style.display="block";box.textContent="❌ Could not save record. Check Firestore Rules for the discipline collection.";}};
+window.saveWorksheetStatus=async function(){const studentId=document.getElementById("worksheetStudentSelect").value,box=document.getElementById("worksheetMessage");if(!studentId){box.className="error";box.style.display="block";box.textContent="Please select a student.";return;}try{const snap=await getDocs(collection(db,"students"));let student=null;snap.forEach(x=>{if(x.id===studentId)student=x.data();});const payload={studentId,studentName:student?.name||"Student",registerNumber:student?.registerNumber||student?.rollNumber||"",subjects:Object.fromEntries(WORKSHEET_SUBJECTS.map(x=>[x,worksheetSelections[x]||"complete"])),updatedAt:serverTimestamp(),updatedAtLocal:new Date().toISOString()};const old=await getDocs(collection(db,"worksheets"));let id=null;old.forEach(x=>{if(x.data().studentId===studentId)id=x.id;});if(id)await updateDoc(doc(db,"worksheets",id),payload);else await addDoc(collection(db,"worksheets"),{...payload,createdAt:serverTimestamp()});box.className="success";box.style.display="block";box.textContent="✅ Worksheet status saved!";}catch(e){console.error(e);box.className="error";box.style.display="block";box.textContent="❌ Could not save worksheet status. Check Firestore Rules for the worksheets collection.";}};
+
+async function loadTeacherDiscipline(){
+ const box=document.getElementById("teacherDisciplineList");box.innerHTML='<div class="loading">Loading records...</div>';
+ try{const snap=await getDocs(collection(db,"discipline"));let arr=[];snap.forEach(x=>arr.push({id:x.id,data:x.data()}));arr.sort((a,b)=>String(b.data.createdAtLocal||"").localeCompare(String(a.data.createdAtLocal||"")));
+ if(!arr.length){box.innerHTML='<div class="empty">No discipline records yet.</div>';return;}
+ box.innerHTML=arr.map(x=>`<div class="discipline-item"><div class="student-header"><div><h3>${escapeHTML(x.data.studentName||"Student")}</h3><p>Register No: ${escapeHTML(x.data.registerNumber||"")}</p></div><button class="danger-button" onclick="deleteDisciplineRecord('${x.id}')">Delete</button></div>${x.data.note?`<p style="margin-top:12px">${escapeHTML(x.data.note)}</p>`:""}<p class="date-text">📅 ${formatDate(x.data.createdAtLocal||x.data.createdAt)}</p></div>`).join("");
+ }catch(e){console.error(e);box.innerHTML='<div class="empty">Could not load records.</div>';}
+}
+window.deleteDisciplineRecord=async function(id){if(!confirm("Delete this discipline record?"))return;try{await deleteDoc(doc(db,"discipline",id));await loadTeacherDiscipline();}catch(e){console.error(e);alert("Could not delete record.");}};
+
+window.showPersonalDiscipline=async function(){
+ if(!currentPersonalStudent)return openRegisterLookupPage();
+ hideAllPages();document.getElementById("personalDisciplinePage").classList.add("active");
+ const name=currentPersonalStudent.data.name||"Student";
+ document.getElementById("personalDisciplineHeader").textContent=`${name}'s discipline and worksheet section`;
+ document.getElementById("disciplineStudentWelcome").textContent=`${name}'s Discipline`;
+ document.getElementById("personalDisciplineTitle").textContent=`${name}'s Discipline`;
+};
+
+window.showMyDisciplineRecords=async function(){
+ if(!currentPersonalStudent)return openRegisterLookupPage();
+ hideAllPages();document.getElementById("personalDisciplineRecordsPage").classList.add("active");
+ const box=document.getElementById("personalDisciplineContent");box.innerHTML='<div class="loading">Loading discipline records...</div>';
+ try{const snap=await getDocs(collection(db,"discipline"));let arr=[];snap.forEach(x=>{const d=x.data();if(d.studentId===currentPersonalStudent.id)arr.push({id:x.id,data:d});});arr.sort((a,b)=>String(b.data.createdAtLocal||"").localeCompare(String(a.data.createdAtLocal||"")));
+ if(!arr.length){box.innerHTML='<div class="empty">No discipline records available yet.</div>';return;}
+ box.innerHTML=`<div class="result-card glass"><h2>🛡️ Discipline History</h2><p class="date-text">Your teacher-recorded discipline notes and feedback.</p><div class="discipline-history">${arr.map(x=>`<div class="discipline-item"><p>${escapeHTML(x.data.note||"")}</p><p class="date-text">📅 ${formatDate(x.data.createdAtLocal||x.data.createdAt)}</p></div>`).join("")}</div></div>`;
+ }catch(e){console.error(e);box.innerHTML='<div class="empty">Could not load discipline records.</div>';}
+};
+
+window.showMyWorksheet=async function(){
+ if(!currentPersonalStudent)return openRegisterLookupPage();
+ hideAllPages();document.getElementById("personalWorksheetPage").classList.add("active");
+ const box=document.getElementById("personalWorksheetContent");box.innerHTML='<div class="loading">Loading worksheet status...</div>';
+ try{const snap=await getDocs(collection(db,"worksheets"));let found=null;snap.forEach(x=>{if(x.data().studentId===currentPersonalStudent.id)found=x.data();});
+ if(!found){box.innerHTML='<div class="empty">No worksheet status available yet.</div>';return;}
+ const subjects=found.subjects||{};
+ box.innerHTML=`<div class="result-card glass"><h2>📝 My Worksheet Status</h2><p class="date-text">Check whether your subject notes and worksheets are complete.</p><div class="worksheet-grid">${Object.entries(subjects).map(([subject,status])=>`<div class="worksheet-row"><strong>${escapeHTML(subject)}</strong><p style="margin-top:10px;font-weight:800">${status==="complete"?"✅ Complete":"❌ Not Complete"}</p></div>`).join("")}</div><p class="date-text" style="margin-top:16px">Last updated: ${formatDate(found.updatedAtLocal||found.updatedAt)}</p></div>`;
+ }catch(e){console.error(e);box.innerHTML='<div class="empty">Could not load worksheet status.</div>';}
+};
+
+console.log(
+  "🔥 Plus One Student System loaded."
+);
+
+</script>
 
 </body>
 </html>
