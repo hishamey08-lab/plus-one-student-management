@@ -1595,8 +1595,21 @@ footer{
      PERSONAL DISCIPLINE
 ====================================================== -->
 <div id="personalDisciplinePage" class="page">
-<header><h1>🛡️ MY DISCIPLINE</h1><p id="personalDisciplineHeader">Behaviour and discipline records</p></header>
-<main class="container"><button class="back-button" onclick="openPersonalStudentDashboard()">← Back to My Dashboard</button><div id="personalDisciplineContent"><div class="loading">Loading discipline records...</div></div></main></div>
+<header><h1>🛡️ STUDENT DISCIPLINE</h1><p id="personalDisciplineHeader">Discipline records and worksheet status</p></header>
+<main class="container"><button class="back-button" onclick="openPersonalStudentDashboard()">← Back to My Dashboard</button>
+<div class="dashboard-title"><h2 id="disciplineStudentWelcome">My Student Section</h2><p>Choose what you want to view.</p></div>
+<div class="feature-grid">
+<div class="feature-card glass clickable" onclick="showMyDisciplineRecords()"><div class="feature-icon">🛡️</div><h3>My Discipline</h3><p>View teacher discipline notes and feedback.</p></div>
+<div class="feature-card glass clickable" onclick="showMyWorksheet()"><div class="feature-icon">📝</div><h3>My Worksheet</h3><p>Check your subject-wise worksheet and notes status.</p></div>
+</div></main></div>
+
+<div id="personalDisciplineRecordsPage" class="page">
+<header><h1>🛡️ MY DISCIPLINE</h1><p>Teacher discipline records and feedback</p></header>
+<main class="container"><button class="back-button" onclick="showPersonalDiscipline()">← Back to Discipline</button><div id="personalDisciplineContent"><div class="loading">Loading discipline records...</div></div></main></div>
+
+<div id="personalWorksheetPage" class="page">
+<header><h1>📝 MY WORKSHEET</h1><p>Subject-wise worksheet and notes status</p></header>
+<main class="container"><button class="back-button" onclick="showPersonalDiscipline()">← Back to Discipline</button><div id="personalWorksheetContent"><div class="loading">Loading worksheet status...</div></div></main></div>
 
 <!-- =====================================================
      TEACHER ATTENDANCE
@@ -4893,13 +4906,33 @@ async function loadTeacherDiscipline(){
 window.deleteDisciplineRecord=async function(id){if(!confirm("Delete this discipline record?"))return;try{await deleteDoc(doc(db,"discipline",id));await loadTeacherDiscipline();}catch(e){console.error(e);alert("Could not delete record.");}};
 
 window.showPersonalDiscipline=async function(){
- if(!currentPersonalStudent)return openRegisterLookupPage();hideAllPages();document.getElementById("personalDisciplinePage").classList.add("active");
- const name=currentPersonalStudent.data.name||"Student";document.getElementById("personalDisciplineHeader").textContent=`${name}'s behaviour and discipline records`;document.getElementById("personalDisciplineTitle").textContent=`${name}'s Discipline`;
+ if(!currentPersonalStudent)return openRegisterLookupPage();
+ hideAllPages();document.getElementById("personalDisciplinePage").classList.add("active");
+ const name=currentPersonalStudent.data.name||"Student";
+ document.getElementById("personalDisciplineHeader").textContent=`${name}'s discipline and worksheet section`;
+ document.getElementById("disciplineStudentWelcome").textContent=`${name}'s Discipline`;
+ document.getElementById("personalDisciplineTitle").textContent=`${name}'s Discipline`;
+};
+
+window.showMyDisciplineRecords=async function(){
+ if(!currentPersonalStudent)return openRegisterLookupPage();
+ hideAllPages();document.getElementById("personalDisciplineRecordsPage").classList.add("active");
  const box=document.getElementById("personalDisciplineContent");box.innerHTML='<div class="loading">Loading discipline records...</div>';
  try{const snap=await getDocs(collection(db,"discipline"));let arr=[];snap.forEach(x=>{const d=x.data();if(d.studentId===currentPersonalStudent.id)arr.push({id:x.id,data:d});});arr.sort((a,b)=>String(b.data.createdAtLocal||"").localeCompare(String(a.data.createdAtLocal||"")));
  if(!arr.length){box.innerHTML='<div class="empty">No discipline records available yet.</div>';return;}
  box.innerHTML=`<div class="result-card glass"><h2>🛡️ Discipline History</h2><p class="date-text">Your teacher-recorded discipline notes and feedback.</p><div class="discipline-history">${arr.map(x=>`<div class="discipline-item"><p>${escapeHTML(x.data.note||"")}</p><p class="date-text">📅 ${formatDate(x.data.createdAtLocal||x.data.createdAt)}</p></div>`).join("")}</div></div>`;
  }catch(e){console.error(e);box.innerHTML='<div class="empty">Could not load discipline records.</div>';}
+};
+
+window.showMyWorksheet=async function(){
+ if(!currentPersonalStudent)return openRegisterLookupPage();
+ hideAllPages();document.getElementById("personalWorksheetPage").classList.add("active");
+ const box=document.getElementById("personalWorksheetContent");box.innerHTML='<div class="loading">Loading worksheet status...</div>';
+ try{const snap=await getDocs(collection(db,"worksheets"));let found=null;snap.forEach(x=>{if(x.data().studentId===currentPersonalStudent.id)found=x.data();});
+ if(!found){box.innerHTML='<div class="empty">No worksheet status available yet.</div>';return;}
+ const subjects=found.subjects||{};
+ box.innerHTML=`<div class="result-card glass"><h2>📝 My Worksheet Status</h2><p class="date-text">Check whether your subject notes and worksheets are complete.</p><div class="worksheet-grid">${Object.entries(subjects).map(([subject,status])=>`<div class="worksheet-row"><strong>${escapeHTML(subject)}</strong><p style="margin-top:10px;font-weight:800">${status==="complete"?"✅ Complete":"❌ Not Complete"}</p></div>`).join("")}</div><p class="date-text" style="margin-top:16px">Last updated: ${formatDate(found.updatedAtLocal||found.updatedAt)}</p></div>`;
+ }catch(e){console.error(e);box.innerHTML='<div class="empty">Could not load worksheet status.</div>';}
 };
 
 console.log(
