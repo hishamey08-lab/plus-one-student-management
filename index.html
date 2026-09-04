@@ -988,12 +988,12 @@ footer{
 /* =========================================================
    ATTENDANCE SYSTEM
 ========================================================= */
-.attendance-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}.attendance-stat{padding:18px;border-radius:18px;border:1px solid var(--glass-border);background:linear-gradient(135deg,rgba(255,255,255,.10),var(--glass-bg));text-align:center}.attendance-stat span{display:block;color:var(--muted);font-size:12px}.attendance-stat strong{display:block;margin-top:8px;font-size:24px;color:var(--highlight)}.attendance-row{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:16px;margin-top:12px;border:1px solid var(--glass-border);border-radius:18px;background:rgba(255,255,255,.04);flex-wrap:wrap}.attendance-row h3{margin-bottom:5px}.attendance-row p{color:var(--muted);font-size:13px}.attendance-actions{display:flex;gap:10px;flex-wrap:wrap}.attendance-btn{border:1px solid var(--glass-border);padding:11px 18px;border-radius:50px;background:rgba(255,255,255,.08);color:var(--text);font-weight:800}.attendance-btn.present.active{background:linear-gradient(135deg,#059669,#22c55e);color:white}.attendance-btn.absent.active{background:linear-gradient(135deg,#dc2626,#991b1b);color:white}.attendance-status{font-weight:800;padding:7px 13px;border-radius:50px}.attendance-status.present{color:#6ee7b7;background:rgba(34,197,94,.14)}.attendance-status.absent{color:#fca5a5;background:rgba(239,68,68,.14)}@media(max-width:700px){.attendance-summary{grid-template-columns:repeat(2,1fr)}}
+.attendance-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}.attendance-stat{padding:18px;border-radius:18px;border:1px solid var(--glass-border);background:linear-gradient(135deg,rgba(255,255,255,.10),var(--glass-bg));text-align:center}.attendance-stat span{display:block;color:var(--muted);font-size:12px}.attendance-stat strong{display:block;margin-top:8px;font-size:24px;color:var(--highlight)}.attendance-row{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:16px;margin-top:12px;border:1px solid var(--glass-border);border-radius:18px;background:rgba(255,255,255,.04);flex-wrap:wrap}.attendance-row h3{margin-bottom:5px}.attendance-row p{color:var(--muted);font-size:13px}.attendance-actions{display:flex;gap:10px;flex-wrap:wrap}.attendance-btn{border:1px solid var(--glass-border);padding:11px 18px;border-radius:50px;background:rgba(255,255,255,.08);color:var(--text);font-weight:800}.attendance-btn.present.active{background:linear-gradient(135deg,#059669,#22c55e);color:white}.attendance-btn.absent.active{background:linear-gradient(135deg,#dc2626,#991b1b);color:white}.attendance-btn.late.active{background:linear-gradient(135deg,#d97706,#f59e0b);color:white}.attendance-status.late{color:#fcd34d;background:rgba(245,158,11,.14)}.attendance-status{font-weight:800;padding:7px 13px;border-radius:50px}.attendance-status.present{color:#6ee7b7;background:rgba(34,197,94,.14)}.attendance-status.absent{color:#fca5a5;background:rgba(239,68,68,.14)}@media(max-width:700px){.attendance-summary{grid-template-columns:repeat(2,1fr)}}
 
 /* =========================================================
    DISCIPLINE SYSTEM
 ========================================================= */
-.discipline-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:15px}.discipline-option{border:1px solid var(--glass-border);background:rgba(255,255,255,.06);color:var(--text);padding:14px;border-radius:16px;text-align:left;font-weight:700}.discipline-option.active{border-color:var(--highlight);box-shadow:0 0 0 2px rgba(34,211,238,.18);background:rgba(34,211,238,.10)}.discipline-history{margin-top:14px}.discipline-item{padding:15px;border:1px solid var(--glass-border);border-radius:16px;margin-top:10px;background:rgba(255,255,255,.04)}.discipline-tag{display:inline-block;padding:6px 12px;border-radius:50px;background:rgba(34,211,238,.12);color:var(--highlight);font-weight:800;font-size:13px}.discipline-positive{color:#6ee7b7}.discipline-warning{color:#fca5a5}@media(max-width:700px){.discipline-grid{grid-template-columns:1fr}}
+.worksheet-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:15px}.worksheet-row{padding:14px;border:1px solid var(--glass-border);border-radius:16px;background:rgba(255,255,255,.05)}.worksheet-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.worksheet-btn{border:1px solid var(--glass-border);padding:9px 13px;border-radius:50px;background:rgba(255,255,255,.08);color:var(--text);font-weight:800}.worksheet-btn.complete.active{background:linear-gradient(135deg,#059669,#22c55e);color:white}.worksheet-btn.incomplete.active{background:linear-gradient(135deg,#dc2626,#991b1b);color:white}.discipline-history{margin-top:14px}.discipline-item{padding:15px;border:1px solid var(--glass-border);border-radius:16px;margin-top:10px;background:rgba(255,255,255,.04)}.discipline-tag{display:inline-block;padding:6px 12px;border-radius:50px;background:rgba(34,211,238,.12);color:var(--highlight);font-weight:800;font-size:13px}.discipline-positive{color:#6ee7b7}.discipline-warning{color:#fca5a5}@media(max-width:700px){.worksheet-grid{grid-template-columns:1fr}}
 
 </style>
 </head>
@@ -1582,12 +1582,12 @@ footer{
 <h2>🛡️ Add Discipline Record</h2>
 <div class="form-grid">
 <div class="form-group full"><label>Select Student</label><select id="disciplineStudentSelect"></select></div>
-<div class="form-group full"><label>Behaviour / Record</label><div id="disciplineOptions" class="discipline-grid"></div></div>
-<div class="form-group full"><label>Teacher Note (Optional)</label><textarea id="disciplineNote" placeholder="Add a short note..."></textarea></div>
+<div class="form-group full"><label>Teacher Discipline Note</label><textarea id="disciplineNote" placeholder="Write the student's discipline record or feedback..."></textarea></div>
 </div>
 <button class="primary-button" onclick="saveDisciplineRecord()">💾 Save Record</button>
 <div id="disciplineMessage"></div>
 </div>
+<div class="form-card glass"><h2>📝 Worksheet / Notes Status</h2><p class="date-text">Mark whether each subject note/worksheet is complete.</p><div id="worksheetStudentSelectWrap" class="form-group full"><label>Select Student</label><select id="worksheetStudentSelect"></select></div><div id="worksheetGrid" class="worksheet-grid"></div><button class="primary-button" onclick="saveWorksheetStatus()">💾 Save Worksheet Status</button><div id="worksheetMessage"></div></div>
 <div class="form-card glass"><h2>📋 Discipline Records</h2><div id="teacherDisciplineList"><div class="loading">Loading records...</div></div></div>
 </main></div>
 
@@ -4760,7 +4760,7 @@ function renderTeacherAttendance(){
     const data = student.data;
     const status = attendanceSelections[student.id] || "present";
     const registerNumber = data.registerNumber || data.rollNumber || "";
-    html += `<div class="attendance-row"><div><h3>👤 ${escapeHTML(data.name||"Student")}</h3><p>Register No: ${escapeHTML(registerNumber)}</p></div><div class="attendance-actions"><button class="attendance-btn present ${status==="present"?"active":""}" onclick="setAttendanceStatus('${student.id}','present')">✅ Present</button><button class="attendance-btn absent ${status==="absent"?"active":""}" onclick="setAttendanceStatus('${student.id}','absent')">❌ Absent</button></div></div>`;
+    html += `<div class="attendance-row"><div><h3>👤 ${escapeHTML(data.name||"Student")}</h3><p>Register No: ${escapeHTML(registerNumber)}</p></div><div class="attendance-actions"><button class="attendance-btn present ${status==="present"?"active":""}" onclick="setAttendanceStatus('${student.id}','present')">✅ Present</button><button class="attendance-btn late ${status==="late"?"active":""}" onclick="setAttendanceStatus('${student.id}','late')">🕒 Present + Late</button><button class="attendance-btn absent ${status==="absent"?"active":""}" onclick="setAttendanceStatus('${student.id}','absent')">❌ Absent</button></div></div>`;
   });
   container.innerHTML = html;
 }
@@ -4817,13 +4817,14 @@ window.showPersonalAttendance = async function(){
     });
     history.sort((a,b)=>String(b.date).localeCompare(String(a.date)));
     const total = history.length;
-    const present = history.filter(item=>item.status==="present").length;
-    const absent = total-present;
+    const present = history.filter(item=>item.status==="present"||item.status==="late").length;
+    const late = history.filter(item=>item.status==="late").length;
+    const absent = history.filter(item=>item.status==="absent").length;
     const percentage = total ? ((present/total)*100).toFixed(2) : "0.00";
-    let html = `<div class="result-card glass"><h2>📊 Attendance Summary</h2><div class="attendance-summary"><div class="attendance-stat"><span>Total Working Days</span><strong>${total}</strong></div><div class="attendance-stat"><span>✅ Present</span><strong>${present}</strong></div><div class="attendance-stat"><span>❌ Absent</span><strong>${absent}</strong></div><div class="attendance-stat"><span>📊 Attendance</span><strong>${percentage}%</strong></div></div></div><div class="result-card glass"><h2>📅 Day-by-Day Attendance</h2>`;
+    let html = `<div class="result-card glass"><h2>📊 Attendance Summary</h2><div class="attendance-summary"><div class="attendance-stat"><span>Total Working Days</span><strong>${total}</strong></div><div class="attendance-stat"><span>✅ Present</span><strong>${present}</strong></div><div class="attendance-stat"><span>🕒 Late</span><strong>${late}</strong></div><div class="attendance-stat"><span>❌ Absent</span><strong>${absent}</strong></div><div class="attendance-stat"><span>📊 Attendance</span><strong>${percentage}%</strong></div></div></div><div class="result-card glass"><h2>📅 Day-by-Day Attendance</h2>`;
     if(!history.length) html += '<div class="empty">No attendance marked yet.</div>';
     history.forEach(item => {
-      html += `<div class="total-box"><span>📅 ${attendanceDateText(item.date)}</span><span class="attendance-status ${item.status}">${item.status==="present"?"✅ Present":"❌ Absent"}</span></div>`;
+      html += `<div class="total-box"><span>📅 ${attendanceDateText(item.date)}</span><span class="attendance-status ${item.status}">${item.status==="present"?"✅ Present":item.status==="late"?"🕒 Present + Late":"❌ Absent"}</span></div>`;
     });
     html += '</div>';
     container.innerHTML = html;
@@ -4851,10 +4852,11 @@ window.loadPublicClassAttendance = async function(){
     snapshot.forEach(item => { if(item.data().date === date) attendance = item.data(); });
     if(!attendance){ container.innerHTML='<div class="empty">No attendance available for this date.</div>'; return; }
     const records = Object.values(attendance.records||{}).sort((a,b)=>String(a.name||"").localeCompare(String(b.name||"")));
-    const present = records.filter(item=>item.status==="present").length;
-    const absent = records.length-present;
-    let html = `<div class="result-card glass"><h2>📅 ${attendanceDateText(date)}</h2><div class="attendance-summary"><div class="attendance-stat"><span>Total Students</span><strong>${records.length}</strong></div><div class="attendance-stat"><span>✅ Present</span><strong>${present}</strong></div><div class="attendance-stat"><span>❌ Absent</span><strong>${absent}</strong></div><div class="attendance-stat"><span>Attendance</span><strong>${records.length?((present/records.length)*100).toFixed(2):0}%</strong></div></div>`;
-    records.forEach(record => { html += `<div class="total-box"><span>👤 ${escapeHTML(record.name||"Student")} — Reg No: ${escapeHTML(record.registerNumber||"")}</span><span class="attendance-status ${record.status}">${record.status==="present"?"✅ Present":"❌ Absent"}</span></div>`; });
+    const present = records.filter(item=>item.status==="present"||item.status==="late").length;
+    const late = records.filter(item=>item.status==="late").length;
+    const absent = records.filter(item=>item.status==="absent").length;
+    let html = `<div class="result-card glass"><h2>📅 ${attendanceDateText(date)}</h2><div class="attendance-summary"><div class="attendance-stat"><span>Total Students</span><strong>${records.length}</strong></div><div class="attendance-stat"><span>✅ Present</span><strong>${present}</strong></div><div class="attendance-stat"><span>🕒 Late</span><strong>${late}</strong></div><div class="attendance-stat"><span>❌ Absent</span><strong>${absent}</strong></div><div class="attendance-stat"><span>Attendance</span><strong>${records.length?((present/records.length)*100).toFixed(2):0}%</strong></div></div>`;
+    records.forEach(record => { html += `<div class="total-box"><span>👤 ${escapeHTML(record.name||"Student")} — Reg No: ${escapeHTML(record.registerNumber||"")}</span><span class="attendance-status ${record.status}">${record.status==="present"?"✅ Present":record.status==="late"?"🕒 Present + Late":"❌ Absent"}</span></div>`; });
     html += '</div>';
     container.innerHTML = html;
   }catch(errorObject){ console.error(errorObject); container.innerHTML='<div class="empty">Could not load class attendance.</div>'; }
@@ -4863,50 +4865,29 @@ window.loadPublicClassAttendance = async function(){
 /* =========================================================
    DISCIPLINE SYSTEM
 ========================================================= */
-const DISCIPLINE_OPTIONS = [
-  "🌟 Excellent Behaviour","🤝 Helpful","📚 Responsible","🎯 Active Participation","⏰ Punctual",
-  "⚠️ Improvement","⏰ Late to Class","📵 Mobile Phone Issue","🗣️ Disturbing Class","📚 Incomplete Work","⚠️ Other"
-];
-let selectedDisciplineOption = "";
+const WORKSHEET_SUBJECTS=["English","Accountancy","Business Studies","Computer Application"];
+let worksheetSelections={};
 
 window.openTeacherDiscipline = async function(){
-  hideAllPages();
-  document.getElementById("teacherDisciplinePage").classList.add("active");
-  await loadDisciplineStudents();
-  renderDisciplineOptions();
-  await loadTeacherDiscipline();
+  hideAllPages(); document.getElementById("teacherDisciplinePage").classList.add("active");
+  await loadDisciplineStudents(); await loadWorksheetStudents(); renderWorksheetGrid(); await loadTeacherDiscipline();
 };
-
-function renderDisciplineOptions(){
-  const box=document.getElementById("disciplineOptions");
-  box.innerHTML=DISCIPLINE_OPTIONS.map((item,i)=>`<button type="button" class="discipline-option ${selectedDisciplineOption===item?"active":""}" onclick="selectDisciplineOption(${i})">${item}</button>`).join("");
-}
-window.selectDisciplineOption=function(index){selectedDisciplineOption=DISCIPLINE_OPTIONS[index];renderDisciplineOptions();};
-
 async function loadDisciplineStudents(){
-  const select=document.getElementById("disciplineStudentSelect");
-  select.innerHTML='<option value="">Loading students...</option>';
+  const select=document.getElementById("disciplineStudentSelect"); select.innerHTML='<option value="">Loading students...</option>';
   try{const snap=await getDocs(collection(db,"students"));let arr=[];snap.forEach(item=>arr.push({id:item.id,data:item.data()}));arr.sort((a,b)=>String(a.data.name||"").localeCompare(String(b.data.name||"")));
-    select.innerHTML='<option value="">Select Student</option>'+arr.map(x=>`<option value="${x.id}">${escapeHTML(x.data.name||"Student")} — ${escapeHTML(x.data.registerNumber||x.data.rollNumber||"")}</option>`).join("");
-  }catch(e){console.error(e);select.innerHTML='<option value="">Could not load students</option>';}
-}
-
-window.saveDisciplineRecord=async function(){
-  const studentId=document.getElementById("disciplineStudentSelect").value;
-  const note=document.getElementById("disciplineNote").value.trim();
-  const box=document.getElementById("disciplineMessage");
-  if(!studentId||!selectedDisciplineOption){box.className="error";box.style.display="block";box.textContent="Please select a student and a behaviour record.";return;}
-  try{const snap=await getDocs(collection(db,"students"));let student=null;snap.forEach(x=>{if(x.id===studentId)student=x.data();});
-    await addDoc(collection(db,"discipline"),{studentId,studentName:student?.name||"Student",registerNumber:student?.registerNumber||student?.rollNumber||"",category:selectedDisciplineOption,note,createdAt:serverTimestamp(),createdAtLocal:new Date().toISOString()});
-    box.className="success";box.style.display="block";box.textContent="✅ Discipline record saved!";document.getElementById("disciplineNote").value="";selectedDisciplineOption="";renderDisciplineOptions();await loadTeacherDiscipline();
-  }catch(e){console.error(e);box.className="error";box.style.display="block";box.textContent="❌ Could not save record.";}
-};
+  const opts='<option value="">Select Student</option>'+arr.map(x=>`<option value="${x.id}">${escapeHTML(x.data.name||"Student")} — ${escapeHTML(x.data.registerNumber||x.data.rollNumber||"")}</option>`).join(""); select.innerHTML=opts;
+  }catch(e){console.error(e);select.innerHTML='<option value="">Could not load students</option>';}}
+async function loadWorksheetStudents(){const a=document.getElementById("disciplineStudentSelect"),b=document.getElementById("worksheetStudentSelect"); b.innerHTML=a.innerHTML||'<option value="">Select Student</option>';}
+function renderWorksheetGrid(){const box=document.getElementById("worksheetGrid");box.innerHTML=WORKSHEET_SUBJECTS.map(sub=>{const st=worksheetSelections[sub]||"complete";return `<div class="worksheet-row"><strong>${sub}</strong><div class="worksheet-actions"><button class="worksheet-btn complete ${st==="complete"?"active":""}" onclick="setWorksheetStatus('${sub}','complete')">✅ Complete</button><button class="worksheet-btn incomplete ${st==="incomplete"?"active":""}" onclick="setWorksheetStatus('${sub}','incomplete')">❌ Not Complete</button></div></div>`}).join("");}
+window.setWorksheetStatus=function(subject,status){worksheetSelections[subject]=status;renderWorksheetGrid();};
+window.saveDisciplineRecord=async function(){const studentId=document.getElementById("disciplineStudentSelect").value,note=document.getElementById("disciplineNote").value.trim(),box=document.getElementById("disciplineMessage");if(!studentId||!note){box.className="error";box.style.display="block";box.textContent="Please select a student and write a discipline note.";return;}try{const snap=await getDocs(collection(db,"students"));let student=null;snap.forEach(x=>{if(x.id===studentId)student=x.data();});await addDoc(collection(db,"discipline"),{studentId,studentName:student?.name||"Student",registerNumber:student?.registerNumber||student?.rollNumber||"",note,createdAt:serverTimestamp(),createdAtLocal:new Date().toISOString()});box.className="success";box.style.display="block";box.textContent="✅ Discipline record saved!";document.getElementById("disciplineNote").value="";await loadTeacherDiscipline();}catch(e){console.error(e);box.className="error";box.style.display="block";box.textContent="❌ Could not save record. Check Firestore Rules for the discipline collection.";}};
+window.saveWorksheetStatus=async function(){const studentId=document.getElementById("worksheetStudentSelect").value,box=document.getElementById("worksheetMessage");if(!studentId){box.className="error";box.style.display="block";box.textContent="Please select a student.";return;}try{const snap=await getDocs(collection(db,"students"));let student=null;snap.forEach(x=>{if(x.id===studentId)student=x.data();});const payload={studentId,studentName:student?.name||"Student",registerNumber:student?.registerNumber||student?.rollNumber||"",subjects:Object.fromEntries(WORKSHEET_SUBJECTS.map(x=>[x,worksheetSelections[x]||"complete"])),updatedAt:serverTimestamp(),updatedAtLocal:new Date().toISOString()};const old=await getDocs(collection(db,"worksheets"));let id=null;old.forEach(x=>{if(x.data().studentId===studentId)id=x.id;});if(id)await updateDoc(doc(db,"worksheets",id),payload);else await addDoc(collection(db,"worksheets"),{...payload,createdAt:serverTimestamp()});box.className="success";box.style.display="block";box.textContent="✅ Worksheet status saved!";}catch(e){console.error(e);box.className="error";box.style.display="block";box.textContent="❌ Could not save worksheet status. Check Firestore Rules for the worksheets collection.";}};
 
 async function loadTeacherDiscipline(){
  const box=document.getElementById("teacherDisciplineList");box.innerHTML='<div class="loading">Loading records...</div>';
  try{const snap=await getDocs(collection(db,"discipline"));let arr=[];snap.forEach(x=>arr.push({id:x.id,data:x.data()}));arr.sort((a,b)=>String(b.data.createdAtLocal||"").localeCompare(String(a.data.createdAtLocal||"")));
  if(!arr.length){box.innerHTML='<div class="empty">No discipline records yet.</div>';return;}
- box.innerHTML=arr.map(x=>`<div class="discipline-item"><div class="student-header"><div><h3>${escapeHTML(x.data.studentName||"Student")}</h3><p>Register No: ${escapeHTML(x.data.registerNumber||"")}</p></div><button class="danger-button" onclick="deleteDisciplineRecord('${x.id}')">Delete</button></div><span class="discipline-tag">${escapeHTML(x.data.category||"")}</span>${x.data.note?`<p style="margin-top:12px">${escapeHTML(x.data.note)}</p>`:""}<p class="date-text">📅 ${formatDate(x.data.createdAtLocal||x.data.createdAt)}</p></div>`).join("");
+ box.innerHTML=arr.map(x=>`<div class="discipline-item"><div class="student-header"><div><h3>${escapeHTML(x.data.studentName||"Student")}</h3><p>Register No: ${escapeHTML(x.data.registerNumber||"")}</p></div><button class="danger-button" onclick="deleteDisciplineRecord('${x.id}')">Delete</button></div>${x.data.note?`<p style="margin-top:12px">${escapeHTML(x.data.note)}</p>`:""}<p class="date-text">📅 ${formatDate(x.data.createdAtLocal||x.data.createdAt)}</p></div>`).join("");
  }catch(e){console.error(e);box.innerHTML='<div class="empty">Could not load records.</div>';}
 }
 window.deleteDisciplineRecord=async function(id){if(!confirm("Delete this discipline record?"))return;try{await deleteDoc(doc(db,"discipline",id));await loadTeacherDiscipline();}catch(e){console.error(e);alert("Could not delete record.");}};
@@ -4917,8 +4898,7 @@ window.showPersonalDiscipline=async function(){
  const box=document.getElementById("personalDisciplineContent");box.innerHTML='<div class="loading">Loading discipline records...</div>';
  try{const snap=await getDocs(collection(db,"discipline"));let arr=[];snap.forEach(x=>{const d=x.data();if(d.studentId===currentPersonalStudent.id)arr.push({id:x.id,data:d});});arr.sort((a,b)=>String(b.data.createdAtLocal||"").localeCompare(String(a.data.createdAtLocal||"")));
  if(!arr.length){box.innerHTML='<div class="empty">No discipline records available yet.</div>';return;}
- const positive=["🌟 Excellent Behaviour","🤝 Helpful","📚 Responsible","🎯 Active Participation","⏰ Punctual"];
- box.innerHTML=`<div class="result-card glass"><h2>🛡️ Discipline History</h2><p class="date-text">Your teacher-recorded behaviour and feedback.</p><div class="discipline-history">${arr.map(x=>`<div class="discipline-item"><span class="discipline-tag ${positive.includes(x.data.category)?"discipline-positive":"discipline-warning"}">${escapeHTML(x.data.category||"")}</span>${x.data.note?`<p style="margin-top:12px">${escapeHTML(x.data.note)}</p>`:""}<p class="date-text">📅 ${formatDate(x.data.createdAtLocal||x.data.createdAt)}</p></div>`).join("")}</div></div>`;
+ box.innerHTML=`<div class="result-card glass"><h2>🛡️ Discipline History</h2><p class="date-text">Your teacher-recorded discipline notes and feedback.</p><div class="discipline-history">${arr.map(x=>`<div class="discipline-item"><p>${escapeHTML(x.data.note||"")}</p><p class="date-text">📅 ${formatDate(x.data.createdAtLocal||x.data.createdAt)}</p></div>`).join("")}</div></div>`;
  }catch(e){console.error(e);box.innerHTML='<div class="empty">Could not load discipline records.</div>';}
 };
 
