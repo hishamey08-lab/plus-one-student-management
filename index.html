@@ -985,6 +985,11 @@ footer{
   }
 }
 
+/* =========================================================
+   ATTENDANCE SYSTEM
+========================================================= */
+.attendance-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}.attendance-stat{padding:18px;border-radius:18px;border:1px solid var(--glass-border);background:linear-gradient(135deg,rgba(255,255,255,.10),var(--glass-bg));text-align:center}.attendance-stat span{display:block;color:var(--muted);font-size:12px}.attendance-stat strong{display:block;margin-top:8px;font-size:24px;color:var(--highlight)}.attendance-row{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:16px;margin-top:12px;border:1px solid var(--glass-border);border-radius:18px;background:rgba(255,255,255,.04);flex-wrap:wrap}.attendance-row h3{margin-bottom:5px}.attendance-row p{color:var(--muted);font-size:13px}.attendance-actions{display:flex;gap:10px;flex-wrap:wrap}.attendance-btn{border:1px solid var(--glass-border);padding:11px 18px;border-radius:50px;background:rgba(255,255,255,.08);color:var(--text);font-weight:800}.attendance-btn.present.active{background:linear-gradient(135deg,#059669,#22c55e);color:white}.attendance-btn.absent.active{background:linear-gradient(135deg,#dc2626,#991b1b);color:white}.attendance-status{font-weight:800;padding:7px 13px;border-radius:50px}.attendance-status.present{color:#6ee7b7;background:rgba(34,197,94,.14)}.attendance-status.absent{color:#fca5a5;background:rgba(239,68,68,.14)}@media(max-width:700px){.attendance-summary{grid-template-columns:repeat(2,1fr)}}
+
 </style>
 </head>
 
@@ -1155,6 +1160,11 @@ footer{
 
   </div>
 
+
+  <div class="feature-card glass clickable" onclick="openClassAttendancePage()">
+    <div class="feature-icon">📅</div><h3>Class Attendance</h3>
+    <p>View day-by-day attendance for all students.</p>
+  </div>
 
   <div class="feature-card glass clickable"
        onclick="openAnnouncementsPage()">
@@ -1352,6 +1362,11 @@ footer{
   </div>
 
 
+  <div class="feature-card glass teacher-feature clickable" onclick="openTeacherAttendance()">
+    <div class="feature-icon">📅</div><h3>Day-by-Day Attendance</h3>
+    <p>Mark every student Present or Absent with one click.</p>
+  </div>
+
   <div class="feature-card glass teacher-feature clickable"
        onclick="openStudentManagement()">
 
@@ -1447,6 +1462,11 @@ footer{
 
   </div>
 
+  <div class="feature-card glass clickable" onclick="showPersonalAttendance()">
+    <div class="feature-icon">📅</div><h3 id="personalAttendanceTitle">My Attendance</h3>
+    <p>View your attendance summary and day-by-day history.</p>
+  </div>
+
   <div class="feature-card glass clickable"
        onclick="showPersonalExamResults()">
 
@@ -1514,6 +1534,38 @@ footer{
 
 </div>
 
+
+<!-- =====================================================
+     PERSONAL ATTENDANCE
+====================================================== -->
+<div id="personalAttendancePage" class="page">
+<header><h1>📅 MY ATTENDANCE</h1><p id="personalAttendanceHeader">Personal attendance history</p></header>
+<main class="container">
+<button class="back-button" onclick="openPersonalStudentDashboard()">← Back to My Dashboard</button>
+<div id="personalAttendanceContent"><div class="loading">Loading attendance...</div></div>
+</main></div>
+
+<!-- =====================================================
+     PUBLIC CLASS ATTENDANCE
+====================================================== -->
+<div id="classAttendancePage" class="page">
+<header><h1>👥 CLASS ATTENDANCE</h1><p>Day-by-day attendance</p></header>
+<main class="container">
+<button class="back-button" onclick="openStudentLobby()">← Back to Student Lobby</button>
+<div class="form-card glass"><h2>📅 Select Date</h2><div class="result-search"><input id="publicAttendanceDate" type="date"><button class="primary-button" onclick="loadPublicClassAttendance()">View Attendance</button></div></div>
+<div id="publicClassAttendanceContent"><div class="empty">Select a date to view attendance.</div></div>
+</main></div>
+
+<!-- =====================================================
+     TEACHER ATTENDANCE
+====================================================== -->
+<div id="teacherAttendancePage" class="page">
+<header><h1>📅 DAY-BY-DAY ATTENDANCE</h1><p>Click Present or Absent — no typing needed</p></header>
+<main class="container">
+<button class="back-button" onclick="openTeacherLobby()">← Back to Teacher Lobby</button>
+<div class="form-card glass"><h2>📅 Attendance Date</h2><input id="teacherAttendanceDate" type="date" onchange="loadTeacherAttendanceStudents()"><div id="teacherAttendanceMessage"></div></div>
+<div class="form-card glass"><h2>👨‍🎓 Mark Attendance</h2><div id="teacherAttendanceList"><div class="loading">Loading students...</div></div><button class="primary-button" onclick="saveAttendance()">💾 Save Attendance</button></div>
+</main></div>
 
 <!-- =====================================================
      TEACHER STUDENT MANAGEMENT
@@ -4136,6 +4188,8 @@ window.openPersonalStudentDashboard = function(){
     `${name}'s Details`;
   document.getElementById("personalResultsTitle").textContent =
     `${name}'s Exam Results`;
+  const attendanceTitle = document.getElementById("personalAttendanceTitle");
+  if(attendanceTitle) attendanceTitle.textContent = `${name}'s Attendance`;
 };
 
 window.saveStudentProfile = async function(){
@@ -4601,6 +4655,168 @@ window.loadTeacherStudents = async function(){
   container.innerHTML = html;
 };
 
+
+
+/* =========================================================
+   ATTENDANCE SYSTEM
+========================================================= */
+let attendanceSelections = {};
+let teacherAttendanceStudents = [];
+
+function attendanceToday(){
+  const d = new Date();
+  const offset = d.getTimezoneOffset();
+  return new Date(d.getTime() - offset * 60000).toISOString().slice(0,10);
+}
+
+function attendanceDateText(value){
+  if(!value) return "Date unavailable";
+  return new Date(value + "T00:00:00").toLocaleDateString("en-IN",{
+    day:"2-digit",month:"short",year:"numeric"
+  });
+}
+
+window.openTeacherAttendance = async function(){
+  hideAllPages();
+  document.getElementById("teacherAttendancePage").classList.add("active");
+  const input = document.getElementById("teacherAttendanceDate");
+  if(!input.value) input.value = attendanceToday();
+  await loadTeacherAttendanceStudents();
+};
+
+window.loadTeacherAttendanceStudents = async function(){
+  const date = document.getElementById("teacherAttendanceDate").value;
+  const container = document.getElementById("teacherAttendanceList");
+  container.innerHTML = '<div class="loading">Loading students...</div>';
+  try{
+    const studentsSnapshot = await getDocs(collection(db,"students"));
+    teacherAttendanceStudents = [];
+    studentsSnapshot.forEach(item => teacherAttendanceStudents.push({id:item.id,data:item.data()}));
+    teacherAttendanceStudents.sort((a,b)=>String(a.data.name||"").localeCompare(String(b.data.name||"")));
+    if(!teacherAttendanceStudents.length){
+      container.innerHTML = '<div class="empty">No students added yet. Add students first.</div>';
+      return;
+    }
+    const attendanceSnapshot = await getDocs(collection(db,"attendance"));
+    let oldAttendance = null;
+    attendanceSnapshot.forEach(item => { if(item.data().date === date) oldAttendance = item.data(); });
+    attendanceSelections = {};
+    teacherAttendanceStudents.forEach(student => {
+      attendanceSelections[student.id] = oldAttendance?.records?.[student.id]?.status || "present";
+    });
+    renderTeacherAttendance();
+  }catch(errorObject){
+    console.error(errorObject);
+    container.innerHTML = '<div class="empty">Could not load students.</div>';
+  }
+};
+
+function renderTeacherAttendance(){
+  const container = document.getElementById("teacherAttendanceList");
+  let html = "";
+  teacherAttendanceStudents.forEach(student => {
+    const data = student.data;
+    const status = attendanceSelections[student.id] || "present";
+    const registerNumber = data.registerNumber || data.rollNumber || "";
+    html += `<div class="attendance-row"><div><h3>👤 ${escapeHTML(data.name||"Student")}</h3><p>Register No: ${escapeHTML(registerNumber)}</p></div><div class="attendance-actions"><button class="attendance-btn present ${status==="present"?"active":""}" onclick="setAttendanceStatus('${student.id}','present')">✅ Present</button><button class="attendance-btn absent ${status==="absent"?"active":""}" onclick="setAttendanceStatus('${student.id}','absent')">❌ Absent</button></div></div>`;
+  });
+  container.innerHTML = html;
+}
+
+window.setAttendanceStatus = function(studentId,status){
+  attendanceSelections[studentId] = status;
+  renderTeacherAttendance();
+};
+
+window.saveAttendance = async function(){
+  const date = document.getElementById("teacherAttendanceDate").value;
+  const box = document.getElementById("teacherAttendanceMessage");
+  if(!date){ box.className="error"; box.style.display="block"; box.textContent="Please select a date."; return; }
+  const records = {};
+  teacherAttendanceStudents.forEach(student => {
+    const data = student.data;
+    records[student.id] = {
+      name:data.name||"Student",
+      registerNumber:data.registerNumber||data.rollNumber||"",
+      status:attendanceSelections[student.id]||"present"
+    };
+  });
+  try{
+    const snapshot = await getDocs(collection(db,"attendance"));
+    let existingId = null;
+    snapshot.forEach(item => { if(item.data().date === date) existingId = item.id; });
+    const payload = {date,records,updatedAt:serverTimestamp(),updatedAtLocal:new Date().toISOString()};
+    if(existingId) await updateDoc(doc(db,"attendance",existingId),payload);
+    else await addDoc(collection(db,"attendance"),{...payload,createdAt:serverTimestamp(),createdAtLocal:new Date().toISOString()});
+    box.className="success"; box.style.display="block"; box.textContent="✅ Attendance saved successfully!";
+  }catch(errorObject){
+    console.error(errorObject);
+    box.className="error"; box.style.display="block"; box.textContent="❌ Could not save attendance. Check Firestore Rules.";
+  }
+};
+
+window.showPersonalAttendance = async function(){
+  if(!currentPersonalStudent) return openRegisterLookupPage();
+  hideAllPages();
+  document.getElementById("personalAttendancePage").classList.add("active");
+  const data = currentPersonalStudent.data;
+  const name = data.name || "Student";
+  document.getElementById("personalAttendanceHeader").textContent = `${name}'s personal attendance history`;
+  document.getElementById("personalAttendanceTitle").textContent = `${name}'s Attendance`;
+  const container = document.getElementById("personalAttendanceContent");
+  container.innerHTML = '<div class="loading">Loading attendance...</div>';
+  try{
+    const snapshot = await getDocs(collection(db,"attendance"));
+    const history = [];
+    snapshot.forEach(item => {
+      const attendance = item.data();
+      const record = attendance.records?.[currentPersonalStudent.id];
+      if(record) history.push({date:attendance.date,status:record.status});
+    });
+    history.sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+    const total = history.length;
+    const present = history.filter(item=>item.status==="present").length;
+    const absent = total-present;
+    const percentage = total ? ((present/total)*100).toFixed(2) : "0.00";
+    let html = `<div class="result-card glass"><h2>📊 Attendance Summary</h2><div class="attendance-summary"><div class="attendance-stat"><span>Total Working Days</span><strong>${total}</strong></div><div class="attendance-stat"><span>✅ Present</span><strong>${present}</strong></div><div class="attendance-stat"><span>❌ Absent</span><strong>${absent}</strong></div><div class="attendance-stat"><span>📊 Attendance</span><strong>${percentage}%</strong></div></div></div><div class="result-card glass"><h2>📅 Day-by-Day Attendance</h2>`;
+    if(!history.length) html += '<div class="empty">No attendance marked yet.</div>';
+    history.forEach(item => {
+      html += `<div class="total-box"><span>📅 ${attendanceDateText(item.date)}</span><span class="attendance-status ${item.status}">${item.status==="present"?"✅ Present":"❌ Absent"}</span></div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+  }catch(errorObject){
+    console.error(errorObject);
+    container.innerHTML = '<div class="empty">Could not load attendance.</div>';
+  }
+};
+
+window.openClassAttendancePage = function(){
+  hideAllPages();
+  document.getElementById("classAttendancePage").classList.add("active");
+  const input = document.getElementById("publicAttendanceDate");
+  if(!input.value) input.value = attendanceToday();
+};
+
+window.loadPublicClassAttendance = async function(){
+  const date = document.getElementById("publicAttendanceDate").value;
+  const container = document.getElementById("publicClassAttendanceContent");
+  if(!date){ container.innerHTML='<div class="empty">Please select a date.</div>'; return; }
+  container.innerHTML = '<div class="loading">Loading attendance...</div>';
+  try{
+    const snapshot = await getDocs(collection(db,"attendance"));
+    let attendance = null;
+    snapshot.forEach(item => { if(item.data().date === date) attendance = item.data(); });
+    if(!attendance){ container.innerHTML='<div class="empty">No attendance available for this date.</div>'; return; }
+    const records = Object.values(attendance.records||{}).sort((a,b)=>String(a.name||"").localeCompare(String(b.name||"")));
+    const present = records.filter(item=>item.status==="present").length;
+    const absent = records.length-present;
+    let html = `<div class="result-card glass"><h2>📅 ${attendanceDateText(date)}</h2><div class="attendance-summary"><div class="attendance-stat"><span>Total Students</span><strong>${records.length}</strong></div><div class="attendance-stat"><span>✅ Present</span><strong>${present}</strong></div><div class="attendance-stat"><span>❌ Absent</span><strong>${absent}</strong></div><div class="attendance-stat"><span>Attendance</span><strong>${records.length?((present/records.length)*100).toFixed(2):0}%</strong></div></div>`;
+    records.forEach(record => { html += `<div class="total-box"><span>👤 ${escapeHTML(record.name||"Student")} — Reg No: ${escapeHTML(record.registerNumber||"")}</span><span class="attendance-status ${record.status}">${record.status==="present"?"✅ Present":"❌ Absent"}</span></div>`; });
+    html += '</div>';
+    container.innerHTML = html;
+  }catch(errorObject){ console.error(errorObject); container.innerHTML='<div class="empty">Could not load class attendance.</div>'; }
+};
 
 console.log(
   "🔥 Plus One Student System loaded."
