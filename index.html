@@ -1864,6 +1864,12 @@ input,select,textarea{background:rgba(2,25,67,.48)}
     </div>
 
     <div class="form-group">
+      <label>Parent WhatsApp Number 📱</label>
+      <input id="profileWhatsappNumber" type="tel" placeholder="Example: +91XXXXXXXXXX">
+      <small style="margin-top:7px;color:var(--muted)">Used later for official school notifications.</small>
+    </div>
+
+    <div class="form-group">
       <label>Email</label>
       <input id="profileEmail" type="email" placeholder="Student email">
     </div>
@@ -4428,6 +4434,7 @@ window.saveStudentProfile = async function(){
   const gender = document.getElementById("profileGender").value;
   const guardianName = document.getElementById("profileGuardianName").value.trim();
   const guardianPhone = document.getElementById("profileGuardianPhone").value.trim();
+  const whatsappNumber = document.getElementById("profileWhatsappNumber").value.trim();
   const email = document.getElementById("profileEmail").value.trim();
   const address = document.getElementById("profileAddress").value.trim();
   const message = document.getElementById("studentProfileMessage");
@@ -4473,6 +4480,7 @@ window.saveStudentProfile = async function(){
       gender,
       guardianName,
       guardianPhone,
+      whatsappNumber,
       email,
       address,
       updatedAt:serverTimestamp(),
@@ -4645,6 +4653,8 @@ window.editManagedStudent = function(id){
     data.guardianName || "";
   document.getElementById("profileGuardianPhone").value =
     data.guardianPhone || "";
+  document.getElementById("profileWhatsappNumber").value =
+    data.whatsappNumber || "";
   document.getElementById("profileEmail").value = data.email || "";
   document.getElementById("profileAddress").value = data.address || "";
 
@@ -4742,6 +4752,7 @@ window.showPersonalStudentDetails = function(){
     ["Gender", data.gender || ""],
     ["Parent / Guardian", data.guardianName || ""],
     ["Parent Phone", data.guardianPhone || ""],
+    ["Parent WhatsApp", data.whatsappNumber || ""],
     ["Email", data.email || ""],
     ["Address", data.address || ""]
   ].filter(([,value]) => String(value).trim() !== "");
@@ -5238,7 +5249,7 @@ function createPrintHTML(report,sections){
     const fields=[
       ["Student Name",name],["Register Number",reg],["Class",d.className],["Stream",d.stream],
       ["Division",d.division],["Date of Birth",d.dob],["Gender",d.gender],["Parent / Guardian",d.guardianName],
-      ["Parent Phone",d.guardianPhone],["Email",d.email],["Address",d.address]
+      ["Parent Phone",d.guardianPhone],["Parent WhatsApp",d.whatsappNumber],["Email",d.email],["Address",d.address]
     ].filter(([,v])=>String(v??"").trim()!=="");
     body+=printSection("👤 Personal Details",`<table>${fields.map(([k,v])=>`<tr><th>${escapePrint(k)}</th><td>${escapePrint(v)}</td></tr>`).join("")}</table>`);
   }
