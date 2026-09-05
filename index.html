@@ -1296,6 +1296,13 @@ input,select,textarea{background:rgba(2,25,67,.48)}
     <p>View day-by-day attendance for all students.</p>
   </div>
 
+  <div class="feature-card glass clickable" onclick="openNotificationsPage()">
+    <div class="feature-icon">🔔</div>
+    <h3>Notifications</h3>
+    <p>View important updates, homework, dates and emergency notices.</p>
+  </div>
+
+
   <div class="feature-card glass clickable"
        onclick="openAnnouncementsPage()">
 
@@ -1489,6 +1496,13 @@ input,select,textarea{background:rgba(2,25,67,.48)}
       Create and manage class announcements.
     </p>
 
+  </div>
+
+
+  <div class="feature-card glass teacher-feature clickable" onclick="openNotificationCenter()">
+    <div class="feature-icon">🔔</div>
+    <h3>Notification Center</h3>
+    <p>Create important notifications for students and parents.</p>
   </div>
 
 
@@ -2330,6 +2344,73 @@ Loading notes...
 
 
 <!-- =====================================================
+     TEACHER NOTIFICATION CENTER
+====================================================== -->
+<div id="notificationCenter" class="page">
+<header>
+  <h1>🔔 NOTIFICATION CENTER</h1>
+  <p>Create important class notifications</p>
+</header>
+<main class="container">
+<button class="back-button" onclick="openTeacherLobby()">← Back to Teacher Lobby</button>
+
+<div class="form-card glass">
+  <h2>➕ Create Notification</h2>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>Notification Type</label>
+      <select id="notificationType">
+        <option value="📢 Announcement">📢 Announcement</option>
+        <option value="📚 Study Material">📚 Study Material</option>
+        <option value="📝 Homework">📝 Homework</option>
+        <option value="📅 Important Date">📅 Important Date</option>
+        <option value="⚠️ Emergency Notice">⚠️ Emergency Notice</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Audience</label>
+      <select id="notificationAudience">
+        <option value="Students & Parents">Students & Parents</option>
+        <option value="Students">Students</option>
+        <option value="Parents">Parents</option>
+      </select>
+    </div>
+    <div class="form-group full">
+      <label>Title</label>
+      <input id="notificationTitle" placeholder="Example: Mathematics Exam Tomorrow">
+    </div>
+    <div class="form-group full">
+      <label>Message</label>
+      <textarea id="notificationText" placeholder="Write the notification details..."></textarea>
+    </div>
+  </div>
+  <button class="primary-button" onclick="saveNotification()">🔔 Publish Notification</button>
+  <div id="notificationSaveMessage"></div>
+</div>
+
+<div class="form-card glass">
+  <h2>📋 Published Notifications</h2>
+  <div id="teacherNotificationsList"><div class="loading">Loading notifications...</div></div>
+</div>
+</main>
+</div>
+
+<!-- =====================================================
+     STUDENT NOTIFICATIONS
+====================================================== -->
+<div id="notificationsPage" class="page">
+<header>
+  <h1>🔔 NOTIFICATIONS</h1>
+  <p>Important class updates</p>
+</header>
+<main class="container">
+<button class="back-button" onclick="openStudentLobby()">← Back to Student Lobby</button>
+<div id="studentNotificationsList"><div class="loading">Loading notifications...</div></div>
+</main>
+</div>
+
+
+<!-- =====================================================
      TEACHER ANNOUNCEMENTS
 ====================================================== -->
 
@@ -2637,6 +2718,19 @@ window.openAnnouncementsPage = async function(){
 
   await loadStudentAnnouncements();
 
+};
+
+
+window.openNotificationCenter = async function(){
+  hideAllPages();
+  document.getElementById("notificationCenter").classList.add("active");
+  await loadTeacherNotifications();
+};
+
+window.openNotificationsPage = async function(){
+  hideAllPages();
+  document.getElementById("notificationsPage").classList.add("active");
+  await loadStudentNotifications();
 };
 
 
@@ -3910,6 +4004,119 @@ async function loadStudentNotes(){
 
 }
 
+
+
+/* =========================================================
+   NOTIFICATION CENTER
+========================================================= */
+const notificationIcons = {
+  "📢 Announcement":"📢",
+  "📚 Study Material":"📚",
+  "📝 Homework":"📝",
+  "📅 Important Date":"📅",
+  "⚠️ Emergency Notice":"⚠️"
+};
+
+window.saveNotification = async function(){
+  const type = document.getElementById("notificationType").value;
+  const audience = document.getElementById("notificationAudience").value;
+  const title = document.getElementById("notificationTitle").value.trim();
+  const message = document.getElementById("notificationText").value.trim();
+  const box = document.getElementById("notificationSaveMessage");
+
+  if(!title || !message){
+    box.className = "error";
+    box.style.display = "block";
+    box.textContent = "Please enter a title and message.";
+    return;
+  }
+
+  try{
+    await addDoc(collection(db,"notifications"),{
+      type, audience, title, message,
+      publishedAt:new Date().toISOString(),
+      createdAt:serverTimestamp()
+    });
+    box.className = "success";
+    box.style.display = "block";
+    box.textContent = "✅ Notification published successfully!";
+    document.getElementById("notificationTitle").value = "";
+    document.getElementById("notificationText").value = "";
+    await loadTeacherNotifications();
+  }catch(errorObject){
+    console.error(errorObject);
+    box.className = "error";
+    box.style.display = "block";
+    box.textContent = "❌ Could not publish notification. Check Firestore Rules.";
+  }
+};
+
+async function loadTeacherNotifications(){
+  const container = document.getElementById("teacherNotificationsList");
+  try{
+    const snapshot = await getDocs(collection(db,"notifications"));
+    if(snapshot.empty){
+      container.innerHTML = '<div class="empty">No notifications published yet.</div>';
+      return;
+    }
+    const items=[];
+    snapshot.forEach(item=>items.push({id:item.id,...item.data()}));
+    items.sort((a,b)=>String(b.publishedAt||"").localeCompare(String(a.publishedAt||"")));
+    container.innerHTML = items.map(data=>`
+      <div class="result-card glass">
+        <div class="student-header">
+          <div>
+            <span class="exam-title">${escapeHTML(data.type||"🔔 Notification")}</span>
+            <h3>${escapeHTML(data.title||"")}</h3>
+            <p>${escapeHTML(data.message||"")}</p>
+            <p class="date-text">👥 ${escapeHTML(data.audience||"Students & Parents")} · 📅 ${formatDate(data.publishedAt)}</p>
+          </div>
+          <button class="danger-button" onclick="deleteNotification('${data.id}')">Delete</button>
+        </div>
+      </div>`).join("");
+  }catch(errorObject){
+    console.error(errorObject);
+    container.innerHTML = '<div class="empty">Could not load notifications.</div>';
+  }
+}
+window.loadTeacherNotifications = loadTeacherNotifications;
+
+window.deleteNotification = async function(id){
+  if(!confirm("Delete this notification?")) return;
+  try{
+    await deleteDoc(doc(db,"notifications",id));
+    await loadTeacherNotifications();
+  }catch(errorObject){
+    console.error(errorObject);
+    alert("Could not delete notification.");
+  }
+};
+
+async function loadStudentNotifications(){
+  const container = document.getElementById("studentNotificationsList");
+  try{
+    const snapshot = await getDocs(collection(db,"notifications"));
+    if(snapshot.empty){
+      container.innerHTML = '<div class="empty">No notifications available.</div>';
+      return;
+    }
+    const items=[];
+    snapshot.forEach(item=>items.push(item.data()));
+    items.sort((a,b)=>String(b.publishedAt||"").localeCompare(String(a.publishedAt||"")));
+    container.innerHTML = items.map(data=>`
+      <div class="result-card glass">
+        <span class="exam-title">${escapeHTML(data.type||"🔔 Notification")}</span>
+        <h2>${escapeHTML(data.title||"")}</h2>
+        <br>
+        <p>${escapeHTML(data.message||"")}</p>
+        <p class="date-text">📅 ${formatDate(data.publishedAt)}</p>
+      </div>`).join("");
+  }catch(errorObject){
+    console.error(errorObject);
+    container.innerHTML = '<div class="empty">Could not load notifications.</div>';
+  }
+}
+window.loadStudentNotifications = loadStudentNotifications;
 
 /* =========================================================
    ANNOUNCEMENTS
