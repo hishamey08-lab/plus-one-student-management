@@ -1002,23 +1002,22 @@ footer{
    UI-only upgrade: no functionality changed
 ========================================================= */
 :root{
-  /* BLACK + GOLD — Ultra Luxury Premium Theme */
-  --bg:#090909;
-  --c1:#2B2100;
-  --c2:#D4AF37;
-  --c3:#6B5200;
-  --text:#FFFFFF;
-  --muted:#CFC7B2;
-  --accent-a:#D4AF37;
-  --accent-b:#F5D76E;
-  --highlight:#FFF3B0;
-  --phantom:#B8860B;
-  --glass-bg:rgba(18,16,10,.62);
-  --glass-bg-strong:rgba(35,30,17,.80);
-  --glass-border:rgba(212,175,55,.22);
-  --shadow-dark:rgba(0,0,0,.62);
-  --shadow-light:rgba(245,215,110,.08);
-  --glow:rgba(212,175,55,.34);
+  --bg:#070914;
+  --c1:#24114d;
+  --c2:#7c3aed;
+  --c3:#0b5ea8;
+  --text:#f7f8ff;
+  --muted:#aab3c7;
+  --accent-a:#6d5dfc;
+  --accent-b:#9b6cff;
+  --highlight:#39d5ff;
+  --phantom:#5b7cff;
+  --glass-bg:rgba(13,18,34,.56);
+  --glass-bg-strong:rgba(24,29,51,.76);
+  --glass-border:rgba(170,190,255,.16);
+  --shadow-dark:rgba(0,0,0,.42);
+  --shadow-light:rgba(126,113,255,.09);
+  --glow:rgba(105,92,252,.42);
 }
 body{line-height:1.55;letter-spacing:.01em;background:radial-gradient(circle at 50% -20%,rgba(79,70,229,.12),transparent 38%),var(--bg)}
 body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:linear-gradient(115deg,rgba(255,255,255,.025),transparent 30%,rgba(57,213,255,.025));}
@@ -1063,29 +1062,61 @@ footer{padding:30px 20px 40px;color:#8994ac;border-top:1px solid rgba(255,255,25
 
 
 /* =========================================================
-   FINAL BLACK + GOLD LUXURY OVERRIDE
+   BLUE + GREEN + WHITE PREMIUM THEME — FINAL OVERRIDE
 ========================================================= */
-body{background:radial-gradient(circle at 50% -20%,rgba(212,175,55,.10),transparent 38%),var(--bg)}
-body::before{background:linear-gradient(115deg,rgba(255,243,176,.018),transparent 30%,rgba(212,175,55,.025))}
-header{background:linear-gradient(180deg,rgba(12,12,12,.88),rgba(12,12,12,.48));border-bottom-color:rgba(212,175,55,.16)}
-header::after{background:linear-gradient(90deg,var(--accent-a),var(--highlight),var(--accent-b));box-shadow:0 0 18px var(--glow)}
-header h1{background:linear-gradient(120deg,#FFFFFF 5%,#F5D76E 48%,#D4AF37 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-header p{color:var(--muted)}
-.glass,.form-card,.result-card,.password-box{background:linear-gradient(145deg,rgba(255,243,176,.075),rgba(255,255,255,.018) 16%,var(--glass-bg) 48%,rgba(8,8,8,.88));border-color:var(--glass-border);box-shadow:14px 16px 34px var(--shadow-dark),-8px -8px 24px var(--shadow-light),0 0 28px rgba(212,175,55,.055),inset 0 1px 0 rgba(255,243,176,.12)}
-.lobby-card::before,.feature-card::before{background:radial-gradient(circle,rgba(212,175,55,.16),transparent 68%)}
-.lobby-card:hover,.feature-card:hover{border-color:rgba(245,215,110,.42);box-shadow:18px 20px 42px rgba(0,0,0,.52),0 0 36px rgba(212,175,55,.12),inset 0 1px 0 rgba(255,243,176,.18)}
-.icon,.feature-icon{border-color:rgba(212,175,55,.20);background:linear-gradient(145deg,rgba(255,243,176,.10),rgba(212,175,55,.025));box-shadow:7px 7px 15px rgba(0,0,0,.30),-4px -4px 12px rgba(245,215,110,.05),inset 0 1px 0 rgba(255,243,176,.14)}
-.lobby-button,.primary-button,.password-box button{background:linear-gradient(135deg,#8A6818,#D4AF37 55%,#F5D76E);color:#171207;border-color:rgba(255,243,176,.28);box-shadow:7px 8px 18px rgba(0,0,0,.38),0 0 24px rgba(212,175,55,.16),inset 0 1px 0 rgba(255,255,255,.38)}
-.teacher-button{background:linear-gradient(135deg,#5B430D,#B8860B 55%,#D4AF37);color:#171207}
-.back-button,.secondary-button{background:rgba(18,16,10,.78);border-color:rgba(212,175,55,.20);color:#FFF3B0}
-input,select,textarea{background:rgba(7,7,7,.72);border-color:rgba(212,175,55,.14)}
-input:focus,select:focus,textarea:focus{border-color:rgba(245,215,110,.72);box-shadow:0 0 0 3px rgba(212,175,55,.12),inset 4px 5px 11px rgba(0,0,0,.32)}
-.exam-title{background:rgba(212,175,55,.08);border-color:rgba(212,175,55,.25);color:var(--highlight)}
-.grade{color:var(--highlight);text-shadow:0 0 10px rgba(245,215,110,.35)}
-.percentage-box{border-color:rgba(212,175,55,.25);background:rgba(212,175,55,.05);color:var(--highlight)}
-.edit-button{background:linear-gradient(135deg,#8A6818,#D4AF37);color:#171207}.danger-button{background:linear-gradient(135deg,#b91c1c,#7f1d1d)}
-.data-table th,.marks-table th{color:#E9DFC6}.data-table{background:rgba(8,8,8,.34)}
-::-webkit-scrollbar-track{background:#090909}::-webkit-scrollbar-thumb{background:linear-gradient(#6B5200,#D4AF37,#F5D76E)}
+:root{
+  --bg:#061a3a;
+  --c1:#0a4fc7;
+  --c2:#12d7a0;
+  --c3:#1b7be0;
+  --text:#f8fbff;
+  --muted:#b9d1e8;
+  --accent-a:#0f66d8;
+  --accent-b:#12d7a0;
+  --highlight:#ffffff;
+  --phantom:#1595e8;
+  --glass-bg:rgba(7,45,96,.46);
+  --glass-bg-strong:rgba(10,62,126,.68);
+  --glass-border:rgba(255,255,255,.16);
+  --shadow-dark:rgba(1,20,54,.45);
+  --shadow-light:rgba(255,255,255,.08);
+  --glow:rgba(18,215,160,.28);
+}
+body{
+  background:
+    radial-gradient(circle at 15% 0%,rgba(30,116,255,.45),transparent 34%),
+    radial-gradient(circle at 100% 70%,rgba(18,215,160,.30),transparent 36%),
+    linear-gradient(135deg,#061a3a 0%,#083b8a 55%,#0a5bb5 100%);
+}
+.bg-blobs span:nth-child(1){background:#1267df!important}
+.bg-blobs span:nth-child(2){background:#12d7a0!important}
+.bg-blobs span:nth-child(3){background:#2b8cff!important}
+.glass,.form-card,.result-card,.password-box{
+  background:linear-gradient(145deg,rgba(255,255,255,.15),rgba(255,255,255,.055) 18%,rgba(8,61,132,.52) 55%,rgba(5,39,91,.70));
+  border-color:rgba(255,255,255,.18);
+}
+header{background:linear-gradient(180deg,rgba(6,42,95,.78),rgba(5,32,76,.42))}
+header h1{background:linear-gradient(120deg,#ffffff 8%,#d7f4ff 48%,#3af0c3 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lobby-button,.primary-button,.password-box button{
+  background:linear-gradient(135deg,#0f66d8 0%,#1687df 52%,#12d7a0 100%)!important;
+}
+.teacher-button{background:linear-gradient(135deg,#0753b7,#117fe0 55%,#12d7a0)!important}
+header::after{background:linear-gradient(90deg,#1687df,#ffffff,#12d7a0)}
+input,select,textarea{background:rgba(2,25,67,.48)}
+.exam-title{color:#eaffff!important;background:rgba(18,215,160,.12)!important;border-color:rgba(18,215,160,.28)!important}
+.attendance-stat strong,.grade,.percentage-box,.discipline-tag{color:#eaffff}
+.warning-toggle{display:flex;align-items:center;gap:10px;margin-top:14px;padding:12px 14px;border:1px solid rgba(255,255,255,.14);border-radius:14px;background:rgba(255,180,0,.10);font-weight:700}
+.warning-toggle input{width:20px;height:20px;accent-color:#f59e0b}
+.warning-alerts{margin:0 auto 24px;max-width:900px}
+.warning-alert{border:1px solid rgba(251,191,36,.42);background:linear-gradient(135deg,rgba(251,191,36,.17),rgba(239,68,68,.11));border-radius:20px;padding:18px 20px;margin:10px 0;box-shadow:0 10px 28px rgba(0,0,0,.18)}
+.warning-alert h3{margin-bottom:6px;color:#fff3b0}
+.warning-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:999px;background:rgba(239,68,68,.18);border:1px solid rgba(239,68,68,.3);color:#fff;font-weight:800}
+.print-option-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:16px 0}
+.print-option{display:flex;align-items:center;gap:10px;padding:14px;border:1px solid var(--glass-border);border-radius:14px;background:rgba(255,255,255,.05);cursor:pointer}
+.print-option input{width:18px;height:18px;accent-color:#12d7a0}
+.print-actions{display:flex;gap:12px;flex-wrap:wrap}
+.print-actions .primary-button{margin-top:0}
+@media(max-width:700px){.print-actions{flex-direction:column}.print-actions .primary-button{width:100%}}
 
 </style>
 </head>
@@ -1213,6 +1244,8 @@ input:focus,select:focus,textarea:focus{border-color:rgba(245,215,110,.72);box-s
   <h2>Welcome 👋</h2>
   <p>Find everything for your class.</p>
 </div>
+
+<div id="publicWarningAlerts" class="warning-alerts"></div>
 
 <div class="feature-grid">
 
@@ -1482,6 +1515,12 @@ input:focus,select:focus,textarea:focus{border-color:rgba(245,215,110,.72);box-s
 
   </div>
 
+  <div class="feature-card glass teacher-feature clickable" onclick="openPrintCenter()">
+    <div class="feature-icon">🖨️</div>
+    <h3>Print Student Details</h3>
+    <p>Print a complete student report or only selected details.</p>
+  </div>
+
 </div>
 
 </main>
@@ -1676,6 +1715,7 @@ input:focus,select:focus,textarea:focus{border-color:rgba(245,215,110,.72);box-s
 <div class="form-group full"><label>Select Student</label><select id="disciplineStudentSelect"></select></div>
 <div class="form-group full"><label>Teacher Discipline Note</label><textarea id="disciplineNote" placeholder="Write the student's discipline record or feedback..."></textarea></div>
 </div>
+<label class="warning-toggle"><input type="checkbox" id="disciplineWarning"> ⚠️ Add one discipline warning to this record</label>
 <button class="primary-button" onclick="saveDisciplineRecord()">💾 Save Record</button>
 <div id="disciplineMessage"></div>
 </div>
@@ -1702,6 +1742,42 @@ input:focus,select:focus,textarea:focus{border-color:rgba(245,215,110,.72);box-s
 <div id="personalWorksheetPage" class="page">
 <header><h1>📝 MY WORKSHEET</h1><p>Subject-wise worksheet and notes status</p></header>
 <main class="container"><button class="back-button" onclick="showPersonalDiscipline()">← Back to Discipline</button><div id="personalWorksheetContent"><div class="loading">Loading worksheet status...</div></div></main></div>
+
+<!-- =====================================================
+     PRINT CENTER
+====================================================== -->
+<div id="printCenterPage" class="page">
+<header><h1>🖨️ PRINT CENTER</h1><p>Print complete or selected student details</p></header>
+<main class="container">
+<button class="back-button" onclick="openTeacherLobby()">← Back to Teacher Lobby</button>
+<div class="form-card glass">
+  <h2>👨‍🎓 Select Student</h2>
+  <div class="form-group full">
+    <label>Student</label>
+    <select id="printStudentSelect"></select>
+  </div>
+  <div class="print-actions">
+    <button class="primary-button" onclick="printAllStudentDetails()">🖨️ Print All Details</button>
+  </div>
+</div>
+<div class="form-card glass">
+  <h2>📑 Print Specific Details</h2>
+  <p class="date-text">Choose only the sections you want to print.</p>
+  <div class="print-option-grid">
+    <label class="print-option"><input type="checkbox" value="personal" checked> 👤 Personal Details</label>
+    <label class="print-option"><input type="checkbox" value="results"> 📊 Exam Results</label>
+    <label class="print-option"><input type="checkbox" value="performance"> 📈 Performance</label>
+    <label class="print-option"><input type="checkbox" value="attendance"> 📅 Attendance</label>
+    <label class="print-option"><input type="checkbox" value="discipline"> 🛡️ Discipline</label>
+    <label class="print-option"><input type="checkbox" value="worksheet"> 📝 Worksheet</label>
+  </div>
+  <div class="print-actions">
+    <button class="primary-button" onclick="printSelectedStudentDetails()">📄 Print Selected Details</button>
+  </div>
+  <div id="printMessage"></div>
+</div>
+</main>
+</div>
 
 <!-- =====================================================
      TEACHER ATTENDANCE
@@ -2454,6 +2530,8 @@ window.openStudentLobby = function(){
   document
     .getElementById("studentLobby")
     .classList.add("active");
+
+  if(typeof loadPublicWarningAlerts === "function") loadPublicWarningAlerts();
 
 };
 
@@ -4985,14 +5063,44 @@ async function loadDisciplineStudents(){
 async function loadWorksheetStudents(){const a=document.getElementById("disciplineStudentSelect"),b=document.getElementById("worksheetStudentSelect"); b.innerHTML=a.innerHTML||'<option value="">Select Student</option>';}
 function renderWorksheetGrid(){const box=document.getElementById("worksheetGrid");box.innerHTML=WORKSHEET_SUBJECTS.map(sub=>{const st=worksheetSelections[sub]||"complete";return `<div class="worksheet-row"><strong>${sub}</strong><div class="worksheet-actions"><button class="worksheet-btn complete ${st==="complete"?"active":""}" onclick="setWorksheetStatus('${sub}','complete')">✅ Complete</button><button class="worksheet-btn incomplete ${st==="incomplete"?"active":""}" onclick="setWorksheetStatus('${sub}','incomplete')">❌ Not Complete</button></div></div>`}).join("");}
 window.setWorksheetStatus=function(subject,status){worksheetSelections[subject]=status;renderWorksheetGrid();};
-window.saveDisciplineRecord=async function(){const studentId=document.getElementById("disciplineStudentSelect").value,note=document.getElementById("disciplineNote").value.trim(),box=document.getElementById("disciplineMessage");if(!studentId||!note){box.className="error";box.style.display="block";box.textContent="Please select a student and write a discipline note.";return;}try{const snap=await getDocs(collection(db,"students"));let student=null;snap.forEach(x=>{if(x.id===studentId)student=x.data();});await addDoc(collection(db,"discipline"),{studentId,studentName:student?.name||"Student",registerNumber:student?.registerNumber||student?.rollNumber||"",note,createdAt:serverTimestamp(),createdAtLocal:new Date().toISOString()});box.className="success";box.style.display="block";box.textContent="✅ Discipline record saved!";document.getElementById("disciplineNote").value="";await loadTeacherDiscipline();}catch(e){console.error(e);box.className="error";box.style.display="block";box.textContent="❌ Could not save record. Check Firestore Rules for the discipline collection.";}};
+window.saveDisciplineRecord=async function(){
+  const studentId=document.getElementById("disciplineStudentSelect").value;
+  const note=document.getElementById("disciplineNote").value.trim();
+  const isWarning=document.getElementById("disciplineWarning").checked;
+  const box=document.getElementById("disciplineMessage");
+  if(!studentId||!note){
+    box.className="error";box.style.display="block";
+    box.textContent="Please select a student and write a discipline note.";return;
+  }
+  try{
+    const snap=await getDocs(collection(db,"students"));let student=null;
+    snap.forEach(x=>{if(x.id===studentId)student=x.data();});
+    await addDoc(collection(db,"discipline"),{
+      studentId,
+      studentName:student?.name||"Student",
+      registerNumber:student?.registerNumber||student?.rollNumber||"",
+      note,
+      warning:isWarning,
+      createdAt:serverTimestamp(),
+      createdAtLocal:new Date().toISOString()
+    });
+    box.className="success";box.style.display="block";
+    box.textContent=isWarning?"⚠️ Discipline record and warning saved!":"✅ Discipline record saved!";
+    document.getElementById("disciplineNote").value="";
+    document.getElementById("disciplineWarning").checked=false;
+    await loadTeacherDiscipline();
+  }catch(e){
+    console.error(e);box.className="error";box.style.display="block";
+    box.textContent="❌ Could not save record. Check Firestore Rules for the discipline collection.";
+  }
+};
 window.saveWorksheetStatus=async function(){const studentId=document.getElementById("worksheetStudentSelect").value,box=document.getElementById("worksheetMessage");if(!studentId){box.className="error";box.style.display="block";box.textContent="Please select a student.";return;}try{const snap=await getDocs(collection(db,"students"));let student=null;snap.forEach(x=>{if(x.id===studentId)student=x.data();});const payload={studentId,studentName:student?.name||"Student",registerNumber:student?.registerNumber||student?.rollNumber||"",subjects:Object.fromEntries(WORKSHEET_SUBJECTS.map(x=>[x,worksheetSelections[x]||"complete"])),updatedAt:serverTimestamp(),updatedAtLocal:new Date().toISOString()};const old=await getDocs(collection(db,"worksheets"));let id=null;old.forEach(x=>{if(x.data().studentId===studentId)id=x.id;});if(id)await updateDoc(doc(db,"worksheets",id),payload);else await addDoc(collection(db,"worksheets"),{...payload,createdAt:serverTimestamp()});box.className="success";box.style.display="block";box.textContent="✅ Worksheet status saved!";}catch(e){console.error(e);box.className="error";box.style.display="block";box.textContent="❌ Could not save worksheet status. Check Firestore Rules for the worksheets collection.";}};
 
 async function loadTeacherDiscipline(){
  const box=document.getElementById("teacherDisciplineList");box.innerHTML='<div class="loading">Loading records...</div>';
  try{const snap=await getDocs(collection(db,"discipline"));let arr=[];snap.forEach(x=>arr.push({id:x.id,data:x.data()}));arr.sort((a,b)=>String(b.data.createdAtLocal||"").localeCompare(String(a.data.createdAtLocal||"")));
  if(!arr.length){box.innerHTML='<div class="empty">No discipline records yet.</div>';return;}
- box.innerHTML=arr.map(x=>`<div class="discipline-item"><div class="student-header"><div><h3>${escapeHTML(x.data.studentName||"Student")}</h3><p>Register No: ${escapeHTML(x.data.registerNumber||"")}</p></div><button class="danger-button" onclick="deleteDisciplineRecord('${x.id}')">Delete</button></div>${x.data.note?`<p style="margin-top:12px">${escapeHTML(x.data.note)}</p>`:""}<p class="date-text">📅 ${formatDate(x.data.createdAtLocal||x.data.createdAt)}</p></div>`).join("");
+ box.innerHTML=arr.map(x=>`<div class="discipline-item"><div class="student-header"><div><h3>${escapeHTML(x.data.studentName||"Student")}</h3><p>Register No: ${escapeHTML(x.data.registerNumber||"")}</p></div><div>${x.data.warning?'<span class="warning-badge">⚠️ Warning</span> ':''}<button class="danger-button" onclick="deleteDisciplineRecord('${x.id}')">Delete</button></div></div>${x.data.note?`<p style="margin-top:12px">${escapeHTML(x.data.note)}</p>`:""}<p class="date-text">📅 ${formatDate(x.data.createdAtLocal||x.data.createdAt)}</p></div>`).join("");
  }catch(e){console.error(e);box.innerHTML='<div class="empty">Could not load records.</div>';}
 }
 window.deleteDisciplineRecord=async function(id){if(!confirm("Delete this discipline record?"))return;try{await deleteDoc(doc(db,"discipline",id));await loadTeacherDiscipline();}catch(e){console.error(e);alert("Could not delete record.");}};
@@ -5012,7 +5120,8 @@ window.showMyDisciplineRecords=async function(){
  const box=document.getElementById("personalDisciplineContent");box.innerHTML='<div class="loading">Loading discipline records...</div>';
  try{const snap=await getDocs(collection(db,"discipline"));let arr=[];snap.forEach(x=>{const d=x.data();if(d.studentId===currentPersonalStudent.id)arr.push({id:x.id,data:d});});arr.sort((a,b)=>String(b.data.createdAtLocal||"").localeCompare(String(a.data.createdAtLocal||"")));
  if(!arr.length){box.innerHTML='<div class="empty">No discipline records available yet.</div>';return;}
- box.innerHTML=`<div class="result-card glass"><h2>🛡️ Discipline History</h2><p class="date-text">Your teacher-recorded discipline notes and feedback.</p><div class="discipline-history">${arr.map(x=>`<div class="discipline-item"><p>${escapeHTML(x.data.note||"")}</p><p class="date-text">📅 ${formatDate(x.data.createdAtLocal||x.data.createdAt)}</p></div>`).join("")}</div></div>`;
+ const warningCount=arr.filter(x=>x.data.warning===true).length;
+ box.innerHTML=`<div class="result-card glass"><h2>🛡️ Discipline History</h2><p class="date-text">Your teacher-recorded discipline notes and feedback.</p><div class="total-box"><span>⚠️ Total Warnings</span><span>${warningCount}</span></div><div class="discipline-history">${arr.map(x=>`<div class="discipline-item">${x.data.warning?'<span class="warning-badge">⚠️ Discipline Warning</span>':''}<p style="margin-top:8px">${escapeHTML(x.data.note||"")}</p><p class="date-text">📅 ${formatDate(x.data.createdAtLocal||x.data.createdAt)}</p></div>`).join("")}</div></div>`;
  }catch(e){console.error(e);box.innerHTML='<div class="empty">Could not load discipline records.</div>';}
 };
 
@@ -5025,6 +5134,211 @@ window.showMyWorksheet=async function(){
  const subjects=found.subjects||{};
  box.innerHTML=`<div class="result-card glass"><h2>📝 My Worksheet Status</h2><p class="date-text">Check whether your subject notes and worksheets are complete.</p><div class="worksheet-grid">${Object.entries(subjects).map(([subject,status])=>`<div class="worksheet-row"><strong>${escapeHTML(subject)}</strong><p style="margin-top:10px;font-weight:800">${status==="complete"?"✅ Complete":"❌ Not Complete"}</p></div>`).join("")}</div><p class="date-text" style="margin-top:16px">Last updated: ${formatDate(found.updatedAtLocal||found.updatedAt)}</p></div>`;
  }catch(e){console.error(e);box.innerHTML='<div class="empty">Could not load worksheet status.</div>';}
+};
+
+
+/* =========================================================
+   PUBLIC 3-WARNING ALERT SYSTEM
+========================================================= */
+window.loadPublicWarningAlerts=async function(){
+  const box=document.getElementById("publicWarningAlerts");
+  if(!box) return;
+  box.innerHTML="";
+  try{
+    const snap=await getDocs(collection(db,"discipline"));
+    const counts={};
+    snap.forEach(item=>{
+      const d=item.data();
+      if(d.warning===true && d.studentId){
+        if(!counts[d.studentId]) counts[d.studentId]={name:d.studentName||"Student",count:0};
+        counts[d.studentId].count++;
+      }
+    });
+    const flagged=Object.values(counts).filter(x=>x.count>=3);
+    if(!flagged.length) return;
+    box.innerHTML=flagged.map(x=>`
+      <div class="warning-alert">
+        <h3>🚨 Discipline Warning Alert</h3>
+        <p><strong>${escapeHTML(x.name)}</strong> has received <strong>${x.count} discipline warnings</strong>.</p>
+        <p class="date-text">This alert is automatically shown after 3 warnings.</p>
+      </div>`).join("");
+  }catch(e){
+    console.error("Could not load public warning alerts:",e);
+    box.innerHTML="";
+  }
+};
+
+/* =========================================================
+   PRINT CENTER
+========================================================= */
+window.openPrintCenter=async function(){
+  hideAllPages();
+  document.getElementById("printCenterPage").classList.add("active");
+  const select=document.getElementById("printStudentSelect");
+  select.innerHTML='<option value="">Loading students...</option>';
+  try{
+    const snap=await getDocs(collection(db,"students"));
+    const students=[];
+    snap.forEach(x=>students.push({id:x.id,data:x.data()}));
+    students.sort((a,b)=>String(a.data.name||"").localeCompare(String(b.data.name||"")));
+    select.innerHTML='<option value="">Select Student</option>'+students.map(x=>
+      `<option value="${x.id}">${escapeHTML(x.data.name||"Student")} — ${escapeHTML(x.data.registerNumber||x.data.rollNumber||"")}</option>`
+    ).join("");
+  }catch(e){
+    console.error(e);
+    select.innerHTML='<option value="">Could not load students</option>';
+  }
+};
+
+function escapePrint(value){return escapeHTML(String(value??""));}
+
+async function buildStudentPrintData(studentId){
+  const studentSnap=await getDocs(collection(db,"students"));
+  let student=null;
+  studentSnap.forEach(x=>{if(x.id===studentId)student={id:x.id,data:x.data()};});
+  if(!student) throw new Error("Student not found");
+
+  const [attendanceSnap,disciplineSnap,worksheetSnap]=await Promise.all([
+    getDocs(collection(db,"attendance")),
+    getDocs(collection(db,"discipline")),
+    getDocs(collection(db,"worksheets"))
+  ]);
+
+  const attendance=[];
+  attendanceSnap.forEach(x=>{
+    const d=x.data(),record=d.records?.[studentId];
+    if(record) attendance.push({date:d.date,status:record.status||""});
+  });
+  attendance.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+
+  const discipline=[];
+  disciplineSnap.forEach(x=>{
+    const d=x.data();
+    if(d.studentId===studentId) discipline.push(d);
+  });
+  discipline.sort((a,b)=>String(a.createdAtLocal||"").localeCompare(String(b.createdAtLocal||"")));
+
+  let worksheet=null;
+  worksheetSnap.forEach(x=>{const d=x.data();if(d.studentId===studentId)worksheet=d;});
+
+  return {student,attendance,discipline,worksheet};
+}
+
+function printSection(title,content){
+  return `<section class="report-section"><h2>${title}</h2>${content}</section>`;
+}
+
+function createPrintHTML(report,sections){
+  const d=report.student.data;
+  const name=d.name||"Student";
+  const reg=d.registerNumber||d.rollNumber||"";
+  let body=`<div class="report-header"><h1>PLUS ONE STUDENT SYSTEM</h1><h2>${escapePrint(name)} — Student Report</h2><p>Register Number: ${escapePrint(reg)} | Generated: ${new Date().toLocaleString("en-IN")}</p></div>`;
+
+  if(sections.includes("personal")){
+    const fields=[
+      ["Student Name",name],["Register Number",reg],["Class",d.className],["Stream",d.stream],
+      ["Division",d.division],["Date of Birth",d.dob],["Gender",d.gender],["Parent / Guardian",d.guardianName],
+      ["Parent Phone",d.guardianPhone],["Email",d.email],["Address",d.address]
+    ].filter(([,v])=>String(v??"").trim()!=="");
+    body+=printSection("👤 Personal Details",`<table>${fields.map(([k,v])=>`<tr><th>${escapePrint(k)}</th><td>${escapePrint(v)}</td></tr>`).join("")}</table>`);
+  }
+
+  const results=d.results||[];
+  if(sections.includes("results")){
+    let html=results.length?results.map(r=>{
+      const rows=Object.entries(r.marks||{}).map(([subject,v])=>`<tr><td>${escapePrint(subject)}</td><td>${escapePrint(v.mark)} / ${escapePrint(v.maxMark)}</td><td>${escapePrint(v.grade||"")}</td></tr>`).join("");
+      return `<div class="exam"><h3>${escapePrint(r.exam||"Exam")}</h3><table><tr><th>Subject</th><th>Mark</th><th>Grade</th></tr>${rows}</table><p><strong>Total:</strong> ${escapePrint(r.total)} / ${escapePrint(r.maxTotal)} &nbsp; <strong>Percentage:</strong> ${escapePrint(r.percentage)}%</p></div>`;
+    }).join(""):"<p>No exam results available.</p>";
+    body+=printSection("📊 Examination Results",html);
+  }
+
+  if(sections.includes("performance")){
+    const percentages=results.map(r=>Number(r.percentage||0)).filter(v=>Number.isFinite(v));
+    const avg=percentages.length?(percentages.reduce((a,b)=>a+b,0)/percentages.length).toFixed(2):"0.00";
+    const subjectTotals={};
+    results.forEach(r=>Object.entries(r.marks||{}).forEach(([sub,v])=>{
+      if(!subjectTotals[sub])subjectTotals[sub]={mark:0,max:0};
+      subjectTotals[sub].mark+=Number(v.mark||0);subjectTotals[sub].max+=Number(v.maxMark||0);
+    }));
+    const subjectRows=Object.entries(subjectTotals).map(([sub,v])=>{
+      const pct=v.max?((v.mark/v.max)*100).toFixed(2):"0.00";
+      return {sub,pct};
+    });
+    const best=subjectRows.sort((a,b)=>Number(b.pct)-Number(a.pct))[0];
+    body+=printSection("📈 Performance",`
+      <table>
+        <tr><th>Overall Average</th><td>${escapePrint(avg)}%</td></tr>
+        <tr><th>Total Exams</th><td>${results.length}</td></tr>
+        <tr><th>Best Subject</th><td>${escapePrint(best?best.sub+" ("+best.pct+"%)":"Not available")}</td></tr>
+      </table>
+      ${subjectRows.length?`<table><tr><th>Subject</th><th>Overall Performance</th></tr>${subjectRows.map(x=>`<tr><td>${escapePrint(x.sub)}</td><td>${escapePrint(x.pct)}%</td></tr>`).join("")}</table>`:"<p>No performance data available.</p>"}
+    `);
+  }
+
+  if(sections.includes("attendance")){
+    const total=report.attendance.length;
+    const present=report.attendance.filter(x=>x.status==="present"||x.status==="late").length;
+    const late=report.attendance.filter(x=>x.status==="late").length;
+    const absent=report.attendance.filter(x=>x.status==="absent").length;
+    const pct=total?((present/total)*100).toFixed(2):"0.00";
+    body+=printSection("📅 Attendance",`
+      <table><tr><th>Total Working Days</th><td>${total}</td></tr><tr><th>Present</th><td>${present}</td></tr><tr><th>Late</th><td>${late}</td></tr><tr><th>Absent</th><td>${absent}</td></tr><tr><th>Attendance Percentage</th><td>${pct}%</td></tr></table>
+      ${report.attendance.length?`<table><tr><th>Date</th><th>Status</th></tr>${report.attendance.map(x=>`<tr><td>${escapePrint(attendanceDateText(x.date))}</td><td>${escapePrint(x.status==="late"?"Present + Late":x.status)}</td></tr>`).join("")}</table>`:"<p>No attendance records available.</p>"}
+    `);
+  }
+
+  if(sections.includes("discipline")){
+    const warnings=report.discipline.filter(x=>x.warning===true).length;
+    body+=printSection("🛡️ Student Discipline",`
+      <table><tr><th>Total Discipline Records</th><td>${report.discipline.length}</td></tr><tr><th>Total Warnings</th><td>${warnings}</td></tr></table>
+      ${report.discipline.length?`<ul>${report.discipline.map(x=>`<li><strong>${x.warning?"⚠️ Warning — ":"📝 "}</strong>${escapePrint(x.note||"")} <small>(${escapePrint(formatDate(x.createdAtLocal||x.createdAt))})</small></li>`).join("")}</ul>`:"<p>No discipline records available.</p>"}
+    `);
+  }
+
+  if(sections.includes("worksheet")){
+    const subjects=report.worksheet?.subjects||{};
+    body+=printSection("📝 Worksheet / Notes Status",Object.keys(subjects).length?
+      `<table><tr><th>Subject</th><th>Status</th></tr>${Object.entries(subjects).map(([sub,status])=>`<tr><td>${escapePrint(sub)}</td><td>${status==="complete"?"Complete":"Not Complete"}</td></tr>`).join("")}</table>`:
+      "<p>No worksheet status available.</p>");
+  }
+
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Student Report</title>
+  <style>
+    body{font-family:Arial,sans-serif;color:#111;margin:32px;line-height:1.45}
+    .report-header{text-align:center;border-bottom:3px solid #0f66d8;padding-bottom:16px;margin-bottom:24px}
+    .report-header h1{color:#0f66d8;margin:0}.report-header h2{color:#087f70;margin:8px 0}
+    .report-section{page-break-inside:avoid;margin:22px 0}.report-section h2{color:#0f66d8;border-bottom:2px solid #12d7a0;padding-bottom:6px}
+    table{width:100%;border-collapse:collapse;margin:12px 0}th,td{border:1px solid #b8c8d8;padding:9px;text-align:left}th{background:#edf5ff}
+    ul{padding-left:22px}li{margin:8px 0}.exam{margin:16px 0;padding:14px;border:1px solid #d5e3ef;border-radius:8px}
+    small{color:#555}@media print{body{margin:16px}.report-section{break-inside:avoid}}
+  </style></head><body>${body}<script>window.onload=()=>setTimeout(()=>window.print(),250);<\/script></body></html>`;
+}
+
+async function printStudentReport(sections){
+  const select=document.getElementById("printStudentSelect");
+  const box=document.getElementById("printMessage");
+  if(!select.value){
+    box.className="error";box.style.display="block";box.textContent="Please select a student.";return;
+  }
+  if(!sections.length){
+    box.className="error";box.style.display="block";box.textContent="Select at least one detail to print.";return;
+  }
+  try{
+    box.className="success";box.style.display="block";box.textContent="Preparing print report...";
+    const report=await buildStudentPrintData(select.value);
+    const win=window.open("","_blank");
+    if(!win) throw new Error("Popup blocked");
+    win.document.open();win.document.write(createPrintHTML(report,sections));win.document.close();
+    box.textContent="✅ Print report opened.";
+  }catch(e){
+    console.error(e);box.className="error";box.style.display="block";
+    box.textContent=e.message==="Popup blocked"?"❌ Browser blocked the print window. Allow popups and try again.":"❌ Could not prepare the print report.";
+  }
+}
+window.printAllStudentDetails=function(){printStudentReport(["personal","results","performance","attendance","discipline","worksheet"]);};
+window.printSelectedStudentDetails=function(){
+  const sections=[...document.querySelectorAll("#printCenterPage .print-option input:checked")].map(x=>x.value);
+  printStudentReport(sections);
 };
 
 console.log(
