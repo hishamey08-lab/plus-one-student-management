@@ -1118,6 +1118,8 @@ input,select,textarea{background:rgba(2,25,67,.48)}
 .print-actions .primary-button{margin-top:0}
 @media(max-width:700px){.print-actions{flex-direction:column}.print-actions .primary-button{width:100%}}
 
+
+.security-note{margin-top:16px;color:var(--muted);font-size:12.5px;line-height:1.5}.teacher-logout-button{border-color:rgba(220,38,38,.35)!important}.teacher-session-badge{display:inline-flex;align-items:center;gap:8px;margin:0 auto 22px;padding:9px 15px;border:1px solid var(--glass-border);border-radius:999px;background:rgba(255,255,255,.06);color:var(--muted);font-size:12.5px}.teacher-session-badge strong{color:var(--highlight)}
 </style>
 </head>
 
@@ -1296,13 +1298,6 @@ input,select,textarea{background:rgba(2,25,67,.48)}
     <p>View day-by-day attendance for all students.</p>
   </div>
 
-  <div class="feature-card glass clickable" onclick="openNotificationsPage()">
-    <div class="feature-icon">🔔</div>
-    <h3>Notifications</h3>
-    <p>View important updates, homework, dates and emergency notices.</p>
-  </div>
-
-
   <div class="feature-card glass clickable"
        onclick="openAnnouncementsPage()">
 
@@ -1402,23 +1397,30 @@ input,select,textarea{background:rgba(2,25,67,.48)}
   <h2>Teacher Login</h2>
 
   <p>
-    Enter the teacher password to continue.
+    Sign in with your school-approved teacher account.
   </p>
+
+  <input
+    type="email"
+    id="teacherEmail"
+    placeholder="Teacher email"
+    autocomplete="username"
+    spellcheck="false"
+  >
 
   <input
     type="password"
     id="teacherPassword"
     placeholder="Teacher password"
-    autocomplete="off"
+    autocomplete="current-password"
   >
 
-  <button onclick="checkTeacherPassword()">
-    Enter Teacher Lobby
+  <button id="teacherLoginButton" onclick="checkTeacherPassword()">
+    🔓 Enter Teacher Lobby
   </button>
 
-  <div id="passwordError" class="error">
-    Incorrect teacher password.
-  </div>
+  <div id="passwordError" class="error"></div>
+  <div class="security-note">🛡️ Only approved teacher accounts can access this area.</div>
 
 </div>
 
@@ -1445,6 +1447,10 @@ input,select,textarea{background:rgba(2,25,67,.48)}
   ← Back to Home
 </button>
 
+<button class="back-button teacher-logout-button" onclick="logoutTeacher()">
+  🔒 Secure Logout
+</button>
+
 <div class="dashboard-title">
 
   <h2>Teacher Dashboard 👩‍🏫</h2>
@@ -1452,6 +1458,8 @@ input,select,textarea{background:rgba(2,25,67,.48)}
   <p>
     Manage your Plus One class.
   </p>
+
+  <div id="teacherSessionBadge" class="teacher-session-badge">🛡️ Secure teacher session</div>
 
 </div>
 
@@ -1496,13 +1504,6 @@ input,select,textarea{background:rgba(2,25,67,.48)}
       Create and manage class announcements.
     </p>
 
-  </div>
-
-
-  <div class="feature-card glass teacher-feature clickable" onclick="openNotificationCenter()">
-    <div class="feature-icon">🔔</div>
-    <h3>Notification Center</h3>
-    <p>Create important notifications for students and parents.</p>
   </div>
 
 
@@ -2344,73 +2345,6 @@ Loading notes...
 
 
 <!-- =====================================================
-     TEACHER NOTIFICATION CENTER
-====================================================== -->
-<div id="notificationCenter" class="page">
-<header>
-  <h1>🔔 NOTIFICATION CENTER</h1>
-  <p>Create important class notifications</p>
-</header>
-<main class="container">
-<button class="back-button" onclick="openTeacherLobby()">← Back to Teacher Lobby</button>
-
-<div class="form-card glass">
-  <h2>➕ Create Notification</h2>
-  <div class="form-grid">
-    <div class="form-group">
-      <label>Notification Type</label>
-      <select id="notificationType">
-        <option value="📢 Announcement">📢 Announcement</option>
-        <option value="📚 Study Material">📚 Study Material</option>
-        <option value="📝 Homework">📝 Homework</option>
-        <option value="📅 Important Date">📅 Important Date</option>
-        <option value="⚠️ Emergency Notice">⚠️ Emergency Notice</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Audience</label>
-      <select id="notificationAudience">
-        <option value="Students & Parents">Students & Parents</option>
-        <option value="Students">Students</option>
-        <option value="Parents">Parents</option>
-      </select>
-    </div>
-    <div class="form-group full">
-      <label>Title</label>
-      <input id="notificationTitle" placeholder="Example: Mathematics Exam Tomorrow">
-    </div>
-    <div class="form-group full">
-      <label>Message</label>
-      <textarea id="notificationText" placeholder="Write the notification details..."></textarea>
-    </div>
-  </div>
-  <button class="primary-button" onclick="saveNotification()">🔔 Publish Notification</button>
-  <div id="notificationSaveMessage"></div>
-</div>
-
-<div class="form-card glass">
-  <h2>📋 Published Notifications</h2>
-  <div id="teacherNotificationsList"><div class="loading">Loading notifications...</div></div>
-</div>
-</main>
-</div>
-
-<!-- =====================================================
-     STUDENT NOTIFICATIONS
-====================================================== -->
-<div id="notificationsPage" class="page">
-<header>
-  <h1>🔔 NOTIFICATIONS</h1>
-  <p>Important class updates</p>
-</header>
-<main class="container">
-<button class="back-button" onclick="openStudentLobby()">← Back to Student Lobby</button>
-<div id="studentNotificationsList"><div class="loading">Loading notifications...</div></div>
-</main>
-</div>
-
-
-<!-- =====================================================
      TEACHER ANNOUNCEMENTS
 ====================================================== -->
 
@@ -2531,7 +2465,8 @@ from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 import {
   getAuth,
   signInWithEmailAndPassword,
-  signOut
+  signOut,
+  onAuthStateChanged
 }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
@@ -2541,6 +2476,7 @@ import {
   addDoc,
   getDocs,
   doc,
+  getDoc,
   updateDoc,
   deleteDoc,
   serverTimestamp
@@ -2577,238 +2513,214 @@ const db = getFirestore(app);
 
 
 /* =========================================================
-   TEACHER EMAIL
+   TEACHER SECURITY
 ========================================================= */
 
-const TEACHER_EMAIL =
-"teacher@plusone-school.web.app";
+let currentTeacherUser = null;
+let teacherAuthReady = false;
+let teacherSessionTimer = null;
+let teacherLastActivity = Date.now();
+const TEACHER_SESSION_LIMIT = 15 * 60 * 1000;
 
+function teacherDocRef(uid){
+  return doc(db,"users",uid);
+}
+
+async function verifyTeacherAccount(user){
+  if(!user) return false;
+
+  try{
+    const snap = await getDoc(teacherDocRef(user.uid));
+    if(!snap.exists()) return false;
+
+    const data = snap.data() || {};
+    return String(data.role || "").toLowerCase() === "teacher" && data.active === true;
+  }catch(errorObject){
+    console.error("Teacher role verification failed:",errorObject);
+    return false;
+  }
+}
+
+async function requireTeacherAccess(){
+  if(!currentTeacherUser){
+    alert("🔒 Teacher login is required.");
+    openTeacherLogin();
+    return false;
+  }
+
+  const allowed = await verifyTeacherAccount(currentTeacherUser);
+  if(!allowed){
+    await signOut(auth);
+    currentTeacherUser = null;
+    alert("🚫 This account is not an active approved teacher account.");
+    openTeacherLogin();
+    return false;
+  }
+
+  teacherLastActivity = Date.now();
+  return true;
+}
+
+async function logTeacherActivity(action,details={}){
+  if(!currentTeacherUser) return;
+  try{
+    await addDoc(collection(db,"teacherLogs"),{
+      teacherUid:currentTeacherUser.uid,
+      teacherEmail:currentTeacherUser.email || "",
+      action:String(action).slice(0,120),
+      details:details || {},
+      createdAt:serverTimestamp(),
+      createdAtLocal:new Date().toISOString()
+    });
+  }catch(errorObject){
+    console.warn("Activity log failed:",errorObject);
+  }
+}
+
+function resetTeacherSessionTimer(){
+  clearTimeout(teacherSessionTimer);
+  teacherLastActivity = Date.now();
+  teacherSessionTimer = setTimeout(async()=>{
+    if(currentTeacherUser){
+      await logTeacherActivity("Automatic logout after inactivity");
+      await signOut(auth);
+      alert("🔒 Your teacher session expired for security. Please log in again.");
+      openTeacherLogin();
+    }
+  },TEACHER_SESSION_LIMIT);
+}
+
+["click","keydown","mousemove","touchstart"].forEach(eventName=>{
+  document.addEventListener(eventName,()=>{
+    if(currentTeacherUser) resetTeacherSessionTimer();
+  },{passive:true});
+});
+
+window.goHome = function(){
+  hideAllPages();
+  document.getElementById("homePage").classList.add("active");
+};
+
+window.openStudentLobby = function(){
+  hideAllPages();
+  document.getElementById("studentLobby").classList.add("active");
+  if(typeof loadPublicWarningAlerts === "function") loadPublicWarningAlerts();
+};
+
+window.openTeacherLogin = function(){
+  hideAllPages();
+  document.getElementById("teacherLogin").classList.add("active");
+  const email=document.getElementById("teacherEmail");
+  if(email && currentTeacherUser) email.value=currentTeacherUser.email || "";
+};
+
+window.openTeacherLobby = async function(){
+  if(!(await requireTeacherAccess())) return;
+  hideAllPages();
+  document.getElementById("teacherLobby").classList.add("active");
+  const badge=document.getElementById("teacherSessionBadge");
+  if(badge) badge.innerHTML=`🛡️ Signed in as <strong>${escapeHTML(currentTeacherUser.email || "Teacher")}</strong>`;
+  resetTeacherSessionTimer();
+};
+
+window.logoutTeacher = async function(){
+  if(!currentTeacherUser) return;
+  await logTeacherActivity("Manual logout");
+  clearTimeout(teacherSessionTimer);
+  await signOut(auth);
+  currentTeacherUser=null;
+  openTeacherLogin();
+};
 
 /* =========================================================
    PAGE CONTROL
 ========================================================= */
 
 window.hideAllPages = function(){
-
-  document
-    .querySelectorAll(".page")
-    .forEach(page =>
-      page.classList.remove("active")
-    );
-
+  document.querySelectorAll(".page").forEach(page=>page.classList.remove("active"));
 };
-
-
-window.goHome = function(){
-
-  hideAllPages();
-
-  document
-    .getElementById("homePage")
-    .classList.add("active");
-
-};
-
-
-window.openStudentLobby = function(){
-
-  hideAllPages();
-
-  document
-    .getElementById("studentLobby")
-    .classList.add("active");
-
-  if(typeof loadPublicWarningAlerts === "function") loadPublicWarningAlerts();
-
-};
-
-
-window.openTeacherLogin = function(){
-
-  hideAllPages();
-
-  document
-    .getElementById("teacherLogin")
-    .classList.add("active");
-
-};
-
-
-window.openTeacherLobby = function(){
-
-  hideAllPages();
-
-  document
-    .getElementById("teacherLobby")
-    .classList.add("active");
-
-};
-
-
-window.openResultsPage = function(){
-
-  hideAllPages();
-
-  document
-    .getElementById("resultsPage")
-    .classList.add("active");
-
-};
-
-
-window.openTeacherResults = async function(){
-
-  hideAllPages();
-
-  document
-    .getElementById("teacherResults")
-    .classList.add("active");
-
-  await loadTeacherStudents();
-
-};
-
-
-window.openTeacherNotes = async function(){
-
-  hideAllPages();
-
-  document
-    .getElementById("teacherNotes")
-    .classList.add("active");
-
-  await loadTeacherNotes();
-
-};
-
-
-window.openNotesPage = async function(){
-
-  hideAllPages();
-
-  document
-    .getElementById("notesPage")
-    .classList.add("active");
-
-  await loadStudentNotes();
-
-};
-
-
-window.openTeacherAnnouncements = async function(){
-
-  hideAllPages();
-
-  document
-    .getElementById("teacherAnnouncements")
-    .classList.add("active");
-
-  await loadTeacherAnnouncements();
-
-};
-
-
-window.openAnnouncementsPage = async function(){
-
-  hideAllPages();
-
-  document
-    .getElementById("announcementsPage")
-    .classList.add("active");
-
-  await loadStudentAnnouncements();
-
-};
-
-
-window.openNotificationCenter = async function(){
-  hideAllPages();
-  document.getElementById("notificationCenter").classList.add("active");
-  await loadTeacherNotifications();
-};
-
-window.openNotificationsPage = async function(){
-  hideAllPages();
-  document.getElementById("notificationsPage").classList.add("active");
-  await loadStudentNotifications();
-};
-
 
 /* =========================================================
    TEACHER LOGIN
 ========================================================= */
 
 window.checkTeacherPassword = async function(){
+  const email=document.getElementById("teacherEmail").value.trim().toLowerCase();
+  const password=document.getElementById("teacherPassword").value;
+  const error=document.getElementById("passwordError");
+  const button=document.getElementById("teacherLoginButton");
 
-  const password =
-    document
-      .getElementById("teacherPassword")
-      .value
-      .trim();
+  error.style.display="none";
 
-  const error =
-    document.getElementById("passwordError");
-
-  error.style.display = "none";
-
-
+  if(!email || !email.includes("@")){
+    error.textContent="Please enter your teacher email.";
+    error.style.display="block";
+    return;
+  }
   if(!password){
-
-    error.textContent =
-      "Please enter the teacher password.";
-
-    error.style.display = "block";
-
+    error.textContent="Please enter your password.";
+    error.style.display="block";
     return;
   }
 
+  button.disabled=true;
+  button.style.opacity=".65";
+  button.textContent="🔐 Verifying...";
 
   try{
+    const credential=await signInWithEmailAndPassword(auth,email,password);
+    const allowed=await verifyTeacherAccount(credential.user);
 
-    await signInWithEmailAndPassword(
-      auth,
-      TEACHER_EMAIL,
-      password
-    );
+    if(!allowed){
+      await signOut(auth);
+      throw new Error("NOT_APPROVED_TEACHER");
+    }
 
-
-    document
-      .getElementById("teacherPassword")
-      .value = "";
-
-
-    openTeacherLobby();
-
-
+    currentTeacherUser=credential.user;
+    await logTeacherActivity("Teacher login");
+    document.getElementById("teacherPassword").value="";
+    await openTeacherLobby();
   }catch(errorObject){
-
     console.error(errorObject);
-
-    error.textContent =
-      "Incorrect teacher password.";
-
-    error.style.display = "block";
-
+    if(errorObject.message === "NOT_APPROVED_TEACHER")
+      error.textContent="🚫 This account is not an approved active teacher account.";
+    else
+      error.textContent="❌ Invalid teacher email or password.";
+    error.style.display="block";
+  }finally{
+    button.disabled=false;
+    button.style.opacity="1";
+    button.textContent="🔓 Enter Teacher Lobby";
   }
-
 };
 
+/* Restore a valid teacher session after refresh, but never trust the frontend alone. */
+onAuthStateChanged(auth,async user=>{
+  teacherAuthReady=false;
+  if(!user){
+    currentTeacherUser=null;
+    clearTimeout(teacherSessionTimer);
+    teacherAuthReady=true;
+    return;
+  }
 
-document
-  .getElementById("teacherPassword")
-  .addEventListener(
-    "keydown",
-    function(event){
+  const allowed=await verifyTeacherAccount(user);
+  if(allowed){
+    currentTeacherUser=user;
+    resetTeacherSessionTimer();
+  }else{
+    currentTeacherUser=null;
+    await signOut(auth);
+  }
+  teacherAuthReady=true;
+});
 
-      if(event.key === "Enter"){
-
-        checkTeacherPassword();
-
-      }
-
-    }
-  );
-
+document.getElementById("teacherPassword").addEventListener("keydown",function(event){
+  if(event.key==="Enter") checkTeacherPassword();
+});
+document.getElementById("teacherEmail").addEventListener("keydown",function(event){
+  if(event.key==="Enter") checkTeacherPassword();
+});
 
 /* =========================================================
    GRADE CALCULATOR
@@ -2887,6 +2799,8 @@ function validateMark(mark,maxMark){
 ========================================================= */
 
 window.saveStudentResult = async function(){
+
+  if(!(await requireTeacherAccess())) return;
 
   const name = document.getElementById("studentName").value.trim();
   const registerNumber = document.getElementById("rollNumber").value.trim();
@@ -2993,6 +2907,7 @@ window.saveStudentResult = async function(){
     message.className = "success";
     message.style.display = "block";
     message.textContent = "✅ Result saved successfully!";
+    await logTeacherActivity("Updated exam result",{studentName:name,exam});
 
     clearResultForm();
     await loadTeacherStudents();
@@ -3282,6 +3197,8 @@ window.editStudent = async function(id){
 ========================================================= */
 
 window.deleteStudent = async function(id){
+
+  if(!(await requireTeacherAccess())) return;
 
   const confirmDelete =
     confirm(
@@ -3663,6 +3580,8 @@ window.searchResults = async function(){
 ========================================================= */
 
 window.saveNote = async function(){
+  if(!(await requireTeacherAccess())) return;
+
 
   const title =
     document
@@ -3882,6 +3801,8 @@ window.loadTeacherNotes =
 
 window.deleteNote = async function(id){
 
+  if(!(await requireTeacherAccess())) return;
+
   if(!confirm("Delete this note?")) return;
 
 
@@ -4005,124 +3926,13 @@ async function loadStudentNotes(){
 }
 
 
-
-/* =========================================================
-   NOTIFICATION CENTER
-========================================================= */
-const notificationIcons = {
-  "📢 Announcement":"📢",
-  "📚 Study Material":"📚",
-  "📝 Homework":"📝",
-  "📅 Important Date":"📅",
-  "⚠️ Emergency Notice":"⚠️"
-};
-
-window.saveNotification = async function(){
-  const type = document.getElementById("notificationType").value;
-  const audience = document.getElementById("notificationAudience").value;
-  const title = document.getElementById("notificationTitle").value.trim();
-  const message = document.getElementById("notificationText").value.trim();
-  const box = document.getElementById("notificationSaveMessage");
-
-  if(!title || !message){
-    box.className = "error";
-    box.style.display = "block";
-    box.textContent = "Please enter a title and message.";
-    return;
-  }
-
-  try{
-    await addDoc(collection(db,"notifications"),{
-      type, audience, title, message,
-      publishedAt:new Date().toISOString(),
-      createdAt:serverTimestamp()
-    });
-    box.className = "success";
-    box.style.display = "block";
-    box.textContent = "✅ Notification published successfully!";
-    document.getElementById("notificationTitle").value = "";
-    document.getElementById("notificationText").value = "";
-    await loadTeacherNotifications();
-  }catch(errorObject){
-    console.error(errorObject);
-    box.className = "error";
-    box.style.display = "block";
-    box.textContent = "❌ Could not publish notification. Check Firestore Rules.";
-  }
-};
-
-async function loadTeacherNotifications(){
-  const container = document.getElementById("teacherNotificationsList");
-  try{
-    const snapshot = await getDocs(collection(db,"notifications"));
-    if(snapshot.empty){
-      container.innerHTML = '<div class="empty">No notifications published yet.</div>';
-      return;
-    }
-    const items=[];
-    snapshot.forEach(item=>items.push({id:item.id,...item.data()}));
-    items.sort((a,b)=>String(b.publishedAt||"").localeCompare(String(a.publishedAt||"")));
-    container.innerHTML = items.map(data=>`
-      <div class="result-card glass">
-        <div class="student-header">
-          <div>
-            <span class="exam-title">${escapeHTML(data.type||"🔔 Notification")}</span>
-            <h3>${escapeHTML(data.title||"")}</h3>
-            <p>${escapeHTML(data.message||"")}</p>
-            <p class="date-text">👥 ${escapeHTML(data.audience||"Students & Parents")} · 📅 ${formatDate(data.publishedAt)}</p>
-          </div>
-          <button class="danger-button" onclick="deleteNotification('${data.id}')">Delete</button>
-        </div>
-      </div>`).join("");
-  }catch(errorObject){
-    console.error(errorObject);
-    container.innerHTML = '<div class="empty">Could not load notifications.</div>';
-  }
-}
-window.loadTeacherNotifications = loadTeacherNotifications;
-
-window.deleteNotification = async function(id){
-  if(!confirm("Delete this notification?")) return;
-  try{
-    await deleteDoc(doc(db,"notifications",id));
-    await loadTeacherNotifications();
-  }catch(errorObject){
-    console.error(errorObject);
-    alert("Could not delete notification.");
-  }
-};
-
-async function loadStudentNotifications(){
-  const container = document.getElementById("studentNotificationsList");
-  try{
-    const snapshot = await getDocs(collection(db,"notifications"));
-    if(snapshot.empty){
-      container.innerHTML = '<div class="empty">No notifications available.</div>';
-      return;
-    }
-    const items=[];
-    snapshot.forEach(item=>items.push(item.data()));
-    items.sort((a,b)=>String(b.publishedAt||"").localeCompare(String(a.publishedAt||"")));
-    container.innerHTML = items.map(data=>`
-      <div class="result-card glass">
-        <span class="exam-title">${escapeHTML(data.type||"🔔 Notification")}</span>
-        <h2>${escapeHTML(data.title||"")}</h2>
-        <br>
-        <p>${escapeHTML(data.message||"")}</p>
-        <p class="date-text">📅 ${formatDate(data.publishedAt)}</p>
-      </div>`).join("");
-  }catch(errorObject){
-    console.error(errorObject);
-    container.innerHTML = '<div class="empty">Could not load notifications.</div>';
-  }
-}
-window.loadStudentNotifications = loadStudentNotifications;
-
 /* =========================================================
    ANNOUNCEMENTS
 ========================================================= */
 
 window.saveAnnouncement = async function(){
+  if(!(await requireTeacherAccess())) return;
+
 
   const title =
     document
@@ -4595,6 +4405,7 @@ let selectedStudentDocId = null;
 let currentPersonalStudent = null;
 
 window.openStudentManagement = async function(){
+  if(!(await requireTeacherAccess())) return;
   hideAllPages();
   document.getElementById("studentManagementPage").classList.add("active");
   selectedStudentDocId = null;
@@ -4631,6 +4442,8 @@ window.openPersonalStudentDashboard = function(){
 };
 
 window.saveStudentProfile = async function(){
+
+  if(!(await requireTeacherAccess())) return;
 
   const name = document.getElementById("profileStudentName").value.trim();
   const registerNumber = document.getElementById("profileRegisterNumber").value.trim();
@@ -4711,6 +4524,7 @@ window.saveStudentProfile = async function(){
     message.className = "success";
     message.style.display = "block";
     message.textContent = "✅ Student saved successfully!";
+    await logTeacherActivity("Saved student profile",{studentId:selectedStudentDocId || "new"});
 
     selectedStudentDocId = null;
     clearStudentProfileForm(false);
@@ -4742,6 +4556,8 @@ window.clearStudentProfileForm = function(clearMessage = true){
 };
 
 window.loadStudentManagementList = async function(){
+  if(!(await requireTeacherAccess())) return;
+
   const container = document.getElementById("studentManagementList");
   container.innerHTML = '<div class="loading">Loading students...</div>';
 
@@ -4870,6 +4686,8 @@ window.editManagedStudent = function(id){
 };
 
 window.deleteManagedStudent = async function(id){
+  if(!(await requireTeacherAccess())) return;
+
   if(!confirm("Delete this student and all of this student's saved results?")){
     return;
   }
@@ -5120,6 +4938,7 @@ function attendanceDateText(value){
 }
 
 window.openTeacherAttendance = async function(){
+  if(!(await requireTeacherAccess())) return;
   hideAllPages();
   document.getElementById("teacherAttendancePage").classList.add("active");
   const input = document.getElementById("teacherAttendanceDate");
@@ -5128,6 +4947,8 @@ window.openTeacherAttendance = async function(){
 };
 
 window.loadTeacherAttendanceStudents = async function(){
+  if(!(await requireTeacherAccess())) return;
+
   const date = document.getElementById("teacherAttendanceDate").value;
   const container = document.getElementById("teacherAttendanceList");
   container.innerHTML = '<div class="loading">Loading students...</div>';
@@ -5172,6 +4993,8 @@ window.setAttendanceStatus = function(studentId,status){
 };
 
 window.saveAttendance = async function(){
+  if(!(await requireTeacherAccess())) return;
+
   const date = document.getElementById("teacherAttendanceDate").value;
   const box = document.getElementById("teacherAttendanceMessage");
   if(!date){ box.className="error"; box.style.display="block"; box.textContent="Please select a date."; return; }
@@ -5192,6 +5015,7 @@ window.saveAttendance = async function(){
     if(existingId) await updateDoc(doc(db,"attendance",existingId),payload);
     else await addDoc(collection(db,"attendance"),{...payload,createdAt:serverTimestamp(),createdAtLocal:new Date().toISOString()});
     box.className="success"; box.style.display="block"; box.textContent="✅ Attendance saved successfully!";
+    await logTeacherActivity("Saved attendance",{date});
   }catch(errorObject){
     console.error(errorObject);
     box.className="error"; box.style.display="block"; box.textContent="❌ Could not save attendance. Check Firestore Rules.";
@@ -5270,6 +5094,7 @@ const WORKSHEET_SUBJECTS=["English","Accountancy","Business Studies","Computer A
 let worksheetSelections={};
 
 window.openTeacherDiscipline = async function(){
+  if(!(await requireTeacherAccess())) return;
   hideAllPages(); document.getElementById("teacherDisciplinePage").classList.add("active");
   await loadDisciplineStudents(); await loadWorksheetStudents(); renderWorksheetGrid(); await loadTeacherDiscipline();
 };
@@ -5390,6 +5215,7 @@ window.loadPublicWarningAlerts=async function(){
    PRINT CENTER
 ========================================================= */
 window.openPrintCenter=async function(){
+  if(!(await requireTeacherAccess())) return;
   hideAllPages();
   document.getElementById("printCenterPage").classList.add("active");
   const select=document.getElementById("printStudentSelect");
