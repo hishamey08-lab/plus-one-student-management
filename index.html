@@ -1249,6 +1249,13 @@ input,select,textarea{background:rgba(2,25,67,.48)}
 
 <div id="publicWarningAlerts" class="warning-alerts"></div>
 
+<div id="pushNotificationCard" class="result-card glass" style="margin-bottom:22px;">
+  <h2>🔔 Phone Notifications</h2>
+  <p class="date-text">Enable this once and new student-portal updates can arrive directly on this device.</p>
+  <button id="enablePushButton" class="primary-button" onclick="enableStudentNotifications()">🔔 Enable Phone Notifications</button>
+  <div id="pushNotificationStatus" class="security-note">Notification permission has not been enabled yet.</div>
+</div>
+
 <div class="feature-grid">
 
   <div class="feature-card glass clickable"
@@ -2471,6 +2478,12 @@ import {
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
 import {
+  getMessaging,
+  getToken,
+  onMessage
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-messaging.js";
+
+import {
   getFirestore,
   collection,
   addDoc,
@@ -2478,6 +2491,7 @@ import {
   doc,
   getDoc,
   updateDoc,
+  setDoc,
   deleteDoc,
   serverTimestamp
 }
@@ -2510,7 +2524,102 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 const db = getFirestore(app);
+const messaging = getMessaging(app);
 
+// Paste the PUBLIC Web Push VAPID key generated in Firebase Console.
+const FCM_VAPID_KEY = "YOUR_PUBLIC_VAPID_KEY_HERE";
+
+
+/* =========================================================
+   PHONE PUSH NOTIFICATIONS
+========================================================= */
+
+let pushReady = false;
+
+function updatePushStatus(text,ok=false){
+  const box=document.getElementById("pushNotificationStatus");
+  const button=document.getElementById("enablePushButton");
+  if(box){
+    box.textContent=text;
+    box.style.color=ok ? "#6ee7b7" : "";
+  }
+  if(button && ok){
+    button.textContent="✅ Phone Notifications Enabled";
+    button.disabled=true;
+    button.style.opacity=".75";
+  }
+}
+
+async function registerStudentPush(student){
+  if(!student?.id) throw new Error("STUDENT_NOT_SELECTED");
+  if(!("Notification" in window)) throw new Error("NOTIFICATION_UNSUPPORTED");
+  if(!("serviceWorker" in navigator)) throw new Error("SERVICE_WORKER_UNSUPPORTED");
+  if(FCM_VAPID_KEY === "YOUR_PUBLIC_VAPID_KEY_HERE") throw new Error("VAPID_NOT_CONFIGURED");
+
+  const permission = await Notification.requestPermission();
+  if(permission !== "granted") throw new Error("NOTIFICATION_DENIED");
+
+  const registration = await navigator.serviceWorker.register("./firebase-messaging-sw.js", {scope:"./"});
+  const token = await getToken(messaging,{
+    vapidKey:FCM_VAPID_KEY,
+    serviceWorkerRegistration:registration
+  });
+
+  if(!token) throw new Error("NO_PUSH_TOKEN");
+
+  // The current student lookup is public, so this registration is an application-level
+  // association rather than proof of identity. Keep notification messages generic.
+  await addDoc(collection(db,"pushTokens"),{
+    token,
+    studentId:student.id,
+    registerNumber:String(student.data.registerNumber || student.data.rollNumber || ""),
+    createdAt:serverTimestamp(),
+    createdAtLocal:new Date().toISOString()
+  });
+
+  pushReady=true;
+  updatePushStatus("✅ Notifications are enabled on this device for this student profile.",true);
+  return token;
+}
+
+window.enableStudentNotifications = async function(){
+  if(!currentPersonalStudent){
+    alert("First enter your Register Number, then enable phone notifications.");
+    openRegisterLookupPage();
+    return;
+  }
+
+  const button=document.getElementById("enablePushButton");
+  if(button){button.disabled=true;button.textContent="🔄 Enabling...";}
+
+  try{
+    await registerStudentPush(currentPersonalStudent);
+  }catch(errorObject){
+    console.error("Push notification setup failed:",errorObject);
+    const messages={
+      VAPID_NOT_CONFIGURED:"The Web Push key is not configured yet. Complete the Firebase setup step first.",
+      NOTIFICATION_DENIED:"Notification permission was denied. Allow notifications for this website in your browser settings.",
+      NOTIFICATION_UNSUPPORTED:"This browser does not support web notifications.",
+      SERVICE_WORKER_UNSUPPORTED:"This browser does not support the required service worker.",
+      NO_PUSH_TOKEN:"Firebase could not create a push registration for this device.",
+      STUDENT_NOT_SELECTED:"Select your student profile first."
+    };
+    updatePushStatus("❌ " + (messages[errorObject.message] || "Could not enable notifications."));
+    if(button){button.disabled=false;button.textContent="🔔 Enable Phone Notifications";}
+  }
+};
+
+function setupForegroundPushListener(){
+  onMessage(messaging,payload=>{
+    const title=payload?.notification?.title || "Plus One Student System";
+    const body=payload?.notification?.body || "There is a new update.";
+    // Foreground browser notifications are displayed directly when permission exists.
+    if("Notification" in window && Notification.permission === "granted")
+      new Notification(title,{body,icon:"./favicon.ico"});
+  });
+}
+
+setupForegroundPushListener();
 
 /* =========================================================
    TEACHER SECURITY
@@ -2907,7 +3016,7 @@ window.saveStudentResult = async function(){
     message.className = "success";
     message.style.display = "block";
     message.textContent = "✅ Result saved successfully!";
-    await logTeacherActivity("Updated exam result",{studentName:name,exam});
+    await logTeacherActivity("Updated exam result",{studentName:name,registerNumber,exam});
 
     clearResultForm();
     await loadTeacherStudents();
@@ -3655,6 +3764,8 @@ window.saveNote = async function(){
     message.textContent =
       "✅ Note added successfully!";
 
+    await logTeacherActivity("Published study material",{title,subject});
+
 
     document.getElementById(
       "noteTitle"
@@ -3996,6 +4107,8 @@ window.saveAnnouncement = async function(){
 
     box.textContent =
       "✅ Announcement published!";
+
+    await logTeacherActivity("Published announcement",{title});
 
 
     document.getElementById(
@@ -4736,6 +4849,12 @@ window.findStudentByRegister = async function(){
     }
 
     currentPersonalStudent = found;
+    const pushButton=document.getElementById("enablePushButton");
+    if(pushButton){
+      pushButton.disabled=false;
+      pushButton.textContent="🔔 Enable Phone Notifications";
+    }
+    updatePushStatus(`Student profile selected: ${found.data.name || "Student"}. You can now enable phone notifications.`);
     openPersonalStudentDashboard();
 
   }catch(errorObject){
@@ -5015,7 +5134,7 @@ window.saveAttendance = async function(){
     if(existingId) await updateDoc(doc(db,"attendance",existingId),payload);
     else await addDoc(collection(db,"attendance"),{...payload,createdAt:serverTimestamp(),createdAtLocal:new Date().toISOString()});
     box.className="success"; box.style.display="block"; box.textContent="✅ Attendance saved successfully!";
-    await logTeacherActivity("Saved attendance",{date});
+    await logTeacherActivity("Saved attendance",{date,studentCount:teacherAttendanceStudents.length});
   }catch(errorObject){
     console.error(errorObject);
     box.className="error"; box.style.display="block"; box.textContent="❌ Could not save attendance. Check Firestore Rules.";
@@ -5107,6 +5226,7 @@ async function loadWorksheetStudents(){const a=document.getElementById("discipli
 function renderWorksheetGrid(){const box=document.getElementById("worksheetGrid");box.innerHTML=WORKSHEET_SUBJECTS.map(sub=>{const st=worksheetSelections[sub]||"complete";return `<div class="worksheet-row"><strong>${sub}</strong><div class="worksheet-actions"><button class="worksheet-btn complete ${st==="complete"?"active":""}" onclick="setWorksheetStatus('${sub}','complete')">✅ Complete</button><button class="worksheet-btn incomplete ${st==="incomplete"?"active":""}" onclick="setWorksheetStatus('${sub}','incomplete')">❌ Not Complete</button></div></div>`}).join("");}
 window.setWorksheetStatus=function(subject,status){worksheetSelections[subject]=status;renderWorksheetGrid();};
 window.saveDisciplineRecord=async function(){
+  if(!(await requireTeacherAccess())) return;
   const studentId=document.getElementById("disciplineStudentSelect").value;
   const note=document.getElementById("disciplineNote").value.trim();
   const isWarning=document.getElementById("disciplineWarning").checked;
@@ -5137,7 +5257,7 @@ window.saveDisciplineRecord=async function(){
     box.textContent="❌ Could not save record. Check Firestore Rules for the discipline collection.";
   }
 };
-window.saveWorksheetStatus=async function(){const studentId=document.getElementById("worksheetStudentSelect").value,box=document.getElementById("worksheetMessage");if(!studentId){box.className="error";box.style.display="block";box.textContent="Please select a student.";return;}try{const snap=await getDocs(collection(db,"students"));let student=null;snap.forEach(x=>{if(x.id===studentId)student=x.data();});const payload={studentId,studentName:student?.name||"Student",registerNumber:student?.registerNumber||student?.rollNumber||"",subjects:Object.fromEntries(WORKSHEET_SUBJECTS.map(x=>[x,worksheetSelections[x]||"complete"])),updatedAt:serverTimestamp(),updatedAtLocal:new Date().toISOString()};const old=await getDocs(collection(db,"worksheets"));let id=null;old.forEach(x=>{if(x.data().studentId===studentId)id=x.id;});if(id)await updateDoc(doc(db,"worksheets",id),payload);else await addDoc(collection(db,"worksheets"),{...payload,createdAt:serverTimestamp()});box.className="success";box.style.display="block";box.textContent="✅ Worksheet status saved!";}catch(e){console.error(e);box.className="error";box.style.display="block";box.textContent="❌ Could not save worksheet status. Check Firestore Rules for the worksheets collection.";}};
+window.saveWorksheetStatus=async function(){if(!(await requireTeacherAccess())) return; const studentId=document.getElementById("worksheetStudentSelect").value,box=document.getElementById("worksheetMessage");if(!studentId){box.className="error";box.style.display="block";box.textContent="Please select a student.";return;}try{const snap=await getDocs(collection(db,"students"));let student=null;snap.forEach(x=>{if(x.id===studentId)student=x.data();});const payload={studentId,studentName:student?.name||"Student",registerNumber:student?.registerNumber||student?.rollNumber||"",subjects:Object.fromEntries(WORKSHEET_SUBJECTS.map(x=>[x,worksheetSelections[x]||"complete"])),updatedAt:serverTimestamp(),updatedAtLocal:new Date().toISOString()};const old=await getDocs(collection(db,"worksheets"));let id=null;old.forEach(x=>{if(x.data().studentId===studentId)id=x.id;});if(id)await updateDoc(doc(db,"worksheets",id),payload);else await addDoc(collection(db,"worksheets"),{...payload,createdAt:serverTimestamp()});box.className="success";box.style.display="block";box.textContent="✅ Worksheet status saved!";}catch(e){console.error(e);box.className="error";box.style.display="block";box.textContent="❌ Could not save worksheet status. Check Firestore Rules for the worksheets collection.";}};
 
 async function loadTeacherDiscipline(){
  const box=document.getElementById("teacherDisciplineList");box.innerHTML='<div class="loading">Loading records...</div>';
@@ -5146,7 +5266,7 @@ async function loadTeacherDiscipline(){
  box.innerHTML=arr.map(x=>`<div class="discipline-item"><div class="student-header"><div><h3>${escapeHTML(x.data.studentName||"Student")}</h3><p>Register No: ${escapeHTML(x.data.registerNumber||"")}</p></div><div>${x.data.warning?'<span class="warning-badge">⚠️ Warning</span> ':''}<button class="danger-button" onclick="deleteDisciplineRecord('${x.id}')">Delete</button></div></div>${x.data.note?`<p style="margin-top:12px">${escapeHTML(x.data.note)}</p>`:""}<p class="date-text">📅 ${formatDate(x.data.createdAtLocal||x.data.createdAt)}</p></div>`).join("");
  }catch(e){console.error(e);box.innerHTML='<div class="empty">Could not load records.</div>';}
 }
-window.deleteDisciplineRecord=async function(id){if(!confirm("Delete this discipline record?"))return;try{await deleteDoc(doc(db,"discipline",id));await loadTeacherDiscipline();}catch(e){console.error(e);alert("Could not delete record.");}};
+window.deleteDisciplineRecord=async function(id){if(!(await requireTeacherAccess())) return;if(!confirm("Delete this discipline record?"))return;try{await deleteDoc(doc(db,"discipline",id));await loadTeacherDiscipline();}catch(e){console.error(e);alert("Could not delete record.");}};
 
 window.showPersonalDiscipline=async function(){
  if(!currentPersonalStudent)return openRegisterLookupPage();
